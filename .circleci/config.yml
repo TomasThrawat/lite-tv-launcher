@@ -34,7 +34,7 @@ jobs:
               exit 1
             fi
             set +o pipefail
-            yes | android --no-metrics --sdk="$SDK_ROOT" sdk install platforms/android-36 build-tools/36.0.0 platform-tools
+            yes | android --no-metrics --sdk="$SDK_ROOT" sdk --ignore-outdated-xmls install platforms/android-36 build-tools/36.0.0 platform-tools
             set -o pipefail
       - run:
           name: Run unit tests, lint, and assemble APKs
