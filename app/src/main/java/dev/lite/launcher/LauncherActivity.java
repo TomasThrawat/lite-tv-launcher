@@ -819,7 +819,7 @@ public class LauncherActivity extends Activity {
     private static final String ABOUT_KOFI_URL       = "https://ko-fi.com/litetvlauncher";
     private static final String ABOUT_DOWNLOADER_CODE = "See GitHub releases";
     private static final String ABOUT_GITHUB_RELEASES =
-            "https://github.com/f102mithunysypdlcjr-pixel/Lite TV Launcherv3/releases/latest";
+            "https://github.com/TomasThrawat/lite-tv-launcher/releases/latest";
 
     /** Single shared dim backdrop View added to {@link #root} in
      *  {@link #buildLayout}. Both the settings panel and the keymap
