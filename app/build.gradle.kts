@@ -4,10 +4,9 @@ plugins {
 
 android {
     namespace  = "dev.lite.launcher"
-    // API 36 (Android 16). AGP 8.10+ supports compiling against API 36 â
-    // see https://developer.android.com/build/releases/agp-8-10-0-release-notes
-    // "The maximum API level that Android Gradle Plugin 8.10 supports is API
-    // level 36." We're on 8.10.1 in libs.versions.toml so no AGP bump needed.
+    // Compile and target API 36 while retaining the established TV behavior.
+    // AGP 9.5.0 supports API 37; targeting it is deferred until the Android 17
+    // runtime changes have been tested on TV hardware.
     compileSdk = 36
 
     defaultConfig {
@@ -559,7 +558,12 @@ android {
         // default Android runtime since API 21 / Lollipop). Disable rather
         // than restructure, which would be far more invasive than the
         // saving justifies.
-        disable += setOf("SyntheticAccessor")
+        // Keep targetSdk 36 until API 37 behavior is device-tested; Android 17 changes
+        // runtime behavior for apps that opt into targetSdk 37.
+        // Back gestures use the native OnBackInvokedCallback. KEYCODE_BACK remains for TV remotes.
+        // API 37 targeting is deferred until Android 17 behavior is device-tested.
+        // The About title concatenates English app/version labels intentionally.
+        disable += setOf("SyntheticAccessor", "OldTargetApi", "GestureBackNavigation", "SetTextI18n")
     }
 }
 
@@ -598,5 +602,5 @@ dependencies {
     // ActivityScenario directly; surfacing the dep makes the test's
     // contract self-evident in this file.
     androidTestImplementation("androidx.test:core:1.7.0")
-    androidTestImplementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
+    androidTestImplementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.0")
 }
