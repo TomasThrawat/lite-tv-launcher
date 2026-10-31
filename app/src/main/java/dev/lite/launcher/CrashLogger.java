@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
  * Tiny zero-dependency crash sink for production builds.
  *
  * <p>Without third-party crash reporting (Firebase Crashlytics, Sentry,
- * etc. — all of which would violate the launcher's "zero external
+ * etc. â all of which would violate the launcher's "zero external
  * dependencies in the production APK" rule), the only signal a developer
  * gets when a TV ROM kills the launcher is a one-line logcat trace that
  * is nearly impossible for a remote user to capture. This sink:
@@ -70,20 +70,20 @@ final class CrashLogger {
      */
     static void install(final Context appContext) {
         Thread.UncaughtExceptionHandler prev = Thread.getDefaultUncaughtExceptionHandler();
-        if (prev instanceof Lite TV LauncherHandler) return;
+        if (prev instanceof LiteTvLauncherHandler) return;
 
         // Snapshot the application context so the handler can write files
         // without a reference to a (potentially destroyed) activity.
         final Context ctx = appContext.getApplicationContext();
-        Thread.setDefaultUncaughtExceptionHandler(new Lite TV LauncherHandler(ctx, prev));
+        Thread.setDefaultUncaughtExceptionHandler(new LiteTvLauncherHandler(ctx, prev));
     }
 
     /** Marker class so {@link #install} can recognise its own handler
      *  on subsequent calls and skip re-installation. */
-    private static final class Lite TV LauncherHandler implements Thread.UncaughtExceptionHandler {
+    private static final class LiteTvLauncherHandler implements Thread.UncaughtExceptionHandler {
         private final Context                          ctx;
         private final Thread.UncaughtExceptionHandler  next;
-        Lite TV LauncherHandler(Context ctx, Thread.UncaughtExceptionHandler next) {
+        LiteTvLauncherHandler(Context ctx, Thread.UncaughtExceptionHandler next) {
             this.ctx = ctx; this.next = next;
         }
         @Override public void uncaughtException(Thread t, Throwable e) {
@@ -114,7 +114,7 @@ final class CrashLogger {
     /**
      * Append a timestamped trace to the on-disk log, truncating the file
      * from the front if it would otherwise exceed {@link #MAX_BYTES}.
-     * Synchronous — runs on the calling thread.
+     * Synchronous â runs on the calling thread.
      */
     private static void append(Context ctx, Thread t, Throwable e) {
         File dir = ctx.getFilesDir();
@@ -129,14 +129,14 @@ final class CrashLogger {
                 // Best-effort delete then rename. On rare filesystems
                 // both operations can fail; we just continue.
                 if (bak.exists() && !bak.delete()) {
-                    // not fatal — the new file will overwrite below
+                    // not fatal â the new file will overwrite below
                 }
                 if (!f.renameTo(bak)) {
                     // best-effort
                 }
             }
             try (PrintWriter pw = new PrintWriter(new java.io.FileWriter(f, true))) {
-                pw.println("──────────────────────────────────────────");
+                pw.println("ââââââââââââââââââââââââââââââââââââââââââ");
                 pw.println("time:    " + TS_FMT.format(Instant.now()));
                 pw.println("thread:  " + t.getName());
                 pw.println("trace:");
@@ -144,7 +144,7 @@ final class CrashLogger {
                 pw.flush();
             }
         } catch (IOException | SecurityException ignored) {
-            // Filesystem refused the write — we already logged to logcat
+            // Filesystem refused the write â we already logged to logcat
             // in the calling handler. Nothing more we can do.
         }
     }
