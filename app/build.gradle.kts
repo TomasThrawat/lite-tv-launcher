@@ -4,10 +4,9 @@ plugins {
 
 android {
     namespace  = "dev.lite.launcher"
-    // Compile and target API 36 while retaining the established TV behavior.
-    // AGP 9.5.0 supports API 37; targeting it is deferred until the Android 17
-    // runtime changes have been tested on TV hardware.
-    compileSdk = 36
+    // Compile against API 37 while retaining targetSdk 36 and the established
+    // Android 16 runtime behavior until Android 17 has been tested on TV hardware.
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "dev.lite.launcher"
@@ -564,22 +563,24 @@ android {
     }
 }
 
-// Kotlin is excluded from production app classpaths, but stays available to
-// Gradle's Lint worker and the separate test classpaths. This keeps the
-// released APK free of Kotlin runtime while allowing Lint to run correctly.
+// Keep Kotlin available on compile/test classpaths so Java can resolve Kotlin
+// annotation types exposed by AndroidX test dependencies. Exclude it only from
+// production runtime classpaths; the released application remains SDK-only.
 configurations.matching {
     val n = it.name
     !n.contains("Test", ignoreCase = true) &&
             !n.startsWith("androidTest") &&
             !n.startsWith("test")
 }.configureEach {
-    // Keep androidx.core-ktx out of all production and lint classpaths.
+    // AndroidX Core KTX is not used by this Android-SDK-only launcher.
     exclude(group = "androidx.core", module = "core-ktx")
-    // AGP's lint worker uses Kotlin stdlib internals (for example EnumEntriesKt).
-    // Exclude Kotlin only from production app classpaths, never from lint.
-    if (!name.contains("lint", ignoreCase = true)) {
-        exclude(group = "org.jetbrains.kotlin")
-    }
+}
+configurations.matching {
+    val n = it.name
+    n.endsWith("RuntimeClasspath", ignoreCase = true) &&
+            !n.contains("Test", ignoreCase = true)
+}.configureEach {
+    exclude(group = "org.jetbrains.kotlin")
 }
 
 dependencies {
@@ -602,5 +603,5 @@ dependencies {
     // ActivityScenario directly; surfacing the dep makes the test's
     // contract self-evident in this file.
     androidTestImplementation("androidx.test:core:1.7.0")
-    androidTestImplementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.0")
+    androidTestImplementation("org.jetbrains.kotlin:kotlin-stdlib:2.4.21")
 }
