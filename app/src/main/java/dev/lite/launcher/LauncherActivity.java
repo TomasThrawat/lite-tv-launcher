@@ -87,7 +87,7 @@ public class LauncherActivity extends Activity {
     private static final int    HIDE_VISIBLE_ROWS = 6;
     /** Max width of a hidden-app row label. The panel hugs its content (so
      *  short names give a compact menu, no dead space) but long names
-     *  ellipsize at this cap instead of widening the card — the "max
+     *  ellipsize at this cap instead of widening the card â the "max
      *  character limit" that keeps the panel size bounded. */
     private static final int    HIDE_LABEL_MAX_W_DP = 150;
     // Clock cadence lives in {@link ClockFormatter#nextMinuteDelay} now.
@@ -108,7 +108,7 @@ public class LauncherActivity extends Activity {
     /** v1.5.0: number of leading apps (in the visible / non-hidden order)
      *  that form the bottom "home favourites" row and, equivalently, the
      *  centred first row of the pull-down app drawer. Range [0, COLS]. Absent on
-     *  first run after the v1.5.0 upgrade → resolved lazily to
+     *  first run after the v1.5.0 upgrade â resolved lazily to
      *  {@link HomeDrawerModel#defaultHomeCount(int)} (the first
      *  {@link HomeDrawerModel#COLS} of the
      *  user's EXISTING stored order) so an upgrade never resets favourites.
@@ -116,7 +116,7 @@ public class LauncherActivity extends Activity {
      *  single source of truth for ordering; this key only records where the
      *  home/drawer boundary sits. */
     private static final String KEY_HOME_COUNT = "home_count";
-    // Persisted remote-key→app shortcut map. Format: "kc=pkg,kc=pkg,...".
+    // Persisted remote-keyâapp shortcut map. Format: "kc=pkg,kc=pkg,...".
     // Keys are raw Android keycode integers (e.g. 183 = KEYCODE_PROG_RED).
     // Loaded once at startup into the in-memory keyMap SparseArray; every
     // mapped key press anywhere on the home screen launches its app via
@@ -124,13 +124,13 @@ public class LauncherActivity extends Activity {
     // user never has to confirm.
     private static final String KEY_KEYMAP     = "key_map";
     // Persisted set of packages hidden from the home shelf. Comma-separated
-    // package names. The list is "hide from shelf only" — hidden packages
+    // package names. The list is "hide from shelf only" â hidden packages
     // are still visible in the keymap picker so they can be bound to a
     // remote-key shortcut. Loaded once at startup into hiddenApps; saved
     // synchronously on every toggle.
     private static final String KEY_HIDDEN     = "hidden_apps";
     /** Persisted "show clock" preference. true = clock pill rendered with
-     *  a "EEE · h:mm a" date prefix (locale-aware short day-of-week);
+     *  a "EEE Â· h:mm a" date prefix (locale-aware short day-of-week);
      *  false = clock pill hidden entirely and no minute tick scheduled.
      *  v1.3.0 introduced this toggle alongside the unified settings panel.
      *  Default true so existing installs see no behaviour change. */
@@ -155,14 +155,14 @@ public class LauncherActivity extends Activity {
      *  completely off. Must be a member of {@link #SLIDESHOW_STEPS_SEC}. */
     private static final int    SLIDESHOW_DEFAULT_SEC = 30;
 
-    // Subtle focus pop — animations toned down for performance / stability.
+    // Subtle focus pop â animations toned down for performance / stability.
     // No vertical lift (saves a frame of layout work and removes a class of
     // visual jitter on slow TV ROMs). Scale is small enough to read as
     // "selected" without dominating the shelf.
     private static final float  FOCUS_SCALE    = 1.06f;
     // Toolbar pill (network / mapper / wallpaper) focus pop. Smaller than
-    // FOCUS_SCALE because the toolbar plates are themselves smaller — at
-    // 1.06× the pop read as too aggressive against a 40 dp box. 1.04 is
+    // FOCUS_SCALE because the toolbar plates are themselves smaller â at
+    // 1.06Ã the pop read as too aggressive against a 40 dp box. 1.04 is
     // enough for "this is selected" without dominating the corner.
     private static final float  BTN_FOCUS_SCALE = 1.04f;
     // Bumped 130 -> 150 ms so the bounce has enough frames to be perceived
@@ -171,25 +171,25 @@ public class LauncherActivity extends Activity {
     private static final int    FOCUS_DUR_MS   = 150;
     private static final int    UNFOCUS_DUR_MS = 100;
     // Pull-down drawer open/close transition duration. Open and close share
-    // this single value so the two feel symmetric — the close used to be
+    // this single value so the two feel symmetric â the close used to be
     // shorter (140 ms) and restored the home screen instantly, which read as
     // an abrupt "snap" on return. On close the home content now cross-fades
     // in over this same window (see closeDrawer / beginHomeFadeIn) so the
     // drawer sliding down and the home appearing blend into one motion.
     private static final int    DRAWER_ANIM_MS = 200;
 
-    // Easing curves. Defined once, reused everywhere — no per-animation alloc.
-    //   FOCUS_EASE      — decelerate-out, the canonical "press / lift" curve
-    //   FOCUS_IN_BOUNCE — subtle overshoot for focus-IN only. Tension 2.8
+    // Easing curves. Defined once, reused everywhere â no per-animation alloc.
+    //   FOCUS_EASE      â decelerate-out, the canonical "press / lift" curve
+    //   FOCUS_IN_BOUNCE â subtle overshoot for focus-IN only. Tension 2.8
     //                     gives a slightly springier "pop" than the previous
-    //                     2.0 — the cell ticks ~7% past FOCUS_SCALE before
+    //                     2.0 â the cell ticks ~7% past FOCUS_SCALE before
     //                     settling. Higher tension is a math-only change
     //                     with zero CPU / GPU cost. Peak visible width
     //                     (cellW * 1.073) still fits inside the cell stride,
     //                     so neighbours never overlap during the bounce.
-    //   SCROLL_EASE     — Material standard ease-in-out for shelf scrolling
-    //   REORDER_EASE    — quick decelerate for the swap slide
-    //   MENU_IN         — gentle overshoot-free pop-in for the context menu
+    //   SCROLL_EASE     â Material standard ease-in-out for shelf scrolling
+    //   REORDER_EASE    â quick decelerate for the swap slide
+    //   MENU_IN         â gentle overshoot-free pop-in for the context menu
     private static final Interpolator FOCUS_EASE      = new DecelerateInterpolator(1.6f);
     private static final Interpolator FOCUS_IN_BOUNCE = new OvershootInterpolator(2.8f);
     private static final Interpolator SCROLL_EASE     = new PathInterpolator(0.33f, 0f, 0.2f, 1f);
@@ -200,7 +200,7 @@ public class LauncherActivity extends Activity {
     // Static icon-pipeline scratch buffers (sMatrixTL, sPixelBuf, sFillPts)
     // and paints (sMaskPaint, sSrcInPaint, sDrawPaint, sWhiteFill) used to
     // live here. They moved to {@link IconRenderer}, which is the only
-    // consumer — pulling them out drops ~25 lines from the activity and
+    // consumer â pulling them out drops ~25 lines from the activity and
     // gives the icon pipeline a single home.
     //
     // sPhFill stays here because the only caller is {@code CellView.drawIcon}
@@ -229,7 +229,7 @@ public class LauncherActivity extends Activity {
     private PackageManager      pm;
     /** Single shared {@link android.content.SharedPreferences} handle.
      *  Android's {@link Context#getSharedPreferences} caches by name
-     *  internally, so every repeated call returns the same instance —
+     *  internally, so every repeated call returns the same instance â
      *  but the call still walks a HashMap inside Context. Caching the
      *  reference once at startup eliminates ~12 redundant lookups
      *  scattered through onCreate / onResume / onPause / loadKeyMap /
@@ -248,12 +248,12 @@ public class LauncherActivity extends Activity {
     private AppDrawer           drawer;
     /** Number of leading visible apps that are "home" apps. {@code -1} until
      *  resolved from {@link #KEY_HOME_COUNT} (or its default) the first time
-     *  the app list is known — see {@link #resolveHomeCount(int)}. Always
+     *  the app list is known â see {@link #resolveHomeCount(int)}. Always
      *  clamped to {@code [0, min(8, visibleCount)]} before use. */
     private int                 homeCount = -1;
     // Wallpaper rendering uses two stacked ImageViews. wallpaperFront is on
     // top (always visible to the user); wallpaperBack sits below and is the
-    // staging slot used during a fade. Roles do NOT swap — the
+    // staging slot used during a fade. Roles do NOT swap â the
     // {@link WallpaperController} that drives both views enforces the
     // "front is always front" invariant. The activity holds these as
     // fields only so {@code onDestroy} can clear the references; all
@@ -277,11 +277,11 @@ public class LauncherActivity extends Activity {
      *  the one source of BACK handling on devices that route gestures
      *  through the platform's OnBackInvokedDispatcher (instead of via
      *  {@link #dispatchKeyEvent} / {@link #onBackPressed}). It must mirror
-     *  the legacy back-priority chain: keymap overlay → context menu /
-     *  reorder mode → no-op (the launcher is HOME so it never finishes). */
+     *  the legacy back-priority chain: keymap overlay â context menu /
+     *  reorder mode â no-op (the launcher is HOME so it never finishes). */
     private android.window.OnBackInvokedCallback backInvokedCallback;
 
-    // Single Handler on the main looper — was previously two (uiHandler +
+    // Single Handler on the main looper â was previously two (uiHandler +
     // clockHandler). The clock runnable is the only "named" callback; we
     // use clockTick as the token for removeCallbacks.
     private final Handler uiHandler    = new Handler(Looper.getMainLooper());
@@ -289,7 +289,7 @@ public class LauncherActivity extends Activity {
 
     // Clock formatter encapsulates all the per-tick allocation hygiene
     // (Calendar reuse, char[8] digit buffer, SpannableStringBuilder, AM/PM
-    // spans). Pulled out of the activity into {@link ClockFormatter} —
+    // spans). Pulled out of the activity into {@link ClockFormatter} â
     // the activity now only deals with scheduling / TextView wiring.
     private final ClockFormatter clockFmt = new ClockFormatter();
 
@@ -307,11 +307,11 @@ public class LauncherActivity extends Activity {
     private static final int CLOCK_FULL = 0, CLOCK_TIME_ONLY = 1, CLOCK_OFF = 2;
     private int clockMode = CLOCK_FULL;
     // Tracks the system 12/24-hour preference; re-detected in startClock()
-    // so a change in Settings → Date & time is picked up on the next
+    // so a change in Settings â Date & time is picked up on the next
     // onResume without a ContentObserver.
     private boolean is24Hour   = false;
 
-    // ── Wallpaper slideshow state (all UI-thread) ────────────────────────
+    // ââ Wallpaper slideshow state (all UI-thread) ââââââââââââââââââââââââ
     /** Picked folder tree-URI string, or {@code null} when no folder is set. */
     private String  slideshowFolderUri = null;
     /** Rotation interval in SECONDS: 0 = off, else one of {@link #SLIDESHOW_STEPS_SEC}. */
@@ -344,7 +344,7 @@ public class LauncherActivity extends Activity {
         }
     };
 
-    // ── Slideshow folder picker (custom TV-native, MediaStore-backed) ────
+    // ââ Slideshow folder picker (custom TV-native, MediaStore-backed) ââââ
     private FrameLayout                 folderPickerOverlay = null;
     private android.widget.LinearLayout folderPickerCard    = null;
     private android.widget.LinearLayout folderPickerCol     = null;
@@ -353,7 +353,7 @@ public class LauncherActivity extends Activity {
     private final java.util.List<String[]> folderPickerData = new ArrayList<>();
     private int folderPickerSel = 0;
 
-    // ── Idle UI hide (slideshow-only visual cleanup) ─────────────────────
+    // ââ Idle UI hide (slideshow-only visual cleanup) âââââââââââââââââââââ
     /** Idle-hide timeout options in seconds: Off, 1 min, 2 min, 3 min, 5 min. */
     private static final int[]  IDLE_HIDE_STEPS_SEC = { 0, 60, 120, 180, 300 };
     private static final String KEY_IDLE_HIDE       = "idle_hide_sec";
@@ -390,7 +390,7 @@ public class LauncherActivity extends Activity {
     };
 
     /** Refresh the clock TextView. Updates the digits on the minute boundary
-     *  with no fade animation — simpler and stabler. The {@link #showClock}
+     *  with no fade animation â simpler and stabler. The {@link #showClock}
      *  preference gates everything: when off the method short-circuits
      *  before any allocation or canvas-touching work. When on, the
      *  formatter renders with the locale-aware short day-of-week prefix
@@ -409,9 +409,9 @@ public class LauncherActivity extends Activity {
     // {@link #onDestroy} and dereferenced on background workers
     // ({@code iconExecutor} for {@link #iconCache} / {@link #iconDiskCache},
     // {@code appExecutor} for {@link #appExecutor}'s self-reference inside
-    // the cache-write runnable). The internal state of each — LruCache is
+    // the cache-write runnable). The internal state of each â LruCache is
     // synchronized, IconDiskCache flips its own volatile {@code shuttingDown}
-    // flag, ThreadPoolExecutor is documented thread-safe — covers the
+    // flag, ThreadPoolExecutor is documented thread-safe â covers the
     // logical correctness; volatile here covers the visibility of the
     // null assignment so a worker thread doesn't dereference a stale
     // non-null reference after the activity has begun teardown. Same
@@ -425,7 +425,7 @@ public class LauncherActivity extends Activity {
     /** In-memory cache of TV-style banner tiles for the home / drawer
      *  cells. Separate from {@link #iconCache} (which holds the small round
      *  chip icons): tiles are a different shape, size, and source. No disk
-     *  cache — tiles regenerate per process (cheap: only the visible cells
+     *  cache â tiles regenerate per process (cheap: only the visible cells
      *  are warmed), keeping the icon disk cache untouched. */
     private volatile LruCache<String, Bitmap> bannerCache;
     /** Disk-backed sibling of {@link #iconCache}. Wired through the
@@ -450,7 +450,7 @@ public class LauncherActivity extends Activity {
     /** Companion to {@link #appList} keyed by package name for O(1)
      *  {@link #findAppByPackage} lookups. The previous linear scan was a
      *  measurable cost inside {@link #refreshKeymapRows} (called on every
-     *  UP / DOWN press in the keymap overlay — 6 rows × N apps of
+     *  UP / DOWN press in the keymap overlay â 6 rows Ã N apps of
      *  String.equals per press). Single source of truth: the map is
      *  rebuilt atomically inside the same UI block that mutates
      *  {@link #appList}, so the two never diverge mid-frame. */
@@ -464,14 +464,14 @@ public class LauncherActivity extends Activity {
      *  list, so this scratch never leaks references across UI
      *  events. Eliminates one ~50-element ArrayList allocation per
      *  package broadcast / hide-toggle / loadApps reconcile when
-     *  the user has any hidden apps configured. UI thread only —
+     *  the user has any hidden apps configured. UI thread only â
      *  no synchronisation needed. */
     private final ArrayList<AppInfo> visibleScratch = new ArrayList<>();
 
     private boolean pkgChangedWhilePaused = false;
     /** Packages flagged by {@link #packageReceiver} as REPLACED / CHANGED
      *  whose icons must be re-decoded on the next reconcile. Cleared after
-     *  the reconcile consumes it. UI-thread only — no synchronisation. */
+     *  the reconcile consumes it. UI-thread only â no synchronisation. */
     private final ArraySet<String> pendingIconInvalidations = new ArraySet<>();
     /** True between {@link #onPause} and {@link #onResume}. Read by the
      *  package broadcast receiver to decide whether to schedule a
@@ -480,7 +480,7 @@ public class LauncherActivity extends Activity {
      *  fire it.
      *
      *  <p>Pre-1.4.3 the receiver always scheduled the post even while
-     *  the user was in another app, burning ~50–250 ms of CPU on a
+     *  the user was in another app, burning ~50â250 ms of CPU on a
      *  background PM scan + cell rebuild that no human was looking at.
      *  Each scheduled post also kept the launcher process alive past
      *  the broadcast (the looper's pending message holds a strong
@@ -491,13 +491,13 @@ public class LauncherActivity extends Activity {
      *  animation. The {@code pkgChangedWhilePaused} flag still
      *  triggers the resume-time reconcile so no broadcast is missed.
      *
-     *  <p>UI-thread only — no synchronisation needed. */
+     *  <p>UI-thread only â no synchronisation needed. */
     private boolean uiPaused = false;
     /** v1.5.x: set in {@link #onPause} when the drawer was open at pause time,
      *  consumed in {@link #onResume}. We DEFER the drawer teardown (restore
      *  shelf + rebuild home row) to resume so that launching an app from the
      *  drawer does not repaint the home screen into the frame the system
-     *  snapshots for the launch transition — that repaint was the "home
+     *  snapshots for the launch transition â that repaint was the "home
      *  screen flashes for a few ms before the app opens" bug. Leaving the
      *  drawer as the last-painted surface makes the launch animate from the
      *  drawer (correct context), while a genuine return to the launcher still
@@ -506,24 +506,24 @@ public class LauncherActivity extends Activity {
 
     /** Set when Uninstall / App-info is invoked from the OPEN drawer. Both
      *  launch a system screen (so the activity pauses), but unlike an app
-     *  launch we want to come back INTO the drawer — mirroring Hide, which
+     *  launch we want to come back INTO the drawer â mirroring Hide, which
      *  stays in the drawer. When this is true on {@link #onResume} the
      *  deferred teardown keeps the drawer open and re-asserts its focus /
      *  backdrop instead of restoring the home screen. The package-removed
-     *  reconcile (loadApps → applyShelfApps → setApps) refreshes the drawer's
+     *  reconcile (loadApps â applyShelfApps â setApps) refreshes the drawer's
      *  list in place. {@link #pendingDrawerFocusIdx} carries the slot the
      *  acted-on app occupied so focus lands sensibly on return. */
     private boolean keepDrawerOpenOnResume = false;
     private int     pendingDrawerFocusIdx  = 0;
     /** Drawer index to re-focus after the post-uninstall reconcile rebuilds the
-     *  drawer list (so the selector stays on the uninstalled app's slot — the
-     *  app that slid into it — instead of being clamped to the last cell). -1
+     *  drawer list (so the selector stays on the uninstalled app's slot â the
+     *  app that slid into it â instead of being clamped to the last cell). -1
      *  when idle. Mirrors the in-place refocus the Hide path does directly. */
     private int     pendingDrawerRefocus   = -1;
     /** Package being uninstalled from the drawer, and whether it was a home-row
      *  app, so the reconcile can shrink the home row by one ONLY when the
      *  uninstall actually went through (a cancelled dialog leaves the package
-     *  installed → no change). {@code null} when idle. */
+     *  installed â no change). {@code null} when idle. */
     private String  pendingUninstallPkg     = null;
     private boolean pendingUninstallWasHome = false;
     private ViewTreeObserver.OnGlobalLayoutListener focusRestoreListener;
@@ -533,12 +533,12 @@ public class LauncherActivity extends Activity {
      *  screen (configuration change, multi-window resize) and read by
      *  {@link #positionRing} to decide whether {@link #ringRootLoc} is
      *  still valid. The root view of a TV launcher essentially never
-     *  moves once attached — its origin stays at (0, 0) of the activity
+     *  moves once attached â its origin stays at (0, 0) of the activity
      *  window for the activity lifetime. Caching the root's screen
      *  coordinates eliminates one full {@link View#getLocationOnScreen}
      *  walk per {@link #positionRing} call (~5 matrix multiplications +
      *  ~5 offset accumulations across the view hierarchy depth). At
-     *  60 fps × 150 ms focus animation = ~9 frames per focus event, so
+     *  60 fps Ã 150 ms focus animation = ~9 frames per focus event, so
      *  the per-focus saving is ~9 view-tree walks. Invalidated in
      *  {@link #onConfigurationChanged} because that's the only path
      *  that can move the activity window on a TV (HDMI swap, multi-
@@ -552,7 +552,7 @@ public class LauncherActivity extends Activity {
     private boolean rootLocCached = false;
     /** Scratch arrays used by {@link #anchorCardUnderGear} to read the
      *  gear pill's and the root's on-screen positions. Promoted to
-     *  fields so the per-overlay-open path stays allocation-free —
+     *  fields so the per-overlay-open path stays allocation-free â
      *  matches the {@link #ringCellLoc} / {@link #menuCellLoc} pattern.
      *  Anchor reads run only on the main thread so no synchronisation
      *  is needed. */
@@ -571,7 +571,7 @@ public class LauncherActivity extends Activity {
      *  redundantly. The {@link #appsLoading} {@code compareAndSet}
      *  guard would short-circuit the redundant call, but the
      *  short-circuit still allocates the method-reference and walks
-     *  the entry path — clearing the flag here is the cleaner fix.
+     *  the entry path â clearing the flag here is the cleaner fix.
      *
      *  <p>Reused for the {@link #onTrimMemory} 1 s deferred reload
      *  and the {@code RejectedExecutionException} retry path (see
@@ -589,7 +589,7 @@ public class LauncherActivity extends Activity {
     };
 
     private FrameLayout        menuOverlay   = null;
-    /** Surface that currently owns the shared reorder context menu — set on
+    /** Surface that currently owns the shared reorder context menu â set on
      *  entry to reorder mode by whichever of the home shelf / app drawer is
      *  reordering. See {@link ReorderHost}. */
     private ReorderHost        menuHost      = null;
@@ -601,14 +601,14 @@ public class LauncherActivity extends Activity {
     private final int[]    menuRootLoc      = new int[2];
     private final int[]    menuOverlayLoc   = new int[2];
 
-    // ── Remote-key → app shortcut state ──────────────────────────────────
+    // ââ Remote-key â app shortcut state ââââââââââââââââââââââââââââââââââ
     // Curated list of TV-remote keycodes that are safe to remap. Order = row
     // order in the config overlay. The four colour keys cover every TV remote
     // we ship for; KEYCODE_MENU is included even though some remotes also
-    // surface it as a launcher-affordance — we trade that affordance for
+    // surface it as a launcher-affordance â we trade that affordance for
     // user-controlled remapping (the launcher itself does not consume MENU).
     // KEYCODE_CAPTIONS is the standard subtitle / CC button on Android TV.
-    // GUIDE and SEARCH were removed at user request — neither is widely
+    // GUIDE and SEARCH were removed at user request â neither is widely
     // useful on the TV side and removing them keeps the overlay compact.
     private static final int[]    SHORTCUT_KEYCODES = {
             KeyEvent.KEYCODE_PROG_RED,
@@ -622,10 +622,10 @@ public class LauncherActivity extends Activity {
     // Kept as an instance String[] so existing index-based accesses
     // (SHORTCUT_LABELS.length, SHORTCUT_LABELS[i]) keep working without
     // touching every callsite. Length and index order MUST stay locked to
-    // SHORTCUT_KEYCODES — they're parallel arrays.
+    // SHORTCUT_KEYCODES â they're parallel arrays.
     private final String[] SHORTCUT_LABELS = new String[SHORTCUT_KEYCODES.length];
     // Color tag drawn next to each row label. ARGB. 0 = no colour (the
-    // SHORTCUT_GLYPHS slot picks up — Menu and Subtitle render small
+    // SHORTCUT_GLYPHS slot picks up â Menu and Subtitle render small
     // monochrome glyphs in place of the colour disc).
     private static final int[]    SHORTCUT_TAGS     = {
             0xFFE5484D, 0xFF30A46C, 0xFFF5C518, 0xFF3E63DD, 0, 0,
@@ -638,7 +638,7 @@ public class LauncherActivity extends Activity {
      *  render small monochrome glyphs ({@link #GLYPH_HAMBURGER} =
      *  three short horizontal lines, {@link #GLYPH_CC} = the standard
      *  closed-captions "CC" badge) so every row has a visual indicator
-     *  at the same x-position — symmetric across the slot list, no row
+     *  at the same x-position â symmetric across the slot list, no row
      *  reads as "label only" against the colour rows. v1.3.2 addition. */
     private static final int      GLYPH_DOT       = 0;
     private static final int      GLYPH_HAMBURGER = 1;
@@ -646,7 +646,7 @@ public class LauncherActivity extends Activity {
     private static final int[]    SHORTCUT_GLYPHS = {
             GLYPH_DOT, GLYPH_DOT, GLYPH_DOT, GLYPH_DOT, GLYPH_HAMBURGER, GLYPH_CC,
     };
-    // Keyed by raw keycode → package name. SparseArray fits the small,
+    // Keyed by raw keycode â package name. SparseArray fits the small,
     // dense-int-key access pattern with zero autoboxing on every key press.
     private final SparseArray<String> keyMap            = new SparseArray<>();
     private FrameLayout               keymapOverlay     = null;
@@ -657,10 +657,10 @@ public class LauncherActivity extends Activity {
     private android.widget.LinearLayout keymapColumn    = null;
     private int                       keymapSelectedRow = 0;
 
-    // ── Keymap overlay app-picker state ──────────────────────────────────
+    // ââ Keymap overlay app-picker state ââââââââââââââââââââââââââââââââââ
     // The overlay has two visual modes that swap visibility inside the card:
-    //   • SLOTS  — vertical list of remappable keys (default)
-    //   • PICKER — horizontal scrollable list of installed apps for the
+    //   â¢ SLOTS  â vertical list of remappable keys (default)
+    //   â¢ PICKER â horizontal scrollable list of installed apps for the
     //              slot the user just opened
     // Mode-switching is driven by handleKeymapOverlayKey: OK on a slot
     // enters PICKER, OK on an app commits the binding and returns to SLOTS,
@@ -691,13 +691,13 @@ public class LauncherActivity extends Activity {
      *  leading "Not assigned" sentinel) maps to {@code keymapPickerApps.get(i)}. */
     private final java.util.List<AppInfo> keymapPickerApps = new ArrayList<>();
     // Picker chip strip is rebuilt only when the underlying app list
-    // changes — avoids re-allocating ~N TextViews on every overlay open.
+    // changes â avoids re-allocating ~N TextViews on every overlay open.
     private int                         keymapPickerBuiltSize = -1;
 
-    // ── Hide-manager state ───────────────────────────────────────────────
+    // ââ Hide-manager state âââââââââââââââââââââââââââââââââââââââââââââââ
     // Set of packages the user has hidden from the home shelf. Read on
     // every loadApps() to filter the shelf list; written on every toggle
-    // inside the hide-manager mode. Iteration order doesn't matter — we
+    // inside the hide-manager mode. Iteration order doesn't matter â we
     // never list this set directly; we only do contains() checks.
     private final ArraySet<String>      hiddenApps        = new ArraySet<>();
     // Manage-hidden-apps used to live as a 7th, visually-offset row at
@@ -707,7 +707,7 @@ public class LauncherActivity extends Activity {
     // The HIDE sub-mode the manage row used to enter still exists and
     // is reachable from the settings panel's "Manage hidden apps" row.
     // Hide-manager sub-view (third child of the card, sibling of the slot
-    // list and picker — visibility is swapped between the three). The hide
+    // list and picker â visibility is swapped between the three). The hide
     // manager intentionally mirrors the keymap PICKER's UX exactly: a
     // horizontal chip strip with the same selection language (bright pill
     // + dark text + 1.05x scale + auto-scroll). The only delta is that
@@ -719,9 +719,9 @@ public class LauncherActivity extends Activity {
     private android.widget.ScrollView   keymapHideScroll  = null;  // vertical list scroller (v1.5.0)
     private android.widget.LinearLayout keymapHideStrip   = null;  // vertical row list
     /** v1.5.x: the hidden-apps manager now lists ONLY hidden apps (OK unhides
-     *  each). This is the per-row backing list — row {@code i} maps to
+     *  each). This is the per-row backing list â row {@code i} maps to
      *  {@code hideListApps.get(i)}. Rebuilt from {@link #hiddenApps} on every
-     *  open of the manager. Empty → a single non-selectable "No hidden apps"
+     *  open of the manager. Empty â a single non-selectable "No hidden apps"
      *  placeholder row is shown and {@link #keymapHideIdx} is -1. */
     private final java.util.List<AppInfo> hideListApps = new ArrayList<>();
     private int                         keymapHideIdx     = 0;
@@ -731,7 +731,7 @@ public class LauncherActivity extends Activity {
     private int                         keymapHideBuiltSize = -1;
     // Set true whenever a slot row's text content (binding/label) might
     // have changed. equalizeKeymapRowWidths is expensive (7 view measures)
-    // and was previously called on every UP/DOWN press — a no-op since
+    // and was previously called on every UP/DOWN press â a no-op since
     // text didn't change between presses. With this flag we only re-
     // measure on the first refresh after the overlay opens, after a
     // commit from the picker, or after a package broadcast invalidates
@@ -743,11 +743,11 @@ public class LauncherActivity extends Activity {
     private boolean                     keymapHideDirty   = false;
 
     // Third toolbar icon (next to wifi) that opens the unified settings
-    // panel — the v1.3.0 consolidation entry point. Held as a field so
+    // panel â the v1.3.0 consolidation entry point. Held as a field so
     // focus-chain handlers and onDestroy can reach it.
     private View                        mapperBtnView     = null;
 
-    // ── Settings panel (v1.3.0) ──────────────────────────────────────────
+    // ââ Settings panel (v1.3.0) ââââââââââââââââââââââââââââââââââââââââââ
     //
     // Top-level overlay that opens as a dropdown under the gear button
     // and holds five rows: Manage hidden apps, Button shortcuts, Set
@@ -764,32 +764,32 @@ public class LauncherActivity extends Activity {
     private FrameLayout                 settingsOverlay   = null;
     private android.widget.LinearLayout settingsCard      = null;
     private android.widget.LinearLayout settingsColumn    = null;
-    /** Selection cursor inside the panel — UP/DOWN cycle, OK activates. */
+    /** Selection cursor inside the panel â UP/DOWN cycle, OK activates. */
     private int                         settingsSelectedRow = 0;
     /** Row to land on the next time the panel is opened. Set by
      *  {@link #activateSettingsRow} before drilling into the keymap card,
      *  consumed inside {@link #showSettingsPanel}. v1.3.2 fix for the
-     *  "settings cursor jumps back to row 0" bug — when a user clicks
+     *  "settings cursor jumps back to row 0" bug â when a user clicks
      *  "Button shortcuts" then presses Back, the panel re-opens with
      *  the cursor on "Button shortcuts" instead of "Manage hidden apps". */
     private int                         pendingSettingsCursor = 0;
     /** Set when the user enters the keymap card via the settings panel
-     *  (Manage hidden apps row → HIDE mode, Button shortcuts row →
+     *  (Manage hidden apps row â HIDE mode, Button shortcuts row â
      *  SLOTS mode). {@link #hideKeymapOverlay} consults this flag and
      *  re-opens the settings panel instead of dropping focus to the home
-     *  shelf, so a deep "settings → button shortcuts → bind a key →
+     *  shelf, so a deep "settings â button shortcuts â bind a key â
      *  back" gesture lands the user exactly where they left the panel. */
     private boolean                     keymapOpenedFromSettings = false;
 
     /** Set alongside {@link #keymapOpenedFromSettings} when the panel
      *  enters HIDE mode directly (from the "Manage hidden apps" row).
      *  {@link #exitHideManager} consults this and skips the v1.2.x
-     *  "back-from-HIDE returns to SLOTS" behaviour — the user came in
+     *  "back-from-HIDE returns to SLOTS" behaviour â the user came in
      *  from the panel, not from the slot list, so back should bypass
      *  SLOTS and dismiss the keymap card so the panel re-opens. */
     private boolean                     hideManagerSkipSlotsOnExit = false;
 
-    // ── About overlay (v1.4.9) ───────────────────────────────────────────
+    // ââ About overlay (v1.4.9) âââââââââââââââââââââââââââââââââââââââââââ
     // Drill-through card opened from the settings panel's "About" row. Shows
     // the app version (auto, from PackageManager), a Ko-fi support row + QR,
     // the Downloader code for the latest release, a "check latest on GitHub"
@@ -814,7 +814,7 @@ public class LauncherActivity extends Activity {
     private boolean                     aboutShowingQr = false;
     /** 0 = Ko-fi support, 1 = GitHub latest release. */
     private static final int ABOUT_ROW_KOFI = 0, ABOUT_ROW_GITHUB = 1;
-    // ⚠ EDIT THESE: your Ko-fi page URL and the Downloader app code that
+    // â  EDIT THESE: your Ko-fi page URL and the Downloader app code that
     // resolves to your latest GitHub release APK. Placeholders until set.
     private static final String ABOUT_KOFI_URL       = "https://ko-fi.com/litetvlauncher";
     private static final String ABOUT_DOWNLOADER_CODE = "See GitHub releases";
@@ -839,13 +839,13 @@ public class LauncherActivity extends Activity {
     private static final int SPAGE_MAIN = 0, SPAGE_WALLPAPER = 1, SPAGE_BACKUP = 2;
     private int settingsPage = SPAGE_MAIN;
 
-    // Stable settings-row identifiers (NOT list positions — the panel is now
+    // Stable settings-row identifiers (NOT list positions â the panel is now
     // page-based, so identity must be position-independent).
     private static final int SR_HIDE_APPS          = 0;
     private static final int SR_KEYMAP             = 1;
-    private static final int SR_WALLPAPER_MENU     = 2;   // → SPAGE_WALLPAPER
+    private static final int SR_WALLPAPER_MENU     = 2;   // â SPAGE_WALLPAPER
     private static final int SR_CLOCK              = 3;
-    private static final int SR_BACKUP_MENU        = 4;   // → SPAGE_BACKUP
+    private static final int SR_BACKUP_MENU        = 4;   // â SPAGE_BACKUP
     private static final int SR_SYSTEM             = 5;
     private static final int SR_ABOUT              = 6;
     private static final int SR_SET_WALLPAPER      = 7;
@@ -933,14 +933,14 @@ public class LauncherActivity extends Activity {
      *  synchronously clears focus to null and re-fires this listener with
      *  newFocus == null. Hiding the ring on that intermediate event leaves
      *  a one-frame INVISIBLE window before the destination cell's focus
-     *  event repositions and re-shows it — visible to the user as a "ring
+     *  event repositions and re-shows it â visible to the user as a "ring
      *  flickers off when wrapping at the end" glitch. We now skip the null
      *  transition entirely; the next real focus event (either back to a
      *  CellView, or out to a toolbar button) makes the correct decision. */
     private final ViewTreeObserver.OnGlobalFocusChangeListener globalFocusListener =
             (oldFocus, newFocus) -> {
                 if (destroyed) return;
-                if (newFocus == null) return; // transient — let the next focus event decide
+                if (newFocus == null) return; // transient â let the next focus event decide
                 if (!(newFocus instanceof RecyclingShelfView.CellView)
                         && !(newFocus instanceof AppDrawer.DrawerCell)) {
                     RingView rv = ringView;
@@ -948,23 +948,23 @@ public class LauncherActivity extends Activity {
                 }
             };
 
-    /** Refresh the visible clock the moment the device clock advances —
+    /** Refresh the visible clock the moment the device clock advances â
      *  user changed the time manually, crossed a timezone boundary
      *  (flight, train), or DST flipped. Without this receiver the clock
      *  could show the old time for up to 60 seconds (until the next
      *  minute-aligned tick fires). The receiver is registered ONLY while
      *  the launcher is in the foreground (registered in {@link #onResume},
-     *  unregistered in {@link #onPause}) — it has no business waking the
+     *  unregistered in {@link #onPause}) â it has no business waking the
      *  process when the user is somewhere else. */
     private final BroadcastReceiver timeReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context ctx, Intent intent) {
             if (destroyed) return;
-            // ACTION_TIME_CHANGED also fires when the user flips Settings →
-            // Date & time → "Use 24-hour format", not just on a manual
+            // ACTION_TIME_CHANGED also fires when the user flips Settings â
+            // Date & time â "Use 24-hour format", not just on a manual
             // clock/timezone change. startClock() already re-detects this
             // on every onResume, but some TV boxes expose a quick-settings
             // overlay that can flip the toggle WITHOUT pausing the launcher
-            // — re-checking here means that case is picked up immediately
+            // â re-checking here means that case is picked up immediately
             // too, instead of waiting for the next resume.
             boolean detected = DateFormat.is24HourFormat(ctx);
             if (detected != is24Hour) is24Hour = detected;
@@ -1007,13 +1007,13 @@ public class LauncherActivity extends Activity {
         @Override public void onReceive(Context ctx, Intent intent) {
             String action = intent.getAction();
             // Invalidate per-package caches on REPLACED / CHANGED / REMOVED.
-            // PACKAGE_REPLACED  — app upgrade; the icon may have changed.
-            // PACKAGE_CHANGED   — components enabled/disabled etc; same.
-            // PACKAGE_REMOVED   — uninstall; clean up the disk cache so
+            // PACKAGE_REPLACED  â app upgrade; the icon may have changed.
+            // PACKAGE_CHANGED   â components enabled/disabled etc; same.
+            // PACKAGE_REMOVED   â uninstall; clean up the disk cache so
             //                     orphan icon files don't accumulate
             //                     (in-memory cache is invalidated for free
             //                     on the next loadApps reconcile).
-            // PACKAGE_ADDED is intentionally absent — there's nothing to
+            // PACKAGE_ADDED is intentionally absent â there's nothing to
             // invalidate (no entry yet); the loadApps reconcile picks up
             // the new package and warms the cache normally.
             if (Intent.ACTION_PACKAGE_REPLACED.equals(action)
@@ -1024,7 +1024,7 @@ public class LauncherActivity extends Activity {
                     // SSP is documented non-null for "package:" URIs but
                     // malformed broadcasts on stripped-down ROMs have been
                     // observed returning null. Guard before calling cache /
-                    // inflight removers — those would NPE on a null key
+                    // inflight removers â those would NPE on a null key
                     // and bubble up through the BroadcastReceiver, which
                     // the system treats as a misbehaving receiver and may
                     // tear the launcher down.
@@ -1054,7 +1054,7 @@ public class LauncherActivity extends Activity {
                 }
             }
             pkgChangedWhilePaused = true;
-            // Invalidate cached picker chip strip — its identities can no
+            // Invalidate cached picker chip strip â its identities can no
             // longer be trusted to match the in-memory appList after a
             // package install / remove / replace. Same applies to the
             // hide-manager toggle rows. Slot rows must be re-measured
@@ -1067,12 +1067,12 @@ public class LauncherActivity extends Activity {
             // v1.4.3 audit: skip the deferred reconcile while the
             // activity is paused. The {@link #pkgChangedWhilePaused}
             // flag set above triggers the same reconcile in the next
-            // {@link #onResume}, so no broadcast is missed — but doing
-            // the work now (while no human is looking) costs ~50–250 ms
+            // {@link #onResume}, so no broadcast is missed â but doing
+            // the work now (while no human is looking) costs ~50â250 ms
             // of CPU per broadcast and pins the launcher process in
             // memory past the broadcast (the looper's pending message
             // holds a strong reference to the activity). On a TV ROM
-            // that processes 5–10 background package updates per day,
+            // that processes 5â10 background package updates per day,
             // this is several seconds of avoidable CPU + several MB of
             // avoidable memory pressure on the system's process LRU.
             // The trade-off is that the user-visible reconcile happens
@@ -1098,7 +1098,7 @@ public class LauncherActivity extends Activity {
             if (rb != null) return  1;
             // Use the JDK's locale-independent case-insensitive comparator.
             // String.compareToIgnoreCase uses the default Locale and famously
-            // mis-orders Turkish "I"/"i" vs ASCII letters — we don't want that
+            // mis-orders Turkish "I"/"i" vs ASCII letters â we don't want that
             // for an app launcher whose order should be deterministic across
             // locales.
             return String.CASE_INSENSITIVE_ORDER.compare(a.label, b.label);
@@ -1115,18 +1115,18 @@ public class LauncherActivity extends Activity {
         // renders the shelf in the user's just-saved arrangement instead
         // of the previous order. Without this nudge, the next cold start
         // would render in the OLD cached order for ~200 ms before the
-        // PM-scan reconcile detects the order change and re-renders —
+        // PM-scan reconcile detects the order change and re-renders â
         // visible as a transient flicker after every reorder + reboot.
         // Best-effort write on a background thread: appExecutor uses a
         // DiscardPolicy, so a saturated (or shut-down) executor silently
-        // drops the task rather than throwing — the cache then converges
+        // drops the task rather than throwing â the cache then converges
         // on the next loadApps reconcile that detects the new order.
         final ArrayList<AppInfo> snapshot = new ArrayList<>(appList);
         final Context appCtx = getApplicationContext();
         appExecutor.execute(() -> AppListCache.writeFileFromAppInfo(appCtx, snapshot));
     }
 
-    /** Persist the home/drawer boundary. Cheap and synchronous — written only
+    /** Persist the home/drawer boundary. Cheap and synchronous â written only
      *  when the boundary actually moves (a drawer promote/demote, or the
      *  one-time migration default). See {@link #KEY_HOME_COUNT}. */
     private void saveHomeCount() {
@@ -1137,9 +1137,9 @@ public class LauncherActivity extends Activity {
      *
      *  <p>First call with a non-empty list reads the persisted value or, when
      *  absent (the v1.5.0 upgrade), falls back to
-     *  {@link HomeDrawerModel#defaultHomeCount(int)} — the first
+     *  {@link HomeDrawerModel#defaultHomeCount(int)} â the first
      *  {@link HomeDrawerModel#COLS} of the
-     *  user's EXISTING stored order — and writes it back so the migration
+     *  user's EXISTING stored order â and writes it back so the migration
      *  default sticks. Later calls only re-clamp in memory (persisting a
      *  shrink, e.g. when the user hides enough apps that the home row no
      *  longer fits).
@@ -1167,7 +1167,7 @@ public class LauncherActivity extends Activity {
     /** The visible app list = {@link #appList} minus {@link #hiddenApps},
      *  preserving order. Returns {@link #appList} directly (no copy) when no
      *  apps are hidden; otherwise fills the reusable {@link #visibleScratch}.
-     *  Callers must treat the result as read-only and short-lived — every
+     *  Callers must treat the result as read-only and short-lived â every
      *  {@code setApps} consumer snapshots it into its own {@code displayed}
      *  list, so the scratch never leaks across UI events. */
     private List<AppInfo> buildVisibleList() {
@@ -1185,7 +1185,7 @@ public class LauncherActivity extends Activity {
     /** Effective, clamped home-row size for the current visible count. Never
      *  negative; safe to use as a list bound. Enforces a floor of one home app
      *  whenever any app is visible so the home screen always has a cell to
-     *  focus (and to press DOWN on to open the drawer) — an empty home row
+     *  focus (and to press DOWN on to open the drawer) â an empty home row
      *  would otherwise strand the user with no way back into the drawer. */
     private int effectiveHomeCount(int visibleCount) {
         if (visibleCount <= 0) return 0;
@@ -1193,7 +1193,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Feed the bottom home row the first {@code hc} visible apps (the shelf
-     *  centres a short list and scrolls a long one — unchanged behaviour). */
+     *  centres a short list and scrolls a long one â unchanged behaviour). */
     private void pushHomeRow(RecyclingShelfView s, List<AppInfo> visible, int hc) {
         if (s == null) return;
         if (hc >= visible.size()) s.setApps(visible);
@@ -1206,7 +1206,7 @@ public class LauncherActivity extends Activity {
      *  {@code newVisible}; {@link #appByPackage} is rebuilt to match. Used by
      *  the drawer's Move mode (whose {@code displayed} list IS the visible
      *  list) so a 2-D reorder updates the persisted order without scrambling
-     *  hidden-app placement — the same invariant the shelf's
+     *  hidden-app placement â the same invariant the shelf's
      *  {@code swapWithNeighbour} maintains for single swaps. */
     private void rebuildAppListFromVisible(List<AppInfo> newVisible) {
         if (hiddenApps.isEmpty()) {
@@ -1250,7 +1250,7 @@ public class LauncherActivity extends Activity {
         d.setApps(visible, hc);
         // The drawer's row 0 IS the home favourites row, so the focused home
         // cell maps 1:1 to a drawer index. Pressing DOWN drops the selector
-        // into the drawer ONE ROW BELOW the favourite the user was on — the
+        // into the drawer ONE ROW BELOW the favourite the user was on â the
         // app sitting directly under it (navDown). When the home row is the
         // only row (few apps), navDown returns the same index so focus simply
         // stays on the favourite. Clamp the home index defensively.
@@ -1263,7 +1263,7 @@ public class LauncherActivity extends Activity {
         setHomeChromeVisible(false);
         // Frosted backdrop: blur the wallpaper behind the translucent drawer.
         // The shared selection ring stays WHITE in the drawer (it reads well
-        // over the frosted surface) — same colour as on the home shelf.
+        // over the frosted surface) â same colour as on the home shelf.
         applyDrawerBlur(true);
         d.open(focus);
     }
@@ -1280,13 +1280,13 @@ public class LauncherActivity extends Activity {
         pendingDrawerRefocus = -1;
         pendingUninstallPkg  = null;
         if (d == null || d.getVisibility() != View.VISIBLE) return;
-        if (d.closing) return;   // a close is already animating — ignore re-triggers (held DPAD-UP)
+        if (d.closing) return;   // a close is already animating â ignore re-triggers (held DPAD-UP)
         final int drawerFocus = d.focusedIndex;
         if (d.reorderMode) d.exitReorderMode(false);
         // Clear the wallpaper blur NOW (not in the close end-callback). If we
         // waited until the slide finished, the translucent veil would fade to
         // zero while the GPU blur was still applied, briefly revealing the bare
-        // blurred wallpaper before it snapped sharp — the "second blur" flash.
+        // blurred wallpaper before it snapped sharp â the "second blur" flash.
         // Clearing it up front means the veil fades over an already-sharp
         // wallpaper, and it drops the blur a few frames earlier (cheaper).
         applyDrawerBlur(false);
@@ -1294,7 +1294,7 @@ public class LauncherActivity extends Activity {
         // it can't trail the slide.
         d.close(null);
 
-        // Restore the home surface IMMEDIATELY, concurrently with the fade —
+        // Restore the home surface IMMEDIATELY, concurrently with the fade â
         // not in the fade's end-action. The shelf + clock + toolbar cross-fade
         // in behind the still-translucent, fading drawer, which eliminates the
         // hard "pop"/blink the old end-of-fade restore produced. Focus + the
@@ -1320,7 +1320,7 @@ public class LauncherActivity extends Activity {
         int homeIdx = (drawerFocus >= 0 && drawerFocus < hc) ? drawerFocus : Math.max(0, hc - 1);
         s2.focusedIndex = homeIdx;
         s2.snapNextFocus = true;   // calm, no focus-bounce on return
-        // Cross-fade the home surface in as the drawer slides down — mirrors
+        // Cross-fade the home surface in as the drawer slides down â mirrors
         // the open animation so the return reads as one smooth motion instead
         // of an instant pop. Set alpha to 0 BEFORE pushHomeRow binds + paints
         // the cells, then animate to opaque over the same window as the
@@ -1334,10 +1334,10 @@ public class LauncherActivity extends Activity {
      *  downward fade in {@link #closeDrawer}. The small corner toolbar pills
      *  are left to their own idle alpha (they reappear at the screen edge
      *  where an instant restore isn't perceptible); fading the central
-     *  content is what removes the "snap". Cheap — a handful of alpha tweens.
+     *  content is what removes the "snap". Cheap â a handful of alpha tweens.
      *
      *  The shelf fades WITHOUT a hardware layer. A withLayer() fade flattens
-     *  the shelf to a GPU texture sized to the shelf's bounds — but the shelf
+     *  the shelf to a GPU texture sized to the shelf's bounds â but the shelf
      *  is only one cell tall (its height == cellHpx) and the focused tile is
      *  scaled to FOCUS_SCALE, so its banner overflows the shelf's top edge by
      *  ~3 %. The layer clipped that overflow, leaving a thin slice shaved off
@@ -1345,13 +1345,13 @@ public class LauncherActivity extends Activity {
      *  clipChildren=false, so fading without a layer lets the scaled tile draw
      *  past the shelf bounds (into the root) un-clipped. The home row is a
      *  single row of non-overlapping tiles, so a per-child alpha fade is
-     *  visually identical to a layered one — and marginally cheaper (no layer
+     *  visually identical to a layered one â and marginally cheaper (no layer
      *  alloc / save-restore). */
     private void beginHomeFadeIn() {
         fadeViewIn(shelf);
         if (showClock) fadeViewIn(clockView);
         fadeViewIn(ringView);
-        // Toolbar pills fade in to their dim idle alpha (0.6 — the rest value
+        // Toolbar pills fade in to their dim idle alpha (0.6 â the rest value
         // their own focus listeners use), so an unfocused pill lands correctly
         // and the corner cluster no longer pops while the centre cross-fades.
         fadeViewIn(netBtn, 0.6f);
@@ -1373,8 +1373,8 @@ public class LauncherActivity extends Activity {
 
     /** Snap the home surface (shelf, clock, ring, toolbar pills) back to its
      *  resting opacity and cancel any in-flight fade. Guards against an
-     *  interrupted close-fade — the drawer reopened, or an app launched,
-     *  mid-fade — leaving any of them stuck semi-transparent. Pills reset to
+     *  interrupted close-fade â the drawer reopened, or an app launched,
+     *  mid-fade â leaving any of them stuck semi-transparent. Pills reset to
      *  their dim idle alpha (0.6); the others to fully opaque. Cheap; called
      *  on drawer-open and on the resume-time drawer teardown. */
     private void resetHomeAlpha() {
@@ -1388,7 +1388,7 @@ public class LauncherActivity extends Activity {
     /** Frosted-glass backdrop for the drawer: GPU-blur the (static) wallpaper
      *  on Android 12+ (RenderEffect) so the translucent white drawer reads as
      *  frosted glass. The blur is computed once into the wallpaper view's
-     *  render node — no per-frame cost. No-op on older devices, where the
+     *  render node â no per-frame cost. No-op on older devices, where the
      *  drawer falls back to a near-opaque light veil. */
     private void applyDrawerBlur(boolean on) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
@@ -1414,7 +1414,7 @@ public class LauncherActivity extends Activity {
 
     /** Launch the system uninstall flow for {@code app}. Shared by the drawer
      *  cell's reorder menu; the shelf cell keeps its own copy (which also
-     *  manages its reorder teardown). Mirrors the shelf's ACTION_DELETE →
+     *  manages its reorder teardown). Mirrors the shelf's ACTION_DELETE â
      *  ACTION_UNINSTALL_PACKAGE fallback chain. */
     private boolean doUninstall(AppInfo app) {
         if (app == null || app.tvInputId != null) return false;   // inputs aren't uninstallable
@@ -1465,7 +1465,7 @@ public class LauncherActivity extends Activity {
         // below the home boundary).
         int oldHc = effectiveHomeCount(countVisible(appList));
         boolean wasHome = focusHint >= 0 && focusHint < oldHc;
-        if (!hiddenApps.add(app.packageName)) return;   // already hidden — no-op
+        if (!hiddenApps.add(app.packageName)) return;   // already hidden â no-op
         saveHiddenApps();
         // Shrink the home row by one when a home favourite is hidden, so its
         // slot simply disappears instead of the first drawer app being pulled
@@ -1482,7 +1482,7 @@ public class LauncherActivity extends Activity {
         if (fromDrawer && d != null && d.getVisibility() == View.VISIBLE) {
             // applyShelfApps -> drawer.setApps() already posts its own focus
             // request to the drawer's clamped index. Post ours AFTER it (same
-            // view queue, enqueued later → runs later → wins) so the selector
+            // view queue, enqueued later â runs later â wins) so the selector
             // lands on the slot the hidden app vacated instead of being pulled
             // to the last cell by setApps' stale post.
             final AppDrawer fd = d;
@@ -1517,7 +1517,7 @@ public class LauncherActivity extends Activity {
         // else that could fault. From this point on any uncaught throwable
         // on any thread gets timestamped and appended to
         // <internalFiles>/crash.log so a remote user can pull a real
-        // trace (no Crashlytics / Sentry / etc. — see CrashLogger javadoc).
+        // trace (no Crashlytics / Sentry / etc. â see CrashLogger javadoc).
         CrashLogger.install(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -1534,9 +1534,9 @@ public class LauncherActivity extends Activity {
         // hidden-apps and the keymap AFTER loadApps left the cache pre-
         // paint reading an empty {@code hiddenApps} set, so the shelf
         // rendered every installed app on cold start until either:
-        //   • the background PM scan reconciled with {@code changed = true}
-        //     (rare — only fires when the cache disagrees with PM), OR
-        //   • the user opened the hide-manager and toggled any chip
+        //   â¢ the background PM scan reconciled with {@code changed = true}
+        //     (rare â only fires when the cache disagrees with PM), OR
+        //   â¢ the user opened the hide-manager and toggled any chip
         //     (which sets {@code keymapHideDirty} and forces an
         //     applyShelfApps on overlay close).
         // The visible symptom: every force-stop / cold-start showed all
@@ -1559,19 +1559,19 @@ public class LauncherActivity extends Activity {
             // user-visible behaviour stays identical regardless of which
             // delivery path the platform chose.
             backInvokedCallback = () -> {
-                // 0. Slideshow folder picker open → close it (top-most modal).
+                // 0. Slideshow folder picker open â close it (top-most modal).
                 FrameLayout fp = folderPickerOverlay;
                 if (fp != null && fp.getVisibility() == View.VISIBLE) {
                     hideFolderPicker();
                     return;
                 }
-                // 0b. About overlay open → its own Back (QR → list, list → settings).
+                // 0b. About overlay open â its own Back (QR â list, list â settings).
                 FrameLayout ab = aboutOverlay;
                 if (ab != null && ab.getVisibility() == View.VISIBLE) {
                     handleAboutKey(KeyEvent.KEYCODE_BACK);
                     return;
                 }
-                // 1. Keymap overlay open → close it.
+                // 1. Keymap overlay open â close it.
                 FrameLayout ko = keymapOverlay;
                 if (ko != null && ko.getVisibility() == View.VISIBLE) {
                     if (keymapMode == KEYMAP_MODE_PICKER) { exitAppPicker();   return; }
@@ -1579,7 +1579,7 @@ public class LauncherActivity extends Activity {
                     hideKeymapOverlay();
                     return;
                 }
-                // 2. Settings panel open → close it. Lower priority than
+                // 2. Settings panel open â close it. Lower priority than
                 //    the keymap overlay because the keymap overlay can sit
                 //    on top of the settings panel (drilled in via "Manage
                 //    hidden apps" or "Button shortcuts"). hideKeymapOverlay
@@ -1591,12 +1591,12 @@ public class LauncherActivity extends Activity {
                     hideSettingsPanel();
                     return;
                 }
-                // 3. Context menu / reorder mode open → exit it. The context
+                // 3. Context menu / reorder mode open â exit it. The context
                 //    menu lives inside reorder mode in this design, so a
                 //    single exitReorderMode call hides both.
                 RecyclingShelfView s = shelf;
                 if (s != null && s.reorderMode) { s.exitReorderMode(false); return; }
-                // 3.5. App drawer open → exit its Move mode, else close it.
+                // 3.5. App drawer open â exit its Move mode, else close it.
                 //      Lower priority than the overlays (which can sit on top
                 //      of the home screen) but it owns BACK whenever it is
                 //      visible. Mirrors the legacy key-event path handled by
@@ -1607,7 +1607,7 @@ public class LauncherActivity extends Activity {
                     else                closeDrawer();
                     return;
                 }
-                // 4. Otherwise no-op: the launcher is HOME — back from the
+                // 4. Otherwise no-op: the launcher is HOME â back from the
                 //    home screen should stay home.
             };
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
@@ -1616,7 +1616,7 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    /** Pending saved scroll index — applied as soon as appList is populated.
+    /** Pending saved scroll index â applied as soon as appList is populated.
      *  Kept as field so the cold-start path (where appList is empty in onResume)
      *  doesn't silently drop the user's last-focused position. */
     private int pendingScrollIdx = -1;
@@ -1653,7 +1653,7 @@ public class LauncherActivity extends Activity {
             drawerWasOpenAtPause = false;
             AppDrawer d2 = drawer;
             if (keepDrawerOpenOnResume && d2 != null && d2.getVisibility() == View.VISIBLE) {
-                // Uninstall / App-info was launched from the drawer — keep the
+                // Uninstall / App-info was launched from the drawer â keep the
                 // drawer open on return (mirrors Hide). Snap it to its resting
                 // open state (a close/open tween may have been cancelled mid-
                 // flight at pause), re-assert the frosted backdrop, and land
@@ -1682,7 +1682,7 @@ public class LauncherActivity extends Activity {
                 if (d2 != null) d2.forceHide();
                 RecyclingShelfView sh = shelf;
                 if (sh != null) {
-                    resetHomeAlpha();   // app may have launched mid close-fade — clear leftover alpha
+                    resetHomeAlpha();   // app may have launched mid close-fade â clear leftover alpha
                     sh.setVisibility(View.VISIBLE);
                     List<AppInfo> vis = buildVisibleList();
                     pushHomeRow(sh, vis, effectiveHomeCount(vis.size()));
@@ -1709,7 +1709,7 @@ public class LauncherActivity extends Activity {
                 // loadApps's UI callback will apply it once the shelf is populated.
                 pendingScrollIdx = saved;
             }
-            // Dedupe — onResume can fire twice without an intervening onPause
+            // Dedupe â onResume can fire twice without an intervening onPause
             // during fast configuration transitions on some TV ROMs.
             if (focusRestoreListener != null) {
                 ViewTreeObserver vto0 = s.getViewTreeObserver();
@@ -1723,7 +1723,7 @@ public class LauncherActivity extends Activity {
                     focusRestoreListener = null;
                     // Skip when appList was empty in onResume (pendingScrollIdx was
                     // set). loadApps will call requestFocusOnIndex once the shelf is
-                    // populated; firing here would snap to focusedIndex=0 first → flash.
+                    // populated; firing here would snap to focusedIndex=0 first â flash.
                     if (!destroyed && pendingScrollIdx < 0) s.requestFocusOnIndex(s.focusedIndex);
                 }
             };
@@ -1734,7 +1734,7 @@ public class LauncherActivity extends Activity {
         if (r != null) {
             ViewTreeObserver rvto = r.getViewTreeObserver();
             if (rvto.isAlive()) {
-                // Dedupe — onResume can fire twice on some TV ROMs without an
+                // Dedupe â onResume can fire twice on some TV ROMs without an
                 // intervening onPause during fast configuration transitions.
                 // ViewTreeObserver does NOT dedupe the same listener instance,
                 // so a second registration would leak a strong reference to
@@ -1765,7 +1765,7 @@ public class LauncherActivity extends Activity {
         // app-launch transition, so launching an app from the drawer flashed
         // the home screen for a few frames before the app appeared. Instead we
         // record that the drawer was open and finish the teardown in onResume
-        // — the launch then animates from the drawer (correct context), and a
+        // â the launch then animates from the drawer (correct context), and a
         // real return to the launcher still rebuilds a fresh home screen.
         AppDrawer d = drawer;
         if (d != null && d.getVisibility() == View.VISIBLE) {
@@ -1818,20 +1818,20 @@ public class LauncherActivity extends Activity {
         // Pre-1.4.x serialised the four shutdowns: each one called
         // {@code shutdown()} + {@code awaitTermination(300, MS)} +
         // {@code shutdownNow()} in turn, so the worst-case wall-clock
-        // cost was 4 × 300 ms = 1.2 seconds of UI-thread block at
-        // {@code onDestroy} — visible to the user as a stutter when
+        // cost was 4 Ã 300 ms = 1.2 seconds of UI-thread block at
+        // {@code onDestroy} â visible to the user as a stutter when
         // navigating from the launcher into another activity. Now we:
-        //   1. Phase 1 — call {@code shutdown()} on every executor up
+        //   1. Phase 1 â call {@code shutdown()} on every executor up
         //      front (non-blocking; flips internal "shutting down" flags
         //      so future submits are rejected).
-        //   2. Phase 2 — share a single 300 ms deadline across every
+        //   2. Phase 2 â share a single 300 ms deadline across every
         //      {@code awaitTermination} call, decrementing the remaining
         //      budget as each one elapses. Total cap stays 300 ms
         //      regardless of how many executors are involved.
-        //   3. Phase 3 — force-stop any survivors with {@code shutdownNow}
+        //   3. Phase 3 â force-stop any survivors with {@code shutdownNow}
         //      and release the wallpaper bitmaps last (so a runnable
-        //      from an in-flight cross-fade — which short-circuits on
-        //      {@code destroyed} anyway — has already run by then).
+        //      from an in-flight cross-fade â which short-circuits on
+        //      {@code destroyed} anyway â has already run by then).
         if (iconExecutor   != null) try { iconExecutor.shutdown(); } catch (Throwable ignored) { /* best-effort */ }
         if (appExecutor    != null) try { appExecutor .shutdown(); } catch (Throwable ignored) { /* best-effort */ }
         if (iconDiskCache  != null) iconDiskCache.beginShutdown();
@@ -1842,7 +1842,7 @@ public class LauncherActivity extends Activity {
         awaitOrSkip(appExecutor,   deadlineNs);
         if (iconDiskCache != null) iconDiskCache.awaitShutdown(remainingMs(deadlineNs));
         if (wallpaperCtl  != null) wallpaperCtl .awaitShutdown(remainingMs(deadlineNs));
-        // Phase 3 — force-stop survivors and release wallpaper bitmaps.
+        // Phase 3 â force-stop survivors and release wallpaper bitmaps.
         if (iconExecutor != null) try { iconExecutor.shutdownNow(); } catch (Throwable ignored) { /* best-effort */ }
         if (appExecutor  != null) try { appExecutor .shutdownNow(); } catch (Throwable ignored) { /* best-effort */ }
         if (iconDiskCache != null) iconDiskCache = null;
@@ -1854,14 +1854,14 @@ public class LauncherActivity extends Activity {
         // Drop any deferred package-reload runnable that may still be
         // queued on the shelf's looper. The shelf field gets nulled below
         // and {@link #loadApps()} short-circuits on {@code destroyed}, so
-        // this is hygiene rather than a hard correctness fix — but a
+        // this is hygiene rather than a hard correctness fix â but a
         // strayed runnable holds an implicit reference to the activity
         // (it's a method-reference: this::loadApps) until the looper
         // drains it, which on a slow ROM can be several hundred ms after
         // the user navigates away.
         RecyclingShelfView sd = shelf;
         if (sd != null) sd.removeCallbacks(pkgReloadRunnable);
-        // Wallpaper teardown — controller recycles its own bitmaps and
+        // Wallpaper teardown â controller recycles its own bitmaps and
         // clears the ImageView drawables. Keeps the activity from having
         // to know about wallpaper memory hygiene at all.
         if (wallpaperCtl != null) { wallpaperCtl.releaseBitmaps(); wallpaperCtl = null; }
@@ -1931,7 +1931,7 @@ public class LauncherActivity extends Activity {
             uiHandler.postDelayed(pkgReloadRunnable, 1000);
         }
         // MODERATE / BACKGROUND: trim the in-memory bitmap cache only.
-        // The {@code iconInflight} map is intentionally left untouched —
+        // The {@code iconInflight} map is intentionally left untouched â
         // clearing it while executor tasks still hold the captured
         // {@code waiters} list orphans those tasks: the next bind for the
         // same package re-inserts a fresh waiters list and the executor
@@ -1954,8 +1954,8 @@ public class LauncherActivity extends Activity {
         // out of reorder mode rather than leak through to whatever's
         // underneath (e.g. the shelf's own scroll handling). This used to be
         // gated on the menu's visibility, since the menu was visible for the
-        // entire reorder session. It no longer is — the menu hides itself
-        // once the user starts moving the app with D-pad L/R — so the gate
+        // entire reorder session. It no longer is â the menu hides itself
+        // once the user starts moving the app with D-pad L/R â so the gate
         // is now reorderMode itself. While the menu IS visible, a tap inside
         // its bounds is still treated as a normal click on its buttons,
         // exactly as before; everywhere else (including the entire screen
@@ -2003,7 +2003,7 @@ public class LauncherActivity extends Activity {
         if (sp != null && sp.getVisibility() == View.VISIBLE) {
             hideSettingsPanel(); return;
         }
-        // v1.5.0: drawer open → exit its Move mode, else close the drawer.
+        // v1.5.0: drawer open â exit its Move mode, else close the drawer.
         AppDrawer d = drawer;
         if (d != null && d.getVisibility() == View.VISIBLE) {
             if (d.reorderMode) d.exitReorderMode(false);
@@ -2033,7 +2033,7 @@ public class LauncherActivity extends Activity {
         // next decode caps to the new dimensions (e.g. HDMI swap on TV
         // changes both screenW and screenH).
         if (wallpaperCtl != null) wallpaperCtl.onConfigurationChanged(screenW, screenH);
-        // Invalidate the cached root location — a configuration change
+        // Invalidate the cached root location â a configuration change
         // is the one path that can move the activity window on screen
         // (HDMI swap on TV, font scale on tablet, multi-window enter).
         // The next {@link #positionRing} call will refresh against the
@@ -2044,7 +2044,7 @@ public class LauncherActivity extends Activity {
         // against the old metrics could now be too short or too long. Clearing
         // forces the next bind of each app to recompute against the new
         // density. Visible cells keep their current text until they are
-        // re-bound (e.g. by the next scroll) — identical to the pre-1.4.5
+        // re-bound (e.g. by the next scroll) â identical to the pre-1.4.5
         // per-cell behaviour, just now coordinated through the shared memo.
         // UI-thread only, so no synchronisation against the icon workers.
         for (int i = 0, n = appList.size(); i < n; i++) appList.get(i).displayLabel = null;
@@ -2052,7 +2052,7 @@ public class LauncherActivity extends Activity {
         // dp(ICON_DP), so cached bitmaps are now the WRONG pixel size
         // for the new cells. The IconDiskCache is keyed by pixel size
         // and self-invalidates, but iconCache holds old-size bitmaps
-        // under the same package key — CellView.bind would draw them
+        // under the same package key â CellView.bind would draw them
         // mis-scaled (centred via iconBitmap.getWidth()/2) until they
         // happened to be evicted. Drop them all so the next bind
         // re-decodes at the new size via the disk fast-path. Also clear
@@ -2061,7 +2061,7 @@ public class LauncherActivity extends Activity {
         LruCache<String, Bitmap> ic = iconCache;
         if (ic != null) ic.evictAll();
         iconInflight.clear();
-        // Banners are sized in px too — drop them on a density change so the
+        // Banners are sized in px too â drop them on a density change so the
         // next bind re-renders at the new size.
         LruCache<String, Bitmap> bc = bannerCache;
         if (bc != null) bc.evictAll();
@@ -2090,7 +2090,7 @@ public class LauncherActivity extends Activity {
         wallpaperBack.setScaleType(ImageView.ScaleType.CENTER_CROP);
         // No persistent hardware layer here. Earlier versions forced
         // LAYER_TYPE_HARDWARE so the cross-fade alpha animation got an
-        // offscreen FBO — but that allocates a screen-sized GPU buffer
+        // offscreen FBO â but that allocates a screen-sized GPU buffer
         // (~8 MB at 1080p, ~32 MB at 4K) for both ImageViews continuously,
         // for the sole benefit of a 200 ms transition. An ImageView is a
         // leaf with a single drawable: alpha applies directly via the
@@ -2123,13 +2123,13 @@ public class LauncherActivity extends Activity {
                 screenW, screenH,
                 FOCUS_EASE,
                 this::showToast);
-        // Cold-start snapshot pre-paint. Synchronous on the UI thread —
+        // Cold-start snapshot pre-paint. Synchronous on the UI thread â
         // we are still inside buildLayout (called from setContentView,
         // before any vsync), so a ~30-50 ms decode is invisible to the
         // user and makes the wallpaper appear in the very first frame.
         // {@link #loadWallpaper()} called later in onCreate is then a
         // no-op (the controller's loadStored short-circuits when the
-        // snapshot pre-painted) — no second decode, no flicker.
+        // snapshot pre-painted) â no second decode, no flicker.
         wallpaperCtl.loadSnapshotSync();
 
         shelf = new RecyclingShelfView(this);
@@ -2142,12 +2142,12 @@ public class LauncherActivity extends Activity {
         root.addView(shelf);
 
         clockView = new TextView(this);
-        // v1.4.9: the rounded "pill" plate is gone — the clock floats directly
+        // v1.4.9: the rounded "pill" plate is gone â the clock floats directly
         // over the wallpaper as bare digits for a bigger, more minimal look. A
         // soft drop shadow restores legibility on bright wallpapers (the job
         // the plate used to do).
         clockView.setShadowLayer(dp(6), 0, dp(2), 0xB3000000);
-        // No plate → only a small inset so the digits don't kiss the screen
+        // No plate â only a small inset so the digits don't kiss the screen
         // edge. The day/date line sits directly beneath the time.
         clockView.setPadding(dp(2), 0, dp(2), 0);
         clockView.setIncludeFontPadding(false);
@@ -2188,27 +2188,27 @@ public class LauncherActivity extends Activity {
         // smaller cluster sits more quietly in the top-right and gives the
         // wallpaper more presence. Numbers below are tuned together:
         //
-        //   BTN_VIEW_SZ — the layer/clip-outline diameter, which also caps
+        //   BTN_VIEW_SZ â the layer/clip-outline diameter, which also caps
         //                 the focused plate (drawn at scale 1.0). Picked so
         //                 (BTN_VIEW_SZ * 1.04 focus-pop) is still well
         //                 under the dp(48) "minimum touch target" guide
         //                 only for layout-density purposes; the actual
         //                 touch hit-test extends across the full layer box.
-        //   BTN_SZ      — semantic glyph hint passed to the factory. The
+        //   BTN_SZ      â semantic glyph hint passed to the factory. The
         //                 factories don't read it directly (they size from
         //                 getWidth/getHeight), but it pins intent for any
         //                 future caller and keeps the public signature.
-        //   BTN_GAP     — tight cluster: 4 dp reads as "set" not "stack".
-        //   MARG_T/MARG_E — top-right corner inset, slightly tighter so
+        //   BTN_GAP     â tight cluster: 4 dp reads as "set" not "stack".
+        //   MARG_T/MARG_E â top-right corner inset, slightly tighter so
         //                 the smaller buttons hug the screen edge.
         //
         // Color philosophy is unchanged: dark glass idle plate, frosted
         // near-white focused plate, hairline white rim, glyph inverts on
         // focus. See ToolbarStyle.makeBgIdlePaint / makeBgFocusPaint /
-        // makeRimPaint — every paint factory remains untouched, so the
+        // makeRimPaint â every paint factory remains untouched, so the
         // visual vocabulary is identical, just smaller.
         final int BTN_SZ      = dp(28);
-        final int BTN_VIEW_SZ = dp(40);  // 1.04× focus pop = 41.6 dp; clip outline scales with the view
+        final int BTN_VIEW_SZ = dp(40);  // 1.04Ã focus pop = 41.6 dp; clip outline scales with the view
         final int BTN_GAP     = dp(4);
         final int MARG_T      = dp(14);
         final int MARG_E      = dp(16);
@@ -2216,11 +2216,11 @@ public class LauncherActivity extends Activity {
         // Shared dim backdrop for the settings panel and the keymap card.
         // Added to root z-order BEFORE the toolbar pills so both modal
         // overlays can sit above it (their show* methods bring themselves
-        // to front, putting them above the backdrop). GONE by default —
+        // to front, putting them above the backdrop). GONE by default â
         // the backdrop only exists during a modal flow.
         //
         // One shared backdrop avoids the v1.3.0 initial-design dim flicker
-        // where transitioning settings → keymap fade-out a 0x33-black
+        // where transitioning settings â keymap fade-out a 0x33-black
         // backdrop while fading in another 0x33-black backdrop on top of
         // it, briefly compositing ~0x5C and reading as "the wallpaper just
         // went darker for half a second". With one persistent backdrop the
@@ -2241,16 +2241,16 @@ public class LauncherActivity extends Activity {
         // swap that moved the WiFi pill to its leftmost-in-cluster
         // position and the gear pill to the right edge:
         //
-        //     [ wifi ]   [ ⚙ gear ]
+        //     [ wifi ]   [ â gear ]
         //
-        // Why swap from the v1.3.0 [ ⚙ ] [ wifi ] order: WiFi is the
+        // Why swap from the v1.3.0 [ â ] [ wifi ] order: WiFi is the
         // single daily-frequent action on the toolbar (people dig into
         // network settings far more often than the consolidated config
         // panel). Putting it leftmost in the cluster lines it up with
-        // the visual centre-of-mass of the home shelf below — a TV
+        // the visual centre-of-mass of the home shelf below â a TV
         // remote user pressing UP from any shelf cell lands on WiFi,
         // a single keypress away from the most common destination.
-        // The gear pill takes the right-edge slot — slightly out of the
+        // The gear pill takes the right-edge slot â slightly out of the
         // primary glance path, but still discoverable as the second pill
         // and reachable in one extra D-pad RIGHT keypress.
         //
@@ -2258,7 +2258,7 @@ public class LauncherActivity extends Activity {
         // at MARG_E (rightmost), WiFi sits one (BTN_VIEW_SZ + BTN_GAP)
         // step further left (the "leftmost-in-cluster" slot). Cell-up
         // navigation already routes to WiFi via netBtn.requestFocus so
-        // that requirement carries over cleanly from v1.3.0 — only the
+        // that requirement carries over cleanly from v1.3.0 â only the
         // physical pill positions and the per-pill LEFT/RIGHT/DOWN key
         // chains needed updating.
         netBtn = buildNetBtn(BTN_SZ);
@@ -2315,8 +2315,8 @@ public class LauncherActivity extends Activity {
         // The reorder-mode context menu overlay (~10 views, 3 paint
         // backgrounds, 3 click listeners) is built lazily on first
         // {@link RecyclingShelfView#enterReorderMode} entry. The overlay
-        // is only visible while the user is rearranging icons — a
-        // workflow that fires 0× on the cold-start path and 0× for
+        // is only visible while the user is rearranging icons â a
+        // workflow that fires 0Ã on the cold-start path and 0Ã for
         // users who never long-press a shelf cell. Pre-building it
         // costs ~5-15 ms of cold-start view-tree work for a feature
         // most users never touch. See {@link #ensureMenuOverlay}.
@@ -2325,7 +2325,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Build the reorder-mode context menu overlay on first use and add
-     *  it to the root view tree. Subsequent calls are no-ops — the overlay
+     *  it to the root view tree. Subsequent calls are no-ops â the overlay
      *  is reused across every reorder session for the lifetime of the
      *  activity.
      *
@@ -2335,7 +2335,7 @@ public class LauncherActivity extends Activity {
      *  init for {@link #buildKeymapOverlay()}.
      *
      *  <p>Pre-condition for safe operation of {@link #showContextMenu(View)},
-     *  {@link #hideContextMenu()}, {@link #updateMenuHighlight()} — those
+     *  {@link #hideContextMenu()}, {@link #updateMenuHighlight()} â those
      *  three already null-guard their entry, so a missed call here would
      *  produce a silent no-op rather than an NPE. The single unique
      *  call site is {@link RecyclingShelfView#enterReorderMode(int)},
@@ -2348,7 +2348,7 @@ public class LauncherActivity extends Activity {
 
         menuOverlay = new FrameLayout(this) {
             @Override public boolean onTouchEvent(MotionEvent ev) {
-                // Consume — prevents tap-through to shelf. Dismiss handled by dispatchTouchEvent.
+                // Consume â prevents tap-through to shelf. Dismiss handled by dispatchTouchEvent.
                 return true;
             }
         };
@@ -2372,14 +2372,14 @@ public class LauncherActivity extends Activity {
         menuBg.setStroke(1, 0x1AFFFFFF);
         menuCol.setBackground(menuBg);
         // Small inner padding so each rounded item-pill is inset from the
-        // card edge — otherwise a square selection would visually clash
+        // card edge â otherwise a square selection would visually clash
         // with the card's rounded outer corner.
         menuCol.setPadding(dp(4), dp(4), dp(4), dp(4));
         menuCol.setElevation(dp(8));
 
         // Each menu item gets its OWN GradientDrawable as background so the
         // selected highlight is a rounded pill (not a flat rectangle, which
-        // is what the previous setBackgroundColor call produced — and what
+        // is what the previous setBackgroundColor call produced â and what
         // looked clipped against the card's rounded outer corner).
         // updateMenuHighlight just mutates the colour on these existing
         // drawables; the rounded shape is fixed at construction time.
@@ -2465,7 +2465,7 @@ public class LauncherActivity extends Activity {
             if (h != null) h.onMenuMove();
         });
 
-        // Dividers removed — the rounded-pill selection state is enough to
+        // Dividers removed â the rounded-pill selection state is enough to
         // separate items visually, and removing them gives a cleaner
         // menu with no horizontal noise.
         android.widget.LinearLayout.LayoutParams itemLp =
@@ -2488,7 +2488,7 @@ public class LauncherActivity extends Activity {
 
     void showContextMenu(View cell) {
         if (menuOverlay == null || menuHide == null || menuUninstall == null || menuAppInfo == null || menuMove == null) return;
-        // TV-input tiles can't be uninstalled or have an App-info page — hide
+        // TV-input tiles can't be uninstalled or have an App-info page â hide
         // those two rows so the menu shows only Hide + Move. Set BEFORE the
         // measure below so the overlay sizes to the shorter list. menuNavSel
         // then skips the hidden rows during D-pad navigation.
@@ -2502,7 +2502,7 @@ public class LauncherActivity extends Activity {
         r.getLocationOnScreen(menuRootLoc);
         // Anchor to the cell's LAYOUT centre (where it ends up after the
         // reorder-swap slide), not its current visual centre. The slide sets
-        // translationX = slidePx and animates back to 0 — getLocationOnScreen
+        // translationX = slidePx and animates back to 0 â getLocationOnScreen
         // returns the post-translation visual position. If we anchored there,
         // the menu would stick at the OLD cell position while the cell slides
         // into the NEW one, ending up offset to one side of the moving icon.
@@ -2575,7 +2575,7 @@ public class LauncherActivity extends Activity {
                     .withLayer()
                     .start();
         } else {
-            // Already visible (e.g. re-anchored after a reorder swap) — just
+            // Already visible (e.g. re-anchored after a reorder swap) â just
             // make sure the transform is at rest.
             menuOverlay.setAlpha(1f);
             menuOverlay.setScaleX(1f);
@@ -2611,7 +2611,7 @@ public class LauncherActivity extends Activity {
                 .start();
     }
 
-    /** Context-menu rows in top→bottom visual order. {@link #menuNavSel} walks
+    /** Context-menu rows in topâbottom visual order. {@link #menuNavSel} walks
      *  these so UP/DOWN navigation and the input-mode row-skipping live in one
      *  place instead of being duplicated (and drifting) across the two cell
      *  key handlers. */
@@ -2626,10 +2626,10 @@ public class LauncherActivity extends Activity {
      *  ({@code -1} = UP toward Hide, {@code +1} = DOWN toward Move), clamped
      *  at the ends and skipping the Uninstall / App-info rows when the menu is
      *  acting on a TV input. Input-mode is read LIVE from the active host (not
-     *  a cached flag) so navigation can never run against a stale mode — the
+     *  a cached flag) so navigation can never run against a stale mode â the
      *  dragged item is fixed while the menu is open, so this is O(1) and
      *  stable. For a normal app this reproduces the previous hard-coded chain
-     *  exactly (Hide ↔ Uninstall ↔ App info ↔ Move). */
+     *  exactly (Hide â Uninstall â App info â Move). */
     private int menuNavSel(int cur, int dir) {
         boolean input = (menuHost != null && menuHost.menuAppIsInput());
         int[] order = input ? MENU_ROWS_INPUT : MENU_ROWS_FULL;
@@ -2649,7 +2649,7 @@ public class LauncherActivity extends Activity {
         // Uninstall keeps its red identity but darkens to read on white.
         final int hlWhite = 0xFFEFEFEF;
         // Each item's background was constructed as a GradientDrawable with
-        // a fixed corner radius (see buildLayout) — we mutate the colour on
+        // a fixed corner radius (see buildLayout) â we mutate the colour on
         // those existing drawables so the rounded shape never changes.
         setMenuItemBg(menuHide,      sel == RecyclingShelfView.MENU_HIDE      ? hlWhite : Color.TRANSPARENT);
         setMenuItemBg(menuUninstall, sel == RecyclingShelfView.MENU_UNINSTALL ? hlWhite : Color.TRANSPARENT);
@@ -2681,7 +2681,7 @@ public class LauncherActivity extends Activity {
     private View buildNetBtn(int sz) {
         View v = new View(this) {
             // WiFi status pill. The mark is a filled "slice" (sector) when WiFi
-            // is connected and an outline-only slice when it is not — a minimal,
+            // is connected and an outline-only slice when it is not â a minimal,
             // at-a-glance connectivity indicator. Short-press opens WiFi
             // settings; long-press opens Bluetooth settings.
             //
@@ -2708,8 +2708,8 @@ public class LauncherActivity extends Activity {
                 }
                 int symbolColor = focused ? 0xFF0F0F12 : 0xFFFFFFFF;
 
-                // Slice: vertex at the bottom, a ~92° arc across the top,
-                // centred on straight-up (270°), so it reads as an upright
+                // Slice: vertex at the bottom, a ~92Â° arc across the top,
+                // centred on straight-up (270Â°), so it reads as an upright
                 // WiFi "fan". Filled when connected, outline when not.
                 float ic   = r * 0.96f;
                 float vx   = cx;
@@ -2760,10 +2760,10 @@ public class LauncherActivity extends Activity {
         };
         applyPillStyle(v);
         v.setOnClickListener(view -> openNetSettings());
-        // Short-press → WiFi / network settings. (The long-press → Bluetooth
-        // shortcut was removed in v1.5.x: it was unreliable across TV ROMs —
+        // Short-press â WiFi / network settings. (The long-press â Bluetooth
+        // shortcut was removed in v1.5.x: it was unreliable across TV ROMs â
         // the accessory-pairing activity name varies and many boxes resolved
-        // none of them — so it read as a dead gesture. WiFi long-press is now
+        // none of them â so it read as a dead gesture. WiFi long-press is now
         // unbound.)
         v.setAlpha(0.6f);   // dimmed when idle; brightens to full on focus
         v.setOnFocusChangeListener((view, f) -> {
@@ -2785,13 +2785,13 @@ public class LauncherActivity extends Activity {
                     // WiFi is the leftmost-in-cluster button now (v1.3.3
                     // swap). Its DOWN lands on the FIRST shelf cell so
                     // the d-pad model "below me is the cell visually
-                    // under me" stays consistent — first cell sits
+                    // under me" stays consistent â first cell sits
                     // furthest left, gear pill is at the right edge.
                     RecyclingShelfView sd = shelf;
                     if (sd != null) sd.requestFocusOnIndex(0);
                     return true;
                 case KeyEvent.KEYCODE_DPAD_LEFT:
-                    // Leftmost in the toolbar cluster — wrap to the last
+                    // Leftmost in the toolbar cluster â wrap to the last
                     // shelf cell. Symmetric with the gear's RIGHT-wraps-
                     // to-first-shelf-cell behaviour.
                     RecyclingShelfView sl = shelf;
@@ -2810,12 +2810,12 @@ public class LauncherActivity extends Activity {
         return v;
     }
 
-    /** Third toolbar pill — opens the unified settings panel (which
+    /** Third toolbar pill â opens the unified settings panel (which
      *  hosts hide-apps / button-shortcuts / wallpaper / system-settings /
      *  show-clock toggle as a vertical row list). Matches the netBtn glass
      *  aesthetic exactly: dark idle plate, frosted-white focused plate,
      *  glyph inverts on focus. The icon is a gear (universal "settings"
-     *  symbol). Drawn entirely with Canvas primitives — zero new
+     *  symbol). Drawn entirely with Canvas primitives â zero new
      *  resources.
      *
      *  <p>Long-press opens system Settings directly (the most common
@@ -2824,7 +2824,7 @@ public class LauncherActivity extends Activity {
     private View buildMapperBtn(int sz) {
         View v = new View(this) {
             // The fill paint owns one Paint instance reused across every
-            // gear draw — no per-frame allocation. The bg / rim paints
+            // gear draw â no per-frame allocation. The bg / rim paints
             // are factory-built (shared style with the rest of the
             // toolbar pills) and untouched by drawGearGlyph.
             private final Paint fill      = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -2838,7 +2838,7 @@ public class LauncherActivity extends Activity {
                 float cx = w / 2f, cy = h / 2f;
                 float r = Math.min(cx, cy) * scale;
 
-                // Minimal look: no plate when idle — the gear floats over the
+                // Minimal look: no plate when idle â the gear floats over the
                 // wallpaper (whole-view alpha is lowered when unfocused). On
                 // focus the frosted-white plate + rim returns as the selection
                 // indicator and the gear inverts to dark.
@@ -2864,12 +2864,12 @@ public class LauncherActivity extends Activity {
             view.playSoundEffect(SoundEffectConstants.CLICK);
             showSettingsPanel();
         });
-        // Long-press → general system Settings. The most common
+        // Long-press â general system Settings. The most common
         // destination from the panel and the muscle-memory shortcut
         // moved over from the WiFi pill in v1.3.0. Discoverable via the
         // standard "press and hold" gesture (TV remote: hold
         // DPAD_CENTER; touch: long-press). The short click still opens
-        // the unified settings panel — long-press is purely an
+        // the unified settings panel â long-press is purely an
         // additional shortcut.
         v.setOnLongClickListener(view -> {
             view.playSoundEffect(SoundEffectConstants.CLICK);
@@ -2888,7 +2888,7 @@ public class LauncherActivity extends Activity {
             if (ev.getAction() != KeyEvent.ACTION_DOWN) return false;
             switch (kc) {
                 // DPAD_CENTER / ENTER / BUTTON_A intentionally NOT
-                // intercepted — letting them fall through preserves the
+                // intercepted â letting them fall through preserves the
                 // platform's long-press detection (which fires our
                 // OnLongClickListener after the system long-press
                 // timeout) while still triggering the short
@@ -2897,7 +2897,7 @@ public class LauncherActivity extends Activity {
                     // Gear is the rightmost button now (v1.3.3 swap).
                     // Down lands on the LAST shelf cell so the d-pad
                     // model "below me is the cell visually under me"
-                    // stays consistent — last cell sits at the right
+                    // stays consistent â last cell sits at the right
                     // edge, WiFi pill is one stride further left.
                     RecyclingShelfView s = shelf;
                     if (s != null) s.requestFocusOnIndex(s.lastIndex());
@@ -2906,7 +2906,7 @@ public class LauncherActivity extends Activity {
                     // WiFi is the only neighbour to the left.
                     View nb = netBtn; if (nb != null) nb.requestFocus(); return true;
                 case KeyEvent.KEYCODE_DPAD_RIGHT:
-                    // Rightmost in the toolbar cluster — wrap to the
+                    // Rightmost in the toolbar cluster â wrap to the
                     // first shelf cell. Symmetric with the WiFi pill's
                     // LEFT-wraps-to-last-shelf-cell behaviour.
                     RecyclingShelfView sr = shelf;
@@ -2934,12 +2934,12 @@ public class LauncherActivity extends Activity {
         return ToolbarStyle.makeBtnStrokePaint();
     }
 
-    /** Idle button background — dark glass that reads on any wallpaper. */
+    /** Idle button background â dark glass that reads on any wallpaper. */
     private Paint makeBgIdlePaint() {
         return ToolbarStyle.makeBgIdlePaint();
     }
 
-    /** Focused button background — frosted near-white that lifts the symbol
+    /** Focused button background â frosted near-white that lifts the symbol
      *  via inversion. This is the "selected pill" effect. */
     private Paint makeBgFocusPaint() {
         return ToolbarStyle.makeBgFocusPaint();
@@ -3039,8 +3039,8 @@ public class LauncherActivity extends Activity {
         private int   totalW      = 0;
         private int   centerX     = 0;
         private boolean needsRefill = false;
-        // sidePad — half-stride gutter on each side of every cell (cellW + 2*sidePad = stride)
-        // edgePad — buffer kept between the focused cell and the viewport edge
+        // sidePad â half-stride gutter on each side of every cell (cellW + 2*sidePad = stride)
+        // edgePad â buffer kept between the focused cell and the viewport edge
         //           when ensureVisible scrolls. Pre-computed once per shelf
         //           instead of dp(10) / dp(48) every scroll frame & focus event.
         private final int cellW, cellH, stride, sidePad, edgePad;
@@ -3049,7 +3049,7 @@ public class LauncherActivity extends Activity {
         // outer appList is the master inventory of every installed
         // launchable app; the shelf may show a filtered subset (hide-apps
         // feature). bindCell, fillVisible, requestFocusOnIndex, etc. all
-        // read from this list — never from the outer appList directly.
+        // read from this list â never from the outer appList directly.
         // Mismatching the two was the cause of the "hide app function not
         // working" regression: setApps used to update the bookkeeping
         // (totalW, focusedIndex) from the filtered list while bindCell
@@ -3076,10 +3076,10 @@ public class LauncherActivity extends Activity {
 
         // True while a programmatic D-pad-held navigation is being processed.
         // Triggers two short-circuits in CellView.onFocusChange:
-        //   • scale snaps to its target (no animator) — avoids the ~50 ms
+        //   â¢ scale snaps to its target (no animator) â avoids the ~50 ms
         //     thrash where each held-key event cancels the previous bounce
         //     and leaves cells stuck at intermediate scales.
-        //   • the redundant ensureVisible() is skipped — requestFocusOnIndex
+        //   â¢ the redundant ensureVisible() is skipped â requestFocusOnIndex
         //     already ran ensureVisibleSync().
         // Set/cleared synchronously around requestFocus(), so it accurately
         // tags the focus callback that fires inside requestFocus().
@@ -3089,11 +3089,11 @@ public class LauncherActivity extends Activity {
         // cells (the setVisibility(GONE) loop). Hiding a cell that currently
         // holds real platform focus can make the platform hand focus to
         // another still-attached cell as a side effect of that visibility
-        // change — not a real user navigation. CellView's focus listener
+        // change â not a real user navigation. CellView's focus listener
         // checks this flag and no-ops entirely while it's set, so that kind
         // of transient, platform-driven focus churn can never overwrite
         // focusedIndex with something other than what setApps() itself
-        // decided. See setApps()'s keepIdx for the rest of the story — this
+        // decided. See setApps()'s keepIdx for the rest of the story â this
         // is the fix for the "focus lands correctly on resume, then snaps to
         // the last home-row cell" bug.
         boolean rebuildingApps = false;
@@ -3114,7 +3114,7 @@ public class LauncherActivity extends Activity {
         int setAppsGen = 0;
 
         // MENU_HIDE=3 (top), MENU_UNINSTALL=0, MENU_APP_INFO=1, MENU_MOVE=2 (bottom).
-        // Values are identifiers only — the menu's visual order (Hide, Uninstall,
+        // Values are identifiers only â the menu's visual order (Hide, Uninstall,
         // App Info, Move) is set by the order rows are added in ensureMenuOverlay
         // and by the explicit UP/DOWN navigation chains, not by these ints.
         private static final int MENU_UNINSTALL = 0;
@@ -3130,7 +3130,7 @@ public class LauncherActivity extends Activity {
             super(ctx);
             // Pass SCROLL_EASE so startScroll() honours our Material-style
             // ease-in-out curve. Fling deceleration uses the framework's
-            // own SplineOverScroller and is unaffected by this interpolator —
+            // own SplineOverScroller and is unaffected by this interpolator â
             // exactly the right split: programmatic d-pad scrolls feel
             // premium, touch-fling keeps native physics.
             scroller = new OverScroller(ctx, SCROLL_EASE);
@@ -3144,7 +3144,7 @@ public class LauncherActivity extends Activity {
             setLayoutDirection(View.LAYOUT_DIRECTION_LOCALE);
         }
 
-        // ── ReorderHost (shared context menu) ────────────────────────────
+        // ââ ReorderHost (shared context menu) ââââââââââââââââââââââââââââ
         @Override public int menuSelection() { return menuSelection; }
         @Override public boolean menuAppIsInput() {
             return dragIndex >= 0 && dragIndex < displayed.size()
@@ -3174,7 +3174,7 @@ public class LauncherActivity extends Activity {
             if (!reorderMode) return;
             menuSelection = MENU_MOVE;
             LauncherActivity.this.updateMenuHighlight();
-            enterActiveMove();   // "Move" confirm → start moving (LEFT/RIGHT)
+            enterActiveMove();   // "Move" confirm â start moving (LEFT/RIGHT)
         }
 
         void enterReorderMode(int idx) {
@@ -3191,7 +3191,7 @@ public class LauncherActivity extends Activity {
             // who never long-press a shelf cell never trigger it.
             LauncherActivity.this.ensureMenuOverlay();
             CellView cv = attached.get(idx); if (cv != null) LauncherActivity.this.showContextMenu(cv);
-            // rebindAll() calls cv.layout() directly — no requestLayout in flight.
+            // rebindAll() calls cv.layout() directly â no requestLayout in flight.
             // post() fires after the current message finishes, which is exactly when
             // the cell's screen coordinates are stable. No global layout listener needed.
             post(LauncherActivity.this::updateRingAfterMove);
@@ -3236,7 +3236,7 @@ public class LauncherActivity extends Activity {
             // visual delta between each cell's old and new screen positions.
             int oldDragIdx = dragIndex;
             // Swap in displayed (the rendered ordering). We then mirror the
-            // swap into the master appList — but ONLY for the two AppInfo
+            // swap into the master appList â but ONLY for the two AppInfo
             // identities involved, leaving any hidden apps that sit between
             // them in their original positions. This keeps the persisted
             // order in sync with what the user actually rearranged without
@@ -3258,7 +3258,7 @@ public class LauncherActivity extends Activity {
                 // and re-used across overlay opens; the rebuild trigger is
                 // a size-change check (keymapHideBuiltSize / keymapPickerBuiltSize
                 // == appList.size()). A reorder leaves the size unchanged
-                // — only positions move — so without this nudge a stale
+                // â only positions move â so without this nudge a stale
                 // chip strip would survive a swap. The user-visible symptom
                 // was "I select chip showing app A, app B gets toggled":
                 // chip i still carries the OLD label / icon while
@@ -3273,8 +3273,8 @@ public class LauncherActivity extends Activity {
             }
             dragIndex    = targetIdx;
             focusedIndex = dragIndex;
-            ensureVisibleSync(dragIndex);   // sync scroll — swap-slide animates cleanly off final layout
-            rebindAll();                    // bindCell → layout() — cell positions final now
+            ensureVisibleSync(dragIndex);   // sync scroll â swap-slide animates cleanly off final layout
+            rebindAll();                    // bindCell â layout() â cell positions final now
 
             // Slide animation: the cell now occupying targetIdx (showing the
             // dragged app) appears to glide FROM its old visual position to
@@ -3314,14 +3314,14 @@ public class LauncherActivity extends Activity {
 
             // Once the user has actually started moving (first L/R swap),
             // the menu hides and stays hidden for the rest of this reorder
-            // session — it would otherwise sit on top of the icon sliding
+            // session â it would otherwise sit on top of the icon sliding
             // into place. It reappears only on the next fresh long-press
             // (enterReorderMode resets the flag).
             if (!menuDismissedForMove) {
                 menuDismissedForMove = true;
                 LauncherActivity.this.hideContextMenu();
             }
-            // Direct call — cell.mLeft is already updated by repositionAttached() above,
+            // Direct call â cell.mLeft is already updated by repositionAttached() above,
             // so getLocationOnScreen() returns the correct coordinate immediately.
             // The animation's update listener keeps it tracking through the slide.
             LauncherActivity.this.updateRingAfterMove();
@@ -3363,7 +3363,7 @@ public class LauncherActivity extends Activity {
          *  apply alpha correctly. Returning {@code false} is what actually
          *  fixes the return-from-drawer clip: a ViewGroup with overlapping
          *  rendering (the default) renders into an offscreen buffer the moment
-         *  its alpha drops below 1 — and that buffer is sized to the shelf's
+         *  its alpha drops below 1 â and that buffer is sized to the shelf's
          *  bounds. Since the shelf is exactly one cell tall and the focused
          *  tile is scaled to FOCUS_SCALE, the tile's banner overflows the top
          *  edge and the buffer shaves a thin black sliver off it for the whole
@@ -3390,7 +3390,7 @@ public class LauncherActivity extends Activity {
             // listener reacts to. Without rebuildingApps, that listener can
             // overwrite focusedIndex mid-teardown with whatever the
             // platform's focus handling did as a side effect of the GONE
-            // calls — not what the shelf actually intends. Suppressing the
+            // calls â not what the shelf actually intends. Suppressing the
             // listener for the full teardown-and-rebuild sequence (see the
             // extended note further down) and re-deriving the
             // new index from keepIdx (not from focusedIndex, which the
@@ -3467,7 +3467,7 @@ public class LauncherActivity extends Activity {
          *  instead of {@code appList.size() - 1} so the hide-apps filter
          *  is respected (otherwise an UP-from-toolbar can land focus on a
          *  hidden index past the end of the rendered cells, which the
-         *  shelf then has to clamp — visible as a brief mis-positioned
+         *  shelf then has to clamp â visible as a brief mis-positioned
          *  ring before snap-back). */
         int lastIndex() { return displayed.isEmpty() ? 0 : displayed.size() - 1; }
 
@@ -3491,31 +3491,31 @@ public class LauncherActivity extends Activity {
         }
 
         /** Programmatic focus jump.
-         *  @param snap  true → no smooth-scroll animation. Used for held
+         *  @param snap  true â no smooth-scroll animation. Used for held
          *               D-pad navigation (key-repeat) so fast-scroll feels
-         *               actually fast — the smooth path was queueing
+         *               actually fast â the smooth path was queueing
          *               120-240 ms tweens that each cancelled the previous.
          *
          *  Boundary behaviour:
-         *    • snap = false (single press) → CYCLIC. Stepping past the last
+         *    â¢ snap = false (single press) â CYCLIC. Stepping past the last
          *      cell wraps to the first and vice versa.
-         *    • snap = true (held key) → CLAMP at first / last. Cyclic wrap
+         *    â¢ snap = true (held key) â CLAMP at first / last. Cyclic wrap
          *      mid-key-repeat would teleport the shelf under the user's
          *      fingers, which reads as "fast scroll is broken". Clamping
          *      gives a stable edge for fast nav. Releasing and pressing
          *      again gets the cyclic single-press behaviour back.
          *
          *  Wrap-around mechanics (the part that used to land focus on the
-         *  wrong cell — "third app from left" / "second from right"):
+         *  wrong cell â "third app from left" / "second from right"):
          *    A wrap is a giant scroll jump. ensureVisibleSync runs
          *    doScrollTo, which inside fillVisible recycles the currently-
          *    focused cell via setVisibility(GONE). That synchronously
          *    transfers focus to a still-attached intermediate cell, whose
-         *    onFocusChange listener kicks off its own ensureVisible →
+         *    onFocusChange listener kicks off its own ensureVisible â
          *    smoothScrollTo back toward where it sits. By the time we
          *    finally cv.requestFocus() on the wrap target, the destination
          *    smoothScrollTo(0) short-circuits with dx==0 and never aborts
-         *    the competing animation — so the shelf glides past the target
+         *    the competing animation â so the shelf glides past the target
          *    and focus settles 2-3 cells in.
          *
          *    Fix: keep fastNav=true through the entire wrap path so every
@@ -3529,11 +3529,11 @@ public class LauncherActivity extends Activity {
             int sz = displayed.size();
             boolean wrapped = false;
             if (snap) {
-                // Held D-pad → clamp.
+                // Held D-pad â clamp.
                 if (idx < 0)   idx = 0;
                 if (idx >= sz) idx = sz - 1;
             } else {
-                // Single press → cyclic wrap.
+                // Single press â cyclic wrap.
                 if      (idx < 0)   { idx = sz - 1; wrapped = true; }
                 else if (idx >= sz) { idx = 0;      wrapped = true; }
             }
@@ -3559,7 +3559,7 @@ public class LauncherActivity extends Activity {
                     cv.requestFocus();
                     forceRingAndLabelSync(cv);
                 } else {
-                    // Cell not yet attached — post a retry after layout.
+                    // Cell not yet attached â post a retry after layout.
                     final int target = idx;
                     final boolean fastDeferred = bigJump;
                     post(() -> {
@@ -3579,7 +3579,7 @@ public class LauncherActivity extends Activity {
             }
 
             // Wrap deserves the focus bounce so the user clearly perceives
-            // they jumped to the other end. Held-key (snap) skips it — fast
+            // they jumped to the other end. Held-key (snap) skips it â fast
             // nav wants a calm visual. Bounce is run manually because the
             // bigJump path suppressed the focus-listener animator.
             if (wrapped) {
@@ -3591,7 +3591,7 @@ public class LauncherActivity extends Activity {
                     // animation starts. Without this, the previous fastNav
                     // positionRing call used scale=FOCUS_SCALE, so for one
                     // frame the ring sat at the larger radius around a
-                    // shrunk cell — read as "ring jumps off" at wrap. The
+                    // shrunk cell â read as "ring jumps off" at wrap. The
                     // animator's per-frame update listener takes over after
                     // this first sync.
                     LauncherActivity.this.positionRing(cvBounce);
@@ -3610,7 +3610,7 @@ public class LauncherActivity extends Activity {
          * without depending on {@code OnFocusChangeListener} firing.
          *
          * <p>{@link android.view.View#requestFocus()} is a no-op when the
-         * view already holds real platform focus — Android doesn't re-fire
+         * view already holds real platform focus â Android doesn't re-fire
          * the listener for a focus grant that doesn't actually change
          * anything. That's the normal case almost always, but cold start
          * has a window (documented at length around {@code rebuildingApps}
@@ -3618,11 +3618,11 @@ public class LauncherActivity extends Activity {
          * real focus to a cell WHILE the listener is still suppressed. When
          * that happens, the subsequent, legitimate
          * {@code cv.requestFocus()} call here sees "already focused" and
-         * does nothing — the listener never runs a second time, so neither
+         * does nothing â the listener never runs a second time, so neither
          * {@link #positionRing} nor a fresh draw pass (which is what makes
          * {@code CellView.onDraw}'s label check re-evaluate) ever actually
-         * happens. The cell genuinely has focus the whole time — that part
-         * was never wrong — but nothing ever painted it, so the ring stays
+         * happens. The cell genuinely has focus the whole time â that part
+         * was never wrong â but nothing ever painted it, so the ring stays
          * invisible and the label's fate depends on whatever unrelated
          * redraw happens to touch that cell next (an icon finishing an
          * async decode, for instance) rather than anything deterministic.
@@ -3652,18 +3652,18 @@ public class LauncherActivity extends Activity {
          *  centerX (= dp(24) when content overflows) so the LAST cell on the
          *  right is always rendered with the same gutter as the first cell
          *  on the left. The previous formula `totalW - getWidth()` ignored
-         *  the right gutter and clipped the trailing cell by ~dp(14) — the
+         *  the right gutter and clipped the trailing cell by ~dp(14) â the
          *  "last app gets cropped on the right side" bug.
          *
          *  Math (overflow case, centerX = dp(24), sidePad = dp(10)):
          *    last_right_in_world = centerX + (n-1)*stride + sidePad + cellW
          *                        = centerX + n*stride - sidePad
          *                        = centerX + totalW - sidePad
-         *    we want: scrollXMax + getWidth() ≥ last_right_in_world + centerX
-         *    →        scrollXMax = totalW + 2*centerX - sidePad - getWidth()
+         *    we want: scrollXMax + getWidth() â¥ last_right_in_world + centerX
+         *    â        scrollXMax = totalW + 2*centerX - sidePad - getWidth()
          *
          *  Fits-case (centerX = (w - totalW)/2): the formula evaluates to
-         *  -sidePad which clamps to 0 — no scroll allowed when content fits. */
+         *  -sidePad which clamps to 0 â no scroll allowed when content fits. */
         private int scrollXMax() {
             return Math.max(0, totalW + 2 * centerX - sidePad - getWidth());
         }
@@ -3702,7 +3702,7 @@ public class LauncherActivity extends Activity {
                 cv.setTranslationX(0f);         // reorder slide leftover
                 cv.setTranslationY(0f);         // safety reset (no current Y animation)
                 cv.setAlpha(1f);                // reset alpha
-                cv.iconBitmap = null;           // clear stale bitmap — prevents ghost icons
+                cv.iconBitmap = null;           // clear stale bitmap â prevents ghost icons
                 cv.boundApp   = null;           // clear stale binding
                 cv.boundIndex = -1;             // clear stale index
                 cv.setVisibility(VISIBLE);
@@ -3728,14 +3728,14 @@ public class LauncherActivity extends Activity {
 
         private void repositionAttached() {
             // Per-frame hot path during fling / programmatic scroll. We only
-            // ever change horizontal position here — sizes are fixed at
+            // ever change horizontal position here â sizes are fixed at
             // bind time. Using offsetLeftAndRight (a pure mLeft/mRight
             // mutation + parent invalidate) skips the full layout pipeline
             // (onSizeChanged plumbing, requestLayout chains) that
             // View.layout(l,t,r,b) triggers even when the size hasn't
             // actually changed. Visibly reduces dropped frames during
             // fast scrolls on cheap TV ROMs. Cells whose width/height
-            // somehow drifted (defensive — should never happen with the
+            // somehow drifted (defensive â should never happen with the
             // recycler) are repaired with a full layout call.
             int top = (getMeasuredHeight() - cellH) / 2;
             int bot = top + cellH;
@@ -3777,13 +3777,13 @@ public class LauncherActivity extends Activity {
             int dx = target - scrollX;
             // Always abort any in-flight scroll first, even on a no-op call.
             // Otherwise a stale animation from earlier could keep gliding
-            // under us — the focus-listener path used to call this with
+            // under us â the focus-listener path used to call this with
             // dx==0 right after a wrap and the early-return left a leftover
             // scroller alive, which is exactly how the cyclic-wrap focus
             // landed several cells past the edge.
             scroller.abortAnimation();
             if (dx == 0) return;
-            // Duration scales gently with distance — short hops feel snappy
+            // Duration scales gently with distance â short hops feel snappy
             // (90 ms) while long jumps still complete in under ~190 ms so
             // they never feel sluggish. Held D-pad bypasses this path
             // entirely (snap mode) for true fast scroll.
@@ -3803,7 +3803,7 @@ public class LauncherActivity extends Activity {
             else if (right + edgePad > scrollX + getWidth())  smoothScrollTo(right + edgePad - getWidth());
         }
 
-        /** Synchronous variant used by reorder flow — there we need the cells
+        /** Synchronous variant used by reorder flow â there we need the cells
          *  laid out at their final positions BEFORE running the swap-slide
          *  animation, so we can't tolerate an in-flight scroll animation. */
         private void ensureVisibleSync(int idx) {
@@ -3824,7 +3824,7 @@ public class LauncherActivity extends Activity {
                 postInvalidateOnAnimation();
             } else if (touchScrolling) {
                 // Fling has settled. Snap focus to the cell whose centre is
-                // closest to the viewport centre — that's the natural target
+                // closest to the viewport centre â that's the natural target
                 // for touch-scroll on a horizontal carousel.
                 touchScrolling = false;
                 snapFocusToVisibleCenter();
@@ -3840,7 +3840,7 @@ public class LauncherActivity extends Activity {
             int bestIdx = focusedIndex;
             int bestDist = Integer.MAX_VALUE;
             // Use the precomputed sidePad (== dp(10) at construction) instead
-            // of calling dp(10) per iteration — same value, no per-loop math.
+            // of calling dp(10) per iteration â same value, no per-loop math.
             int halfCellW = cellW / 2;
             for (int i = 0; i < attached.size(); i++) {
                 int idx = attached.keyAt(i);
@@ -3852,7 +3852,7 @@ public class LauncherActivity extends Activity {
                 requestFocusOnIndex(bestIdx);
                 return;
             }
-            // Same cell — make sure focus and ring are restored.
+            // Same cell â make sure focus and ring are restored.
             CellView cv = attached.get(bestIdx);
             if (cv == null || !cv.isAttachedToWindow() || cv.getWidth() <= 0) {
                 requestFocusOnIndex(bestIdx);
@@ -3870,7 +3870,7 @@ public class LauncherActivity extends Activity {
                     scroller.abortAnimation();
                     lastTouchX = ev.getX();
                     touchScrolling = true;
-                    // Hide the ring immediately — during a touch drag the
+                    // Hide the ring immediately â during a touch drag the
                     // ring shouldn't track the originally-focused cell as it
                     // scrolls off; that produced a "ghost ring slides off the
                     // edge" artefact and made the icons appear to overlap as
@@ -3907,7 +3907,7 @@ public class LauncherActivity extends Activity {
             return true;
         }
 
-        // ── CellView ──────────────────────────────────────────────────────────
+        // ââ CellView ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
         final class CellView extends View implements IconTarget {
 
@@ -3936,7 +3936,7 @@ public class LauncherActivity extends Activity {
             private       String  labelStr     = "";
             private       String  labelDisplay = "";
 
-            // Pre-allocated focus-tween update listener — reused across every
+            // Pre-allocated focus-tween update listener â reused across every
             // focus animation so we don't churn a fresh lambda (with its
             // captured CellView.this) per key press during fast nav.
             private final android.animation.ValueAnimator.AnimatorUpdateListener focusUpdateListener =
@@ -3953,7 +3953,7 @@ public class LauncherActivity extends Activity {
                 phStroke       = dp(1);
                 labelOffsetY   = bannerH / 2f + dp(16);  // label below the banner
                 labelMaxWInset = dp(6);
-                icyOffset      = bannerH / 2f;  // banner centred at the cell top — ring aligns to this
+                icyOffset      = bannerH / 2f;  // banner centred at the cell top â ring aligns to this
 
                 phRing = new Paint(Paint.ANTI_ALIAS_FLAG);
                 phRing.setStyle(Paint.Style.STROKE);
@@ -3975,7 +3975,7 @@ public class LauncherActivity extends Activity {
 
                 setFocusable(true); setFocusableInTouchMode(true);
                 setClickable(true); setWillNotDraw(false);
-                // Suppress platform default rectangular focus selector — our
+                // Suppress platform default rectangular focus selector â our
                 // RingView handles focus indication exclusively.
                 setDefaultFocusHighlightEnabled(false);
                 setBackground(null);
@@ -3986,7 +3986,7 @@ public class LauncherActivity extends Activity {
                 setOnClickListener(v -> {
                     if (boundApp == null) return;
                     if (!reorderMode) launchApp(boundApp, v);
-                    // In reorder mode clicks are consumed but do nothing — menu buttons handle confirm/cancel
+                    // In reorder mode clicks are consumed but do nothing â menu buttons handle confirm/cancel
                 });
 
                 setOnLongClickListener(v -> {
@@ -4000,14 +4000,14 @@ public class LauncherActivity extends Activity {
                     // the shelf; if one of them currently holds real focus, that
                     // visibility change is itself capable of moving platform
                     // focus around as a side effect. That's not a real user
-                    // navigation — ignore it entirely (including the focusedIndex
+                    // navigation â ignore it entirely (including the focusedIndex
                     // bookkeeping below) so it can never race with setApps()'s
                     // own, authoritative focus decision. See rebuildingApps.
                     if (rebuildingApps) return;
                     if (!reorderMode) {
                         animate().cancel();
                         if (fastNav) {
-                            // Held D-pad nav — snap scale, skip animator entirely.
+                            // Held D-pad nav â snap scale, skip animator entirely.
                             // Without this, every key-repeat press fires a focus
                             // animation that's cancelled ~50 ms later by the next
                             // press, which both thrashes ViewPropertyAnimator and
@@ -4024,7 +4024,7 @@ public class LauncherActivity extends Activity {
                             // Reads as a tiny "tap" of life on selection without
                             // dominating the shelf or stressing slow GPUs.
                             // The reused focusUpdateListener keeps the RingView
-                            // in lockstep with the cell every frame — and being
+                            // in lockstep with the cell every frame â and being
                             // pre-allocated, avoids per-focus lambda churn.
                             animate().scaleX(FOCUS_SCALE).scaleY(FOCUS_SCALE)
                                      .setDuration(FOCUS_DUR_MS)
@@ -4032,7 +4032,7 @@ public class LauncherActivity extends Activity {
                                      .setUpdateListener(focusUpdateListener)
                                      .start();
                         } else {
-                            // Plain decelerate shrink on focus-out — no bounce,
+                            // Plain decelerate shrink on focus-out â no bounce,
                             // matches Material spec for de-selection. Clear the
                             // update listener so the lambda doesn't fire pointlessly
                             // during the unfocus tween (it's a no-op anyway since
@@ -4058,21 +4058,21 @@ public class LauncherActivity extends Activity {
                             // saw the ring "disappear" between consecutive cells).
                             if (isAttachedToWindow() && getWidth() > 0)
                                 positionRing(CellView.this);
-                            // Skip the smooth-scroll path during snap navigation —
+                            // Skip the smooth-scroll path during snap navigation â
                             // requestFocusOnIndex already called ensureVisibleSync().
                             if (!fastNav) ensureVisible(boundIndex);
                         }
                     }
-                    // Don't hide the ring on focus loss — the next cell to gain
+                    // Don't hide the ring on focus loss â the next cell to gain
                     // focus will reposition it in the SAME frame. Hiding here
                     // produced the "ring stutters across only a handful of apps
                     // during fast scroll" artefact, because the brief INVISIBLE
                     // state was visible to the user between every key press.
                     // The ring is hidden explicitly when:
-                    //   • focus leaves the shelf entirely (handled by the
+                    //   â¢ focus leaves the shelf entirely (handled by the
                     //     globalFocusListener on the root)
-                    //   • the activity exits or the shelf is re-populated
-                    //   • a touch interaction begins on the shelf
+                    //   â¢ the activity exits or the shelf is re-populated
+                    //   â¢ a touch interaction begins on the shelf
                 });
 
                 setOnKeyListener((v, kc, ev) -> {
@@ -4084,7 +4084,7 @@ public class LauncherActivity extends Activity {
                         // Clear the suppression latch on KEY_UP so the next press works normally.
                         if (isCenterKey && ev.getAction() == KeyEvent.ACTION_UP) {
                             suppressCenterUntilUp = false;
-                            return true; // consume — don't treat KEY_UP as a confirm
+                            return true; // consume â don't treat KEY_UP as a confirm
                         }
                         // Suppress repeating center-key presses until the key is fully released.
                         if (isCenterKey && suppressCenterUntilUp) return true;
@@ -4092,7 +4092,7 @@ public class LauncherActivity extends Activity {
                         if (ev.getAction() != KeyEvent.ACTION_DOWN) return false;
 
                         if (moveActive) {
-                            // Stage 2 — Move confirmed: LEFT/RIGHT reorder,
+                            // Stage 2 â Move confirmed: LEFT/RIGHT reorder,
                             // OK / BACK commit.
                             switch (kc) {
                                 case KeyEvent.KEYCODE_DPAD_LEFT:
@@ -4105,11 +4105,11 @@ public class LauncherActivity extends Activity {
                                 case KeyEvent.KEYCODE_BACK:
                                     exitReorderMode(true); return true;   // commit
                                 default:
-                                    return true;   // swallow UP/DOWN — no vertical move on the shelf
+                                    return true;   // swallow UP/DOWN â no vertical move on the shelf
                             }
                         }
 
-                        // Stage 1 — menu shown: UP/DOWN navigate, OK selects.
+                        // Stage 1 â menu shown: UP/DOWN navigate, OK selects.
                         switch (kc) {
                             case KeyEvent.KEYCODE_DPAD_LEFT:
                             case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -4231,7 +4231,7 @@ public class LauncherActivity extends Activity {
              *  package-removed reconcile shrinks the home row by one (the
              *  shelf only ever shows home apps, so this is always a home
              *  uninstall). Cancel-safe: the reconcile only acts once the
-             *  package is confirmed gone. No drawer refocus — the drawer is
+             *  package is confirmed gone. No drawer refocus â the drawer is
              *  closed when uninstalling from the home screen. */
             private void armHomeUninstall(AppInfo app) {
                 LauncherActivity.this.pendingUninstallPkg     = app.packageName;
@@ -4243,7 +4243,7 @@ public class LauncherActivity extends Activity {
              *  Always exits reorder mode first so the menu doesn't linger
              *  behind the settings activity (and so the user comes back to
              *  a clean shelf). Falls back to a toast if no Settings app on
-             *  the device handles ACTION_APPLICATION_DETAILS_SETTINGS — that
+             *  the device handles ACTION_APPLICATION_DETAILS_SETTINGS â that
              *  path is well-supported but cheap-TV ROMs occasionally strip it. */
             void triggerAppInfo() {
                 if (boundApp == null) return;
@@ -4262,7 +4262,7 @@ public class LauncherActivity extends Activity {
             private boolean tryUninstall(Intent intent) {
                 try {
                     if (intent.resolveActivity(pm) == null) return false;
-                    // Plain startActivity — we don't need a result. The
+                    // Plain startActivity â we don't need a result. The
                     // PACKAGE_REMOVED broadcast triggers loadApps() reliably
                     // across every Android version we support.
                     startActivity(intent);
@@ -4305,8 +4305,7 @@ public class LauncherActivity extends Activity {
                 // staying put. Suppressing the label the same way the ring
                 // is suppressed -- for the identical window, using the
                 // identical flag -- closes this the same way.
-                boolean showLabel = (!labelDisplay.isEmpty()) &&
-                        ((isFocused() && !reorderMode && !rebuildingApps) || isDragTarget);
+                boolean showLabel = false; // App titles are intentionally icon-only in both launcher views.
                 if (showLabel) {
                     float labelY = icy + labelOffsetY;
                     if (labelY < h) canvas.drawText(labelDisplay, cx, labelY, labelPaint);
@@ -4332,7 +4331,7 @@ public class LauncherActivity extends Activity {
 
             @Override public void setIconBitmap(Bitmap bmp) { iconBitmap = bmp; invalidate(); }
 
-            // ── IconTarget ──────────────────────────────────────────────
+            // ââ IconTarget ââââââââââââââââââââââââââââââââââââââââââââââ
             @Override public String  iconTargetPackage() { return boundApp != null ? boundApp.packageName : null; }
             @Override public boolean iconTargetVisible() { return getVisibility() == View.VISIBLE; }
 
@@ -4343,10 +4342,10 @@ public class LauncherActivity extends Activity {
                 if (labelChanged) {
                     // Reuse the per-AppInfo memoised display label when one
                     // sibling cell has already computed it. The width budget
-                    // (cell width − inset), the label text size, and the
+                    // (cell width â inset), the label text size, and the
                     // typeface are constant for the activity's lifetime, so
                     // the truncated string is byte-identical for every cell
-                    // that ever renders this app — only the first bind pays
+                    // that ever renders this app â only the first bind pays
                     // the measure + (on overflow) the ellipsize allocation.
                     // A recycled cell scrolling back onto an app it showed a
                     // moment ago during a fling now reads the cache instead
@@ -4367,7 +4366,7 @@ public class LauncherActivity extends Activity {
                 if (cached != null) {
                     if (cached != iconBitmap) { iconBitmap = cached; invalidate(); }
                 } else {
-                    // Icon not yet loaded — clear any stale bitmap and request load
+                    // Icon not yet loaded â clear any stale bitmap and request load
                     if (iconBitmap != null) { iconBitmap = null; invalidate(); }
                     loadBannerAsync(app, this);
                 }
@@ -4376,7 +4375,7 @@ public class LauncherActivity extends Activity {
     }
 
     /**
-     * v1.5.0 pull-down app drawer — a vertical recycling grid that reuses the
+     * v1.5.0 pull-down app drawer â a vertical recycling grid that reuses the
      * exact same recycling technique as {@link RecyclingShelfView}: a
      * {@code pool} of recycled cells, an {@code attached} {@link SparseArray}
      * keyed by flat app index, and an {@link OverScroller} for fling. It is
@@ -4385,7 +4384,7 @@ public class LauncherActivity extends Activity {
      * reorder context menu (via {@link ReorderHost}).
      *
      * <h3>Layout (driven by {@link HomeDrawerModel})</h3>
-     * {@link HomeDrawerModel#COLS} cells per row. Row 0 is the home row — the
+     * {@link HomeDrawerModel#COLS} cells per row. Row 0 is the home row â the
      * first {@code homeCount} apps, rendered centred to mirror the bottom home
      * shelf exactly. Rows 1+ hold the remaining apps, {@code COLS} per row,
      * left-aligned within a horizontally-centred grid block; the last row is a
@@ -4414,7 +4413,7 @@ public class LauncherActivity extends Activity {
         private float lastTouchY;
         private boolean touchScrolling = false;
 
-        /** Visible (non-hidden) app list — the drawer's rendering source of
+        /** Visible (non-hidden) app list â the drawer's rendering source of
          *  truth, snapshotted from the activity on every {@link #setApps}. */
         private final ArrayList<AppInfo> displayed = new ArrayList<>();
 
@@ -4431,20 +4430,20 @@ public class LauncherActivity extends Activity {
          *  {@link #forceHide}/{@link #open}). Guards against the close being
          *  re-triggered by held DPAD-UP key-repeat at the top row: without it,
          *  each repeat re-entered closeDrawer -> close(), cancelling and
-         *  restarting the fade so it never completed while the key was held —
+         *  restarting the fade so it never completed while the key was held â
          *  leaving the drawer faded to ~0 over bare wallpaper with the shelf
          *  still hidden (the "stuck on wallpaper, no apps" bug). */
         boolean closing      = false;
         int     dragIndex    = -1;
         int     menuSelection = RecyclingShelfView.MENU_MOVE;
         boolean fastNav      = false;
-        // See RecyclingShelfView.rebuildingApps — same fix, same reason,
+        // See RecyclingShelfView.rebuildingApps â same fix, same reason,
         // mirrored here so the drawer is not exposed to the identical
         // focus-corruption risk on a package-broadcast reconcile that
         // lands while the drawer happens to be open and focused.
         boolean rebuildingApps = false;
 
-        // See RecyclingShelfView.setAppsGen — every applyShelfApps() call
+        // See RecyclingShelfView.setAppsGen â every applyShelfApps() call
         // reaches this drawer too (not only when it's open), so the same
         // two-calls-in-quick-succession race the shelf guards against
         // (cache fast-path immediately followed by the PM-scan reconcile)
@@ -4472,7 +4471,7 @@ public class LauncherActivity extends Activity {
             // out over light wallpapers). On Android 12+ a translucent grey
             // sits over the GPU-blurred wallpaper for a frosted-glass look;
             // older devices get a slightly more opaque grey. Clickable so
-            // touches don't fall through to the shelf. Zero per-frame cost —
+            // touches don't fall through to the shelf. Zero per-frame cost â
             // it's a flat colour over the (statically) blurred wallpaper.
             setBackgroundColor(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
                     ? 0x7326262B      // ~45% dark grey over the blurred wallpaper
@@ -4492,7 +4491,7 @@ public class LauncherActivity extends Activity {
         /** Clamped, effective home-row size for the current visible count. */
         private int hc() { return LauncherActivity.this.effectiveHomeCount(displayed.size()); }
 
-        // ── ReorderHost (shared context menu) ────────────────────────────
+        // ââ ReorderHost (shared context menu) ââââââââââââââââââââââââââââ
         @Override public int menuSelection() { return menuSelection; }
         @Override public boolean menuAppIsInput() {
             return dragIndex >= 0 && dragIndex < displayed.size()
@@ -4516,7 +4515,7 @@ public class LauncherActivity extends Activity {
         @Override public void onMenuMove() {
             if (!reorderMode) return;
             menuSelection = RecyclingShelfView.MENU_MOVE;
-            enterActiveMove();   // Move confirm → stage 2 (2-D move)
+            enterActiveMove();   // Move confirm â stage 2 (2-D move)
         }
 
         void setApps(List<AppInfo> apps, int hcIgnored) {
@@ -4541,17 +4540,17 @@ public class LauncherActivity extends Activity {
                 cv.setVisibility(GONE); pool.add(cv);
             }
             attached.clear();
-            // rebuildingApps deliberately stays true past this point — see
+            // rebuildingApps deliberately stays true past this point â see
             // RecyclingShelfView.setApps's extended note on why an early
             // reset here (the drawer used to reset it right on the next
             // line) leaves the requestLayout() gap unprotected and lets a
             // platform focus reassignment during that pass paint the ring
             // on the wrong drawer cell for a frame. It's cleared below:
             // inside the posted callback when one is coming (the normal
-            // "drawer is open" case — the callback's requestFocusOnIndex
+            // "drawer is open" case â the callback's requestFocusOnIndex
             // is the authoritative call this suppression is protecting),
             // or immediately when none is coming (drawer not visible / no
-            // apps — nothing will ever reach the posted branch to clear it,
+            // apps â nothing will ever reach the posted branch to clear it,
             // so there is no gap left to protect and leaving it true would
             // wedge every future DrawerCell focus/label update).
             displayed.clear();
@@ -4562,7 +4561,7 @@ public class LauncherActivity extends Activity {
             requestLayout();
             // No eager pre-warm of the whole list: banner tiles are heavier
             // than chip icons, so cells load their banner lazily on bind
-            // (visible rows only) via loadBannerAsync — fillVisible warms more
+            // (visible rows only) via loadBannerAsync â fillVisible warms more
             // as the grid scrolls. Pre-warming all N here would decode every
             // app's banner up front, which the user explicitly flagged as a
             // perf concern.
@@ -4574,7 +4573,7 @@ public class LauncherActivity extends Activity {
                 final int fi = focusedIndex;
                 post(() -> {
                     // A newer setApps() has since started (see
-                    // RecyclingShelfView's identical check) — that call is
+                    // RecyclingShelfView's identical check) â that call is
                     // authoritative now, not this one. Leave rebuildingApps
                     // alone: it's either already false (the newer call's own
                     // branch beat us here) or the newer call is still
@@ -4586,7 +4585,7 @@ public class LauncherActivity extends Activity {
             } else {
                 // No focus-restore callback is being posted for this call
                 // (drawer not visible, or nothing to focus), so nothing will
-                // clear the flag later — clear it now. Safe: with no posted
+                // clear the flag later â clear it now. Safe: with no posted
                 // callback there is no requestLayout() gap left to guard.
                 rebuildingApps = false;
             }
@@ -4618,7 +4617,7 @@ public class LauncherActivity extends Activity {
         }
 
         @Override protected void onMeasure(int wSpec, int hSpec) {
-            // MATCH_PARENT in both axes — the FrameLayout passes EXACTLY specs.
+            // MATCH_PARENT in both axes â the FrameLayout passes EXACTLY specs.
             setMeasuredDimension(
                     resolveSize(getSuggestedMinimumWidth(),  wSpec),
                     resolveSize(getSuggestedMinimumHeight(), hSpec));
@@ -4676,7 +4675,7 @@ public class LauncherActivity extends Activity {
         private int rowLeftPad(int row, int len) {
             int hc = hc();
             if (hc > 0 && row == 0) {
-                // Home row: centre its (≤ COLS) cells within the view width,
+                // Home row: centre its (â¤ COLS) cells within the view width,
                 // pixel-mirroring the bottom home shelf's centring.
                 int w = getWidth() > 0 ? getWidth() : screenW;
                 return Math.max(dp(24), (w - len * stride) / 2);
@@ -4783,7 +4782,7 @@ public class LauncherActivity extends Activity {
             }
         }
 
-        /** Drawer counterpart of {@link RecyclingShelfView#refreshBanner} —
+        /** Drawer counterpart of {@link RecyclingShelfView#refreshBanner} â
          *  re-decode the banner for any on-screen drawer cell bound to
          *  {@code pkg} after a package update. UI-thread only. */
         void refreshBanner(String pkg) {
@@ -4837,7 +4836,7 @@ public class LauncherActivity extends Activity {
         /** Scroll so the row of {@code index} is fully visible. */
         private void ensureVisible(int index, boolean snap) {
             int viewH = getHeight();
-            if (viewH <= 0) return;   // not laid out yet — open()'s retry handles it
+            if (viewH <= 0) return;   // not laid out yet â open()'s retry handles it
             int row = HomeDrawerModel.rowOf(index, hc());
             int top    = firstRowTop() + row * rowStride;   // content-space (no scroll)
             int bottom = top + cellH;
@@ -4912,13 +4911,13 @@ public class LauncherActivity extends Activity {
             return true;
         }
 
-        // ── open / close ─────────────────────────────────────────────────
+        // ââ open / close âââââââââââââââââââââââââââââââââââââââââââââââââ
         void open(int focusIdx) {
             closing = false;
             // Defensive: a prior close() that was interrupted (animate().cancel()
-            // from onPause/forceHide, or a rapid close→open re-trigger) can leave
+            // from onPause/forceHide, or a rapid closeâopen re-trigger) can leave
             // this view pinned at LAYER_TYPE_HARDWARE with a stale cached GPU
-            // texture — withLayer()'s automatic layer-type restore only fires on
+            // texture â withLayer()'s automatic layer-type restore only fires on
             // natural animator completion, not on cancel(). Force it back to
             // NONE up front so open() never starts its tween by re-blending an
             // old snapshot (the "glitter" artifact).
@@ -4934,7 +4933,7 @@ public class LauncherActivity extends Activity {
                     // is a ViewGroup full of banner+label cells, so animating
                     // its alpha would otherwise re-blend every child every
                     // frame. withLayer() flattens it to a single GPU texture
-                    // for the tween then drops the layer — smoother on weak TV
+                    // for the tween then drops the layer â smoother on weak TV
                     // GPUs, zero steady-state cost.
                     .withLayer()
                     // Keep the ring glued to the focused cell as the whole
@@ -4970,14 +4969,14 @@ public class LauncherActivity extends Activity {
                         setTranslationY(0f); setAlpha(1f);
                         // Explicit layer-type reset. withLayer() is documented to
                         // restore the pre-animation layer type on completion, but
-                        // that restore rides on the animator's end listener — the
+                        // that restore rides on the animator's end listener â the
                         // same listener that a competing animate().cancel() (rapid
                         // re-toggle, or onPause tearing down mid-close) can skip.
                         // Setting it back to NONE here, unconditionally, is cheap
                         // and makes the reset happen regardless of how the tween
                         // actually ended, closing the gap that let a stale GPU
                         // layer (and its blurred snapshot) survive into the next
-                        // open — the "blur lingers after close" regression.
+                        // open â the "blur lingers after close" regression.
                         setLayerType(LAYER_TYPE_NONE, null);
                         closing = false;
                         if (after != null) after.run();
@@ -4991,7 +4990,7 @@ public class LauncherActivity extends Activity {
             if (reorderMode) exitReorderMode(false);
             animate().cancel();
             // animate().cancel() does not reliably run withLayer()'s own restore
-            // (see close()'s withEndAction comment) — if forceHide() interrupts
+            // (see close()'s withEndAction comment) â if forceHide() interrupts
             // an in-flight close/open tween, the view can be left pinned at
             // LAYER_TYPE_HARDWARE holding a stale texture. Reset explicitly so
             // the drawer's next open() starts from a clean, live-rendered state.
@@ -5004,7 +5003,7 @@ public class LauncherActivity extends Activity {
             if (rv != null) rv.setVisibility(View.INVISIBLE);
         }
 
-        // ── reorder ──────────────────────────────────────────────────────
+        // ââ reorder ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
         void enterReorderMode(int idx) {
             if (reorderMode || idx < 0 || idx >= displayed.size()) return;
             reorderMode = true;
@@ -5066,7 +5065,7 @@ public class LauncherActivity extends Activity {
             LauncherActivity.this.homeCount = newHc;
             LauncherActivity.this.rebuildAppListFromVisible(displayed);
             // Persist immediately on every move so the live in-memory order can
-            // never diverge from what is saved — a Back/reconcile exit then has
+            // never diverge from what is saved â a Back/reconcile exit then has
             // nothing to lose, and a process death mid-reorder keeps the moves
             // the user already saw. saveOrder's AppListCache write is throttled
             // by its bounded executor (rejections ignored) and prefs.apply() is
@@ -5127,7 +5126,7 @@ public class LauncherActivity extends Activity {
             LauncherActivity.this.keepDrawerOpenOnResume = launched;
             if (launched) {
                 // Keep the selector on this slot after the reconcile, and shrink
-                // the home row if a home app was removed — but only once the
+                // the home row if a home app was removed â but only once the
                 // reconcile confirms the package is actually gone (cancel-safe).
                 LauncherActivity.this.pendingDrawerRefocus    = Math.max(0, idx);
                 LauncherActivity.this.pendingUninstallPkg      = app.packageName;
@@ -5138,7 +5137,7 @@ public class LauncherActivity extends Activity {
             int idx = dragIndex;
             AppInfo app = (idx >= 0 && idx < displayed.size()) ? displayed.get(idx) : null;
             exitReorderMode(false);
-            // Hide in place — the drawer stays open and re-filters itself so
+            // Hide in place â the drawer stays open and re-filters itself so
             // the user can keep hiding apps without re-opening the drawer.
             LauncherActivity.this.hideApp(app, true, idx);
         }
@@ -5153,7 +5152,7 @@ public class LauncherActivity extends Activity {
             LauncherActivity.this.keepDrawerOpenOnResume = LauncherActivity.this.doAppInfo(app);
         }
 
-        // ── DrawerCell ─────────────────────────────────────────────────────
+        // ââ DrawerCell âââââââââââââââââââââââââââââââââââââââââââââââââââââ
         final class DrawerCell extends View implements IconTarget {
 
             Bitmap  iconBitmap;
@@ -5200,7 +5199,7 @@ public class LauncherActivity extends Activity {
                 iconPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 
                 labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                labelPaint.setColor(Color.WHITE);                       // white — visible over the frosted blur
+                labelPaint.setColor(Color.WHITE);                       // white â visible over the frosted blur
                 labelPaint.setTextSize(dp(11));
                 labelPaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                 labelPaint.setTextAlign(Paint.Align.CENTER);
@@ -5269,7 +5268,7 @@ public class LauncherActivity extends Activity {
                         if (ev.getAction() != KeyEvent.ACTION_DOWN) return false;
 
                         if (moveActive) {
-                            // Stage 2 — D-pad performs 2-D moves.
+                            // Stage 2 â D-pad performs 2-D moves.
                             switch (kc) {
                                 case KeyEvent.KEYCODE_DPAD_LEFT:
                                 case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -5285,7 +5284,7 @@ public class LauncherActivity extends Activity {
                                 default: return false;
                             }
                         }
-                        // Stage 1 — menu shown: UP/DOWN navigate, OK selects.
+                        // Stage 1 â menu shown: UP/DOWN navigate, OK selects.
                         switch (kc) {
                             case KeyEvent.KEYCODE_DPAD_UP:
                                 menuSelection = menuNavSel(menuSelection, -1); updateMenuHighlight(); return true;
@@ -5339,7 +5338,7 @@ public class LauncherActivity extends Activity {
                     }
 
                     if (ev.getAction() != KeyEvent.ACTION_DOWN) return false;
-                    if (closing) return true;   // close animating — ignore held-key repeats
+                    if (closing) return true;   // close animating â ignore held-key repeats
                     boolean held = ev.getRepeatCount() > 0;
                     int size = displayed.size(), hc = hc();
                     switch (kc) {
@@ -5390,8 +5389,7 @@ public class LauncherActivity extends Activity {
                 // label on the wrong cell for a frame even though the ring
                 // itself is correctly suppressed. See RecyclingShelfView's
                 // rebuildingApps for the full history.
-                boolean showLabel = (!labelDisplay.isEmpty())
-                        && ((isFocused() && !reorderMode && !rebuildingApps) || isDragTarget);
+                boolean showLabel = false; // App titles are intentionally icon-only in both launcher views.
                 if (showLabel) {
                     float labelY = icy + labelOffsetY;
                     if (labelY < h) canvas.drawText(labelDisplay, cx, labelY, labelPaint);
@@ -5460,7 +5458,7 @@ public class LauncherActivity extends Activity {
         // path falls back to {@code PackageManager.getActivityIcon(component)}
         // for those, so cells still get icons via the IconDiskCache hits
         // (and via direct PM calls for cold caches). Only runs at most
-        // once per process — subsequent loadApps() invocations have a
+        // once per process â subsequent loadApps() invocations have a
         // populated appList from prior reconciles.
         if (appList.isEmpty()) {
             boolean ok = AppListCache.readFile(this, (pkg, lbl, cls) -> {
@@ -5475,7 +5473,7 @@ public class LauncherActivity extends Activity {
                     // loadApps runs synchronously in onCreate, before onResume reads
                     // prefs, so focusedIndex is still 0 here. Without this seed,
                     // setApps queues requestFocusOnIndex(0) which drains before the
-                    // focusRestoreListener fires → visible flash to first app on reboot.
+                    // focusRestoreListener fires â visible flash to first app on reboot.
                     s.focusedIndex = prefs.getInt(KEY_SCROLL_IDX, 0);
                     applyShelfApps(s, false);
                 }
@@ -5524,7 +5522,7 @@ public class LauncherActivity extends Activity {
                         // invalidation, pruneHiddenApps, and pruneKeyMap
                         // paths below. The earlier draft built a separate
                         // ArraySet inside each helper from the same
-                        // freshFinal data — three N-element passes plus
+                        // freshFinal data â three N-element passes plus
                         // three small set allocations on every package
                         // broadcast. Sharing one set drops the per-
                         // reconcile cost to a single pass + one
@@ -5541,7 +5539,7 @@ public class LauncherActivity extends Activity {
                                 if (!freshPkgs.contains(old.packageName)) cache.remove(old.packageName);
                         }
                         // GC stale hidden-set entries before any other consumer
-                        // sees the new appList — keeps the saved set in sync
+                        // sees the new appList â keeps the saved set in sync
                         // with the actually-installed packages without a
                         // separate scheduling step.
                         pruneHiddenApps(freshPkgs);
@@ -5568,7 +5566,7 @@ public class LauncherActivity extends Activity {
                             // pending per-package invalidations are subsumed.
                             pendingIconInvalidations.clear();
                             appList.clear(); appList.addAll(freshFinal);
-                            // Rebuild the package → AppInfo index alongside
+                            // Rebuild the package â AppInfo index alongside
                             // the master list so every consumer that asks
                             // findAppByPackage(pkg) sees a consistent view.
                             // Done inside the same UI body that mutates
@@ -5603,7 +5601,7 @@ public class LauncherActivity extends Activity {
                                 // an index pointing past the filtered
                                 // tail used to slip through here and
                                 // {@code setApps} clamped it again to
-                                // {@code displayed.size() - 1} — landing
+                                // {@code displayed.size() - 1} â landing
                                 // the user on the last visible cell
                                 // instead of the closest valid one.
                                 if (pendingScrollIdx >= 0 && !freshFinal.isEmpty()) {
@@ -5645,7 +5643,7 @@ public class LauncherActivity extends Activity {
                             // identities just changed under their hands.
                             // The package receiver invalidated the
                             // {@code *BuiltSize} caches so the NEXT open
-                            // would rebuild — but the user is currently
+                            // would rebuild â but the user is currently
                             // looking at stale chips. Force a rebuild
                             // here so OK on chip {@code i} hits the right
                             // package.
@@ -5690,7 +5688,7 @@ public class LauncherActivity extends Activity {
                             // {@code !changed} branch already verified
                             // every {@code freshFinal[i].packageName ==
                             // appList[i].packageName}. The graft is a
-                            // single volatile write per upgraded entry —
+                            // single volatile write per upgraded entry â
                             // see {@link AppInfo#ri} for the visibility
                             // rationale.
                             for (int i = 0, n = appList.size(); i < n; i++) {
@@ -5707,7 +5705,7 @@ public class LauncherActivity extends Activity {
                                     old.ri = upgrade.ri;
                                 }
                                 // Re-warm ONLY packages the receiver flagged as
-                                // replaced / changed — not every app on every
+                                // replaced / changed â not every app on every
                                 // reconcile (queryApps returns fresh ResolveInfo
                                 // instances each scan, so an identity check would
                                 // re-warm everything). Drops the stale in-memory
@@ -5719,14 +5717,14 @@ public class LauncherActivity extends Activity {
                                     iconInflight.remove(old.packageName);
                                     preWarmIcon(old);
                                     // v1.5.x: the home / drawer cells display
-                                    // BANNER tiles, not the round chip icon — so
+                                    // BANNER tiles, not the round chip icon â so
                                     // a package replace must ALSO drop the cached
                                     // banner (which could have been re-decoded
                                     // from the STALE ResolveInfo in the window
                                     // between the broadcast and this reconcile)
                                     // and force any on-screen cell to re-decode
                                     // from the now-fresh ri. Without this the
-                                    // updated app kept its old banner — and a
+                                    // updated app kept its old banner â and a
                                     // banner generated from a stale ri's icon
                                     // resource id is exactly how the historical
                                     // "icon falls back to the stock Android icon
@@ -5744,10 +5742,10 @@ public class LauncherActivity extends Activity {
                             }
                             pendingIconInvalidations.clear();
                             if (pendingScrollIdx >= 0) {
-                                // App list unchanged but a pending index is waiting —
+                                // App list unchanged but a pending index is waiting â
                                 // honour it. setApps wasn't called, so manually request focus.
                                 // Clamp against the shelf's currently-rendered size (not
-                                // appList.size()) — when hide-apps is filtering, the saved
+                                // appList.size()) â when hide-apps is filtering, the saved
                                 // index could exceed the visible list and requestFocusOnIndex
                                 // would otherwise interpret it as an out-of-bounds wrap.
                                 RecyclingShelfView s = shelf;
@@ -5763,12 +5761,12 @@ public class LauncherActivity extends Activity {
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException e) {
-            // A4 fix: the executor refused this task — most likely because
+            // A4 fix: the executor refused this task â most likely because
             // a package broadcast already had one queued in the bounded
             // ArrayBlockingQueue(1) when {@link #onCreate}'s synchronous
             // call landed. Pre-1.4.x just dropped the request and never
             // reconciled, leaving the cache pre-paint's null-{@code ri}
-            // AppInfos in place for the rest of the session — every icon
+            // AppInfos in place for the rest of the session â every icon
             // load took the slower PM-binder fallback. Schedule a retry
             // 400 ms out (matches the package-broadcast debounce) so the
             // executor has time to drain its existing task before we
@@ -5791,7 +5789,7 @@ public class LauncherActivity extends Activity {
      *  {@code RecyclingShelfView.setApps}. Pure scan, no allocation,
      *  used by the reconcile to clamp {@code pendingScrollIdx} against
      *  the displayed-list size before passing it to setApps (which
-     *  would otherwise clamp again to the same bound — but only after
+     *  would otherwise clamp again to the same bound â but only after
      *  silently throwing away the user's saved position). */
     private int countVisible(List<AppInfo> list) {
         if (list == null || list.isEmpty()) return 0;
@@ -5818,7 +5816,7 @@ public class LauncherActivity extends Activity {
      *  enter*() short-circuits via the existing
      *  refresh{Picker,Hide}ChipIcons fast-path.
      *
-     *  <p>Selection is clamped to the new strip length — a chip that
+     *  <p>Selection is clamped to the new strip length â a chip that
      *  previously sat past the new tail (because a package was
      *  uninstalled) lands on the last surviving chip instead of an
      *  out-of-range slot. */
@@ -5861,7 +5859,7 @@ public class LauncherActivity extends Activity {
         // right target); on a phone / tablet we ask CATEGORY_LAUNCHER
         // first (the phone-tuned activity is the right target). Either
         // way the *other* category is queried right after, which picks
-        // up apps that only declare one or the other — phone-only apps
+        // up apps that only declare one or the other â phone-only apps
         // on TV, TV-only apps on phone, system apps with either filter
         // shape, and sideloaded APKs of any flavour. Net effect: every
         // installed launchable app surfaces exactly once.
@@ -5880,9 +5878,9 @@ public class LauncherActivity extends Activity {
             //noinspection deprecation
             addApps(pm.queryIntentActivities(second, 0), self, seen, out);
         }
-        // Append hardware TV inputs (HDMI / AV / component …) as app-like
+        // Append hardware TV inputs (HDMI / AV / component â¦) as app-like
         // entries so they sort, place, move, hide, and bind exactly like
-        // apps. Empty on devices without TIF inputs — a clean no-op. Done
+        // apps. Empty on devices without TIF inputs â a clean no-op. Done
         // here (on the app executor) so the one binder query never touches
         // the UI thread. See {@link TvInputs}.
         out.addAll(TvInputs.enumerate(this));
@@ -5913,24 +5911,24 @@ public class LauncherActivity extends Activity {
             // (Fire TV has been observed returning these post-system-restart);
             // ai.packageName is null on stripped-down ROMs that ship
             // ActivityInfo objects whose <application> manifest entry is
-            // broken. ai.name is, by contract, the activity's class name —
+            // broken. ai.name is, by contract, the activity's class name â
             // also defensively guarded because {@code new ComponentName(pkg,
             // null)} throws an NPE in the ComponentName constructor, which
             // would bubble up and abort the entire queryApps batch via the
-            // outer Throwable handler in loadApps. Skip silently — equality
+            // outer Throwable handler in loadApps. Skip silently â equality
             // / hash operations downstream would NPE and propagate up,
             // bouncing into loadApps' catch (Throwable) and resetting
             // appsLoading=false; the user-visible effect would be a blank
             // shelf until the next package broadcast retried.
             if (ai == null || ai.packageName == null || ai.name == null) continue;
             if (ai.packageName.equals(self)) continue;
-            // Dedupe by PACKAGE NAME — not "package/activity". A single
+            // Dedupe by PACKAGE NAME â not "package/activity". A single
             // app that declares BOTH a CATEGORY_LAUNCHER (phone) and a
             // CATEGORY_LEANBACK_LAUNCHER (TV) activity exposes two
             // ResolveInfo entries with the SAME package but DIFFERENT
             // activity names; the old "pkg/activity" key let both pass
             // and the package showed up twice on the shelf. Package-only
-            // dedupe collapses them to a single entry — the one that came
+            // dedupe collapses them to a single entry â the one that came
             // back from whichever category we queried first (see the
             // TV-vs-phone ordering in queryApps above). The activity
             // selected here drives launchApp() too, so the right UI
@@ -5943,7 +5941,7 @@ public class LauncherActivity extends Activity {
             // RuntimeException) on the same class of ROMs when the label
             // string-resource id resolves to a missing or cross-user
             // resource. Without the catch, one bad app aborts the whole
-            // queryApps batch via the outer Throwable handler in loadApps —
+            // queryApps batch via the outer Throwable handler in loadApps â
             // visible to the user as a blank shelf until the next package
             // broadcast retries. Treat throw and null identically: fall back
             // to the package name and surface the app as a labelled cell.
@@ -5965,12 +5963,12 @@ public class LauncherActivity extends Activity {
      *  from {@code source} (the tile the user activated) for a clean
      *  "open from the icon" effect. A {@code null} {@code source} (e.g. a
      *  remote-key shortcut, which has no on-screen tile) uses the system
-     *  default transition. The scale-up is a window-animation hint — free at
+     *  default transition. The scale-up is a window-animation hint â free at
      *  our end and silently ignored by ROMs that don't honour custom launch
      *  animations, so there is no performance cost or compatibility risk. */
     private void launchApp(AppInfo app, View source) {
         final android.os.Bundle anim = launchAnimBundle(source);
-        // TV-input entry: switch to the passthrough source (HDMI/AV/…) via
+        // TV-input entry: switch to the passthrough source (HDMI/AV/â¦) via
         // the system Live-TV app instead of starting an activity. Scale-up
         // animation from the tile is reused. Toast if no app can switch
         // inputs (e.g. a box with TIF inputs but no Live-TV handler).
@@ -5983,7 +5981,7 @@ public class LauncherActivity extends Activity {
         // Direct-intent fast path. PackageManager.getLaunchIntentForPackage
         // does TWO synchronous binder calls internally
         // (queryIntentActivities for CATEGORY_INFO, fall back to
-        // CATEGORY_LAUNCHER) to discover the launcher activity — but we
+        // CATEGORY_LAUNCHER) to discover the launcher activity â but we
         // already cached that activity in {@code app.component} at
         // queryApps time, AND {@code Intent.setComponent} bypasses
         // resolution entirely (the named activity is started directly).
@@ -6004,7 +6002,7 @@ public class LauncherActivity extends Activity {
             startActivity(fast, anim);
             return;
         } catch (Exception ignored) {
-            // Fall through to the legacy paths — they have caught every
+            // Fall through to the legacy paths â they have caught every
             // launch failure shape we have observed in production, so we
             // keep them as a defensive belt-and-braces tier even when
             // the fast path covers ~all real installs.
@@ -6012,7 +6010,7 @@ public class LauncherActivity extends Activity {
         // Legacy fallback: resolve the canonical launch intent via PM
         // (the slow path we just bypassed) and override the component.
         // Reached only when the direct intent was rejected by the
-        // platform — extremely rare, but keeps strict-mode security
+        // platform â extremely rare, but keeps strict-mode security
         // policies and exotic ROMs working.
         try {
             Intent i = pm.getLaunchIntentForPackage(app.packageName);
@@ -6050,15 +6048,15 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    // ── Remote-key → app shortcut routing ────────────────────────────────
+    // ââ Remote-key â app shortcut routing ââââââââââââââââââââââââââââââââ
 
     /** Parse the persisted keymap once at startup. The pure-Java parsing
-     *  logic — including the "drop bindings whose keycode is no longer in
-     *  {@link #SHORTCUT_KEYCODES}" rule — lives in {@link KeymapStore},
+     *  logic â including the "drop bindings whose keycode is no longer in
+     *  {@link #SHORTCUT_KEYCODES}" rule â lives in {@link KeymapStore},
      *  which is JVM-testable. The activity owns the {@link SparseArray}
      *  destination and the {@code SharedPreferences} read; the parser
      *  pushes accepted entries through the {@code keyMap::put} method
-     *  reference (zero-autoboxing for {@code int → SparseArray.put(int)}).
+     *  reference (zero-autoboxing for {@code int â SparseArray.put(int)}).
      *
      *  If anything was filtered, we rewrite prefs immediately so the
      *  on-disk format converges to the new shape. */
@@ -6070,13 +6068,13 @@ public class LauncherActivity extends Activity {
     }
 
     /** Write the keymap back to SharedPreferences. Called on every
-     *  configuration change (left/right cycle in the overlay) — the user
+     *  configuration change (left/right cycle in the overlay) â the user
      *  spec requires assignments to be saved instantly with no confirm.
      *
      *  Two array allocations per save (one int[], one String[]) feed the
      *  testable {@link KeymapStore#serializeKeyMap} signature. The save
-     *  path is rare (only when the user changes a binding) — never on a
-     *  hot path — so the cost is irrelevant against the testability gain. */
+     *  path is rare (only when the user changes a binding) â never on a
+     *  hot path â so the cost is irrelevant against the testability gain. */
     private void saveKeyMap() {
         int n = keyMap.size();
         int[]    keycodes = new int[n];
@@ -6105,7 +6103,7 @@ public class LauncherActivity extends Activity {
         // ArraySet<String> implements Iterable<String> via the inherited
         // Collection / Set typed signature, so it can be passed straight
         // to KeymapStore.serializeHiddenApps without an intermediate
-        // ArrayList copy. Saves one ArrayList allocation per toggle —
+        // ArrayList copy. Saves one ArrayList allocation per toggle â
         // not a hot path, but the wrapper was strictly redundant.
         prefs
                 .edit().putString(KEY_HIDDEN,
@@ -6115,11 +6113,11 @@ public class LauncherActivity extends Activity {
     /** Drop hidden-set entries whose package is no longer installed.
      *  Called from loadApps once the fresh appList is known. O(N + M)
      *  via a single ArraySet pass over fresh package names; the prior
-     *  nested loop was O(N · M) and quadratic when many apps were
-     *  hidden — fine in practice but trivially fixed. */
+     *  nested loop was O(N Â· M) and quadratic when many apps were
+     *  hidden â fine in practice but trivially fixed. */
     /** Mirror of {@link #pruneHiddenApps} for the remote-key shortcut
      *  map. Uninstalled-package bindings persist in {@link #keyMap}
-     *  until the user actually presses the bound key — at which point
+     *  until the user actually presses the bound key â at which point
      *  {@link #dispatchKeyEvent}'s "Mapped to an uninstalled package"
      *  branch cleans up lazily. The lazy cleanup works for the press
      *  path, but it leaves the keymap settings UI showing the raw
@@ -6137,7 +6135,7 @@ public class LauncherActivity extends Activity {
      *  runs at most 6 times. Accepts the freshly-built package set
      *  from the reconcile body so the v1.4.x first cut's separate-
      *  ArraySet allocations (three sets built from the same data on
-     *  every reconcile — see the v1.4.x reconcile body comment) are
+     *  every reconcile â see the v1.4.x reconcile body comment) are
      *  collapsed to a single shared instance.
      */
     private void pruneKeyMap(ArraySet<String> installedPkgs) {
@@ -6173,7 +6171,7 @@ public class LauncherActivity extends Activity {
      *  master appList directly so hidden apps remain bindable to remote
      *  keys and toggleable in the hide manager.
      *
-     *  Fast-paths the empty-hidden-set case to a direct reference pass —
+     *  Fast-paths the empty-hidden-set case to a direct reference pass â
      *  no allocation, no scan. The list is already sorted/ordered by
      *  loadApps so we preserve order trivially by walking it once.
      *
@@ -6183,7 +6181,7 @@ public class LauncherActivity extends Activity {
      *  is the only consumer that displays their icons. Pre-warming on
      *  every loadApps reconcile (which fires on every package broadcast)
      *  triggered N disk reads through the IconDiskCache LruCache.create
-     *  fallback for the empty-memory-cache case — measurable cost on
+     *  fallback for the empty-memory-cache case â measurable cost on
      *  installs with many hidden apps. The lazy path runs at most once
      *  per overlay-open, and {@link #preWarmIcon} early-returns on
      *  cache hit so the second-and-subsequent opens are O(N) cheap
@@ -6192,11 +6190,11 @@ public class LauncherActivity extends Activity {
 
     /** @param resolveCount  false for the cold-start cache pre-paint ONLY.
      *  {@link AppListCache} deliberately excludes TV inputs (they are not
-     *  serialisable and are re-enumerated fresh from TIF every scan — see
+     *  serialisable and are re-enumerated fresh from TIF every scan â see
      *  {@link AppListCache#from}), so the cache-derived {@code visible}
      *  list is missing however many TV inputs the device has. Feeding that
-     *  undercount into {@link #resolveHomeCount} would clamp — and PERSIST
-     *  — {@link #homeCount} down to the smaller cache-only size, silently
+     *  undercount into {@link #resolveHomeCount} would clamp â and PERSIST
+     *  â {@link #homeCount} down to the smaller cache-only size, silently
      *  and permanently shrinking the home row (and stranding the saved
      *  scroll index against a shelf smaller than the one it was saved
      *  against) on every cold start where real-app count < the true count.
@@ -6234,7 +6232,7 @@ public class LauncherActivity extends Activity {
     /** Pre-warm the small round chip icons for the keymap overlay. v1.5.0:
      *  the home / drawer cells now load BANNER tiles (not the round icons),
      *  so nothing warms {@link #iconCache} for the chips until the overlay
-     *  opens — warm every app here so the picker / hide-list / slot rows
+     *  opens â warm every app here so the picker / hide-list / slot rows
      *  resolve their icons. {@link #preWarmIcon} early-returns on a cache
      *  hit, so repeat opens are O(N) cheap containsKey checks. */
     private void preWarmChipIcons() {
@@ -6245,7 +6243,7 @@ public class LauncherActivity extends Activity {
 
     private AppInfo findAppByPackage(String pkg) {
         // O(1) via appByPackage. Falls back to a linear scan only if the
-        // map is somehow empty while the list is populated — a defensive
+        // map is somehow empty while the list is populated â a defensive
         // case that shouldn't be reachable, since the two are mutated
         // together inside loadApps' UI block. The fallback exists to
         // keep the contract "if the package is in appList, return it"
@@ -6262,11 +6260,11 @@ public class LauncherActivity extends Activity {
         return null;
     }
 
-    /** Keys the launcher must always handle itself — d-pad, confirm,
+    /** Keys the launcher must always handle itself â d-pad, confirm,
      *  back/home, volume, power. Mapping any of these is silently
      *  ignored so a misconfiguration can never lock the user out of
      *  navigation.
-     *  KEYCODE_MENU is deliberately ABSENT — it's exposed as a mappable
+     *  KEYCODE_MENU is deliberately ABSENT â it's exposed as a mappable
      *  slot in the config overlay, and the launcher never consumes it
      *  itself, so users can repurpose it freely. */
     private static boolean isCoreNavKey(int kc) {
@@ -6297,7 +6295,7 @@ public class LauncherActivity extends Activity {
      *       from firing while the user is configuring them, and stops
      *       stray keys from bleeding through to the shelf underneath.
      *    2. Otherwise, look up the keycode in the in-memory keyMap.
-     *       Match → launch the assigned app and consume. Lookup runs only
+     *       Match â launch the assigned app and consume. Lookup runs only
      *       on the first ACTION_DOWN (repeatCount == 0) to avoid relaunch
      *       storms on a held key. */
     @Override
@@ -6356,7 +6354,7 @@ public class LauncherActivity extends Activity {
             //
             // Why this matters: on DOWN, handleSettingsKey already returns
             // false for let-through keys so the DOWN edge falls through to
-            // super → the platform's global handler (AudioService,
+            // super â the platform's global handler (AudioService,
             // PowerManager, MediaSession). Pre-1.4.5 the matching UP edge was
             // unconditionally swallowed here, so on the rare ROMs that route
             // both edges to user space (HDMI-CEC volume bridges, some set-top
@@ -6375,7 +6373,7 @@ public class LauncherActivity extends Activity {
             if (pkg != null) {
                 AppInfo app = findAppByPackage(pkg);
                 if (app != null) { launchApp(app); return true; }
-                // Mapped to an uninstalled package — clean up so the slot
+                // Mapped to an uninstalled package â clean up so the slot
                 // becomes free again on next config open.
                 keyMap.delete(event.getKeyCode());
                 saveKeyMap();
@@ -6384,7 +6382,7 @@ public class LauncherActivity extends Activity {
         return super.dispatchKeyEvent(event);
     }
 
-    // ── Settings panel (v1.3.0) ──────────────────────────────────────────
+    // ââ Settings panel (v1.3.0) ââââââââââââââââââââââââââââââââââââââââââ
     //
     // Top-level overlay that opens as a dropdown under the gear toolbar
     // pill. Five rows: Manage hidden apps, Button shortcuts, Set
@@ -6396,15 +6394,15 @@ public class LauncherActivity extends Activity {
     //
     // Drill-through actions (hide apps, button shortcuts, wallpaper,
     // system settings) close the panel before launching the next
-    // surface. The Show clock toggle stays in place — the user can flip
+    // surface. The Show clock toggle stays in place â the user can flip
     // it and continue browsing the panel. The keymap card knows it was
     // opened from the panel via {@link #keymapOpenedFromSettings} and
     // re-opens the panel after the keymap card is dismissed, so a deep
-    // "settings → button shortcuts → bind a key → back" gesture lands
+    // "settings â button shortcuts â bind a key â back" gesture lands
     // exactly back at the panel cursor where the user left off.
 
     /** Show the shared dim backdrop if it isn't already visible. Idempotent
-     *  — the second consecutive call (e.g. opening keymap on top of an
+     *  â the second consecutive call (e.g. opening keymap on top of an
      *  already-open settings panel) is a no-op so the dim level stays
      *  constant across the modal flow. */
     private void ensureOverlayBackdropVisible() {
@@ -6422,7 +6420,7 @@ public class LauncherActivity extends Activity {
 
     /** Hide the shared backdrop only when neither overlay is logically
      *  open. "Logically open" includes a queued re-open via
-     *  {@link #keymapOpenedFromSettings} — the 60 ms postDelayed window
+     *  {@link #keymapOpenedFromSettings} â the 60 ms postDelayed window
      *  between hideKeymapOverlay's withEndAction and the panel re-show
      *  must not flash the wallpaper visible. */
     private void dismissOverlayBackdropIfIdle() {
@@ -6489,11 +6487,11 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    // ── Settings panel build / show / hide / refresh / activate ─────────
+    // ââ Settings panel build / show / hide / refresh / activate âââââââââ
 
     /** Lazy-build the settings panel on first {@link #showSettingsPanel}.
      *  Re-used across opens. Same plate / row / animation primitives as
-     *  the keymap overlay — only the row count and content differ. */
+     *  the keymap overlay â only the row count and content differ. */
     private void buildSettingsPanel() {
         FrameLayout r = root; if (r == null) return;
         FrameLayout ov = new FrameLayout(this) {
@@ -6523,7 +6521,7 @@ public class LauncherActivity extends Activity {
         ov.setClickable(true);
         ov.setFocusable(true);
 
-        // Card — matches the keymap card's plate, rim, and corner radius.
+        // Card â matches the keymap card's plate, rim, and corner radius.
         android.widget.LinearLayout card = new android.widget.LinearLayout(this);
         card.setOrientation(android.widget.LinearLayout.VERTICAL);
         android.graphics.drawable.GradientDrawable cardBg =
@@ -6559,7 +6557,7 @@ public class LauncherActivity extends Activity {
      *  is a label plus an optional right-side state indicator; click listeners
      *  map the row's position to its page row-id. Width equalisation runs
      *  post-layout so indicators line up and the card hugs the longest label.
-     *  Called on first build and whenever the page changes (main ↔ sub-view). */
+     *  Called on first build and whenever the page changes (main â sub-view). */
     private void rebuildSettingsColumn() {
         final android.widget.LinearLayout col = settingsColumn;
         if (col == null) return;
@@ -6593,16 +6591,16 @@ public class LauncherActivity extends Activity {
                 indicator.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
                 indicator.setSingleLine(true);
                 // Seed with the widest state string so equalisation reserves
-                // room — the live text (refreshSettingsRows) is never wider.
+                // room â the live text (refreshSettingsRows) is never wider.
                 indicator.setText(settingsIndicatorWidestText(rowId));
                 // Gravity.END so the indicator text right-aligns within its
-                // fixed-width slot — keeps the right edge of the row stable
-                // as the text changes (e.g. "< 20s >" ↔ "< 1.5 min >").
+                // fixed-width slot â keeps the right edge of the row stable
+                // as the text changes (e.g. "< 20s >" â "< 1.5 min >").
                 indicator.setGravity(Gravity.END);
                 // Lock the minimum width to the widest possible value at
                 // build time. measureText is cheap (one measure pass on a
                 // ~12-char string). This prevents any layout reflow when
-                // the live text changes — the column stays the same size
+                // the live text changes â the column stays the same size
                 // regardless of which value is showing.
                 indicator.measure(
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -6638,7 +6636,7 @@ public class LauncherActivity extends Activity {
 
     /** Animate the panel in as a dropdown under the gear toolbar pill.
      *  Same anchor logic as {@link #showKeymapOverlay} so both surfaces
-     *  appear to fall out of the same icon — but the keymap card's anchor
+     *  appear to fall out of the same icon â but the keymap card's anchor
      *  resolves against the gear too, so opening keymap from inside the
      *  settings panel keeps the visual continuity. */
     private void showSettingsPanel() {
@@ -6648,12 +6646,12 @@ public class LauncherActivity extends Activity {
         final android.widget.LinearLayout card = settingsCard;
         if (ov == null || card == null) return;
 
-        // Hide focus ring — it belongs to the shelf which is now logically
+        // Hide focus ring â it belongs to the shelf which is now logically
         // behind the panel.
         RingView rv = ringView; if (rv != null) rv.setVisibility(View.INVISIBLE);
 
-        // Bring up the shared dim backdrop. Idempotent — when this is
-        // called as part of a settings → keymap → settings round-trip
+        // Bring up the shared dim backdrop. Idempotent â when this is
+        // called as part of a settings â keymap â settings round-trip
         // the backdrop is already at full alpha and this call is a
         // no-op, so the dim level stays constant.
         ensureOverlayBackdropVisible();
@@ -6669,7 +6667,7 @@ public class LauncherActivity extends Activity {
         pendingSettingsCursor = SR_HIDE_APPS;
         refreshSettingsRows();
 
-        // Anchor the card just below the gear toolbar pill — shared
+        // Anchor the card just below the gear toolbar pill â shared
         // helper since the keymap card uses the identical math.
         anchorCardUnderGear(card, dp(78), dp(20));
 
@@ -6718,7 +6716,7 @@ public class LauncherActivity extends Activity {
                         ov.setVisibility(View.GONE);
                         // Drop the dim only if no other overlay is
                         // logically open (covers the immediate-close
-                        // case AND the settings → keymap transition
+                        // case AND the settings â keymap transition
                         // where the keymap card has already taken
                         // over the modal flow).
                         dismissOverlayBackdropIfIdle();
@@ -6730,7 +6728,7 @@ public class LauncherActivity extends Activity {
         }
         // Restore focus to the gear pill so the user lands back where
         // they triggered the panel. Falls through to the WiFi pill if
-        // the gear has been GC'd (paranoia — it is held as a field).
+        // the gear has been GC'd (paranoia â it is held as a field).
         View mb = mapperBtnView;
         if (mb != null) mb.requestFocus();
         else {
@@ -6740,7 +6738,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Repaint each row to reflect {@link #settingsSelectedRow} and the
-     *  current {@link #showClock} toggle state. Cheap — five rows, each
+     *  current {@link #showClock} toggle state. Cheap â five rows, each
      *  a small LinearLayout with two children. The "selected" row gets a
      *  bright frosted-white pill and dark text + dark indicator; idle
      *  rows get transparent backgrounds and light-grey text. */
@@ -6756,7 +6754,7 @@ public class LauncherActivity extends Activity {
             if (!(child instanceof android.widget.LinearLayout)) continue;
             android.widget.LinearLayout row = (android.widget.LinearLayout) child;
             boolean sel = (i == settingsSelectedRow);
-            // Background — mutate the existing GradientDrawable so the
+            // Background â mutate the existing GradientDrawable so the
             // 9 dp corner radius is preserved across paints. Wrapping in
             // setBackgroundColor would clobber the drawable.
             android.graphics.drawable.Drawable bg = row.getBackground();
@@ -6802,7 +6800,7 @@ public class LauncherActivity extends Activity {
         }
         // Re-equalise row widths after any indicator text change so the card
         // never clips the indicator (e.g. stepping duration from "< 45s >"
-        // to "< 1 min >" — different text widths). Cheap: just measures and
+        // to "< 1 min >" â different text widths). Cheap: just measures and
         // sets LayoutParams on the already-built views, no inflation.
         col.post(() -> {
             if (col != settingsColumn) return;
@@ -6908,7 +6906,7 @@ public class LauncherActivity extends Activity {
                 enterSettingsPage(SPAGE_BACKUP, SR_BACKUP_MENU);
                 break;
             case SR_CLOCK:
-                // 3-state cycle: FULL → TIME_ONLY → OFF → FULL.
+                // 3-state cycle: FULL â TIME_ONLY â OFF â FULL.
                 clockMode = (clockMode + 1) % 3;
                 showClock = (clockMode != CLOCK_OFF);
                 prefs.edit()
@@ -6968,7 +6966,7 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    // ── About overlay build / show / hide / navigate / QR ───────────────
+    // ââ About overlay build / show / hide / navigate / QR âââââââââââââââ
 
     /** App version string for the About card header, read from the installed
      *  package so it always matches the actual build (auto-updates on every
@@ -7018,11 +7016,11 @@ public class LauncherActivity extends Activity {
 
         final int contentW = dp(270);
 
-        // ── List sub-view ──
+        // ââ List sub-view ââ
         android.widget.LinearLayout list = new android.widget.LinearLayout(this);
         list.setOrientation(android.widget.LinearLayout.VERTICAL);
 
-        // Version (top, no selector) — auto from the installed package.
+        // Version (top, no selector) â auto from the installed package.
         TextView version = new TextView(this);
         version.setText(getString(R.string.about_app_name) + "   " + appVersionName());
         version.setTextColor(0xFFFFFFFF);
@@ -7081,7 +7079,7 @@ public class LauncherActivity extends Activity {
             });
         }
 
-        // ── QR sub-view (swaps in over the list) ──
+        // ââ QR sub-view (swaps in over the list) ââ
         android.widget.LinearLayout qr = new android.widget.LinearLayout(this);
         qr.setOrientation(android.widget.LinearLayout.VERTICAL);
         qr.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -7109,7 +7107,7 @@ public class LauncherActivity extends Activity {
         capLp.topMargin = dp(12);
         qr.addView(cap, capLp);
 
-        // Clickable link under the QR — opens the same URL in the user's
+        // Clickable link under the QR â opens the same URL in the user's
         // browser (for boxes that have one). Styled as a rounded pill so it
         // reads as a button; it is the QR page's single actionable element,
         // so OK on the QR page activates it (see handleAboutKey). Touch
@@ -7201,7 +7199,7 @@ public class LauncherActivity extends Activity {
         return iv;
     }
 
-    /** Draw the Ko-fi coffee cup into an {@code s × s} bitmap. {@code steam}
+    /** Draw the Ko-fi coffee cup into an {@code s Ã s} bitmap. {@code steam}
      *  is the steam-line colour so the cup reads on both the dark About row
      *  (light steam) and the white QR centre plate (red steam). */
     private Bitmap kofiCupBitmap(int s, int steam) {
@@ -7231,9 +7229,9 @@ public class LauncherActivity extends Activity {
     }
 
     /** Centre-logo bitmap for an About QR, or {@code null} (plain modern code)
-     *  when none is available. Ko-fi → the coffee cup; GitHub → the octicon
+     *  when none is available. Ko-fi â the coffee cup; GitHub â the octicon
      *  mark vector. Wrapped so a missing/garbled vector can never break the QR
-     *  — the code just renders without a logo. */
+     *  â the code just renders without a logo. */
     private Bitmap aboutQrLogo(int which) {
         try {
             int s = Math.max(1, dp(56));
@@ -7298,7 +7296,7 @@ public class LauncherActivity extends Activity {
             ov.setVisibility(View.GONE);
             if (returnToSettings) {
                 // Re-open the settings panel on the About row, mirroring the
-                // keymap → settings back-stack behaviour.
+                // keymap â settings back-stack behaviour.
                 pendingSettingsCursor = SR_ABOUT;
                 showSettingsPanel();
             } else {
@@ -7346,7 +7344,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Open {@code url} in whatever browser the user has installed. Offline,
-     *  dependency-free — a plain {@link Intent#ACTION_VIEW}. Guarded with a
+     *  dependency-free â a plain {@link Intent#ACTION_VIEW}. Guarded with a
      *  resolve check so a TV box with no browser shows an honest toast
      *  instead of throwing {@link android.content.ActivityNotFoundException}.
      *  The launcher itself never handles {@code http(s)} VIEW intents (it has
@@ -7395,7 +7393,7 @@ public class LauncherActivity extends Activity {
     private boolean handleAboutKey(int kc) {
         if (aboutShowingQr) {
             switch (kc) {
-                // OK activates the link button → open in the user's browser.
+                // OK activates the link button â open in the user's browser.
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.KEYCODE_BUTTON_A:
@@ -7408,7 +7406,7 @@ public class LauncherActivity extends Activity {
                 default:
                     // Swallow stray navigation/buttons so they can't bleed to
                     // the surface underneath, but let device-control keys
-                    // (volume / mute / power / media) reach the platform — so
+                    // (volume / mute / power / media) reach the platform â so
                     // the DOWN edge stays balanced with the UP edge that
                     // dispatchKeyEvent already lets through via isLetThroughKey.
                     return !isLetThroughKey(kc);
@@ -7436,31 +7434,31 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    // ── Keymap configuration overlay ─────────────────────────────────────
+    // ââ Keymap configuration overlay âââââââââââââââââââââââââââââââââââââ
     //
     // The overlay is a full-screen FrameLayout sitting at the top of the
     // launcher's existing root z-order. Inside the overlay sits a centred
     // "card" LinearLayout that holds two sibling sub-views which alternate
     // visibility based on keymapMode:
     //
-    //   keymapColumn    — vertical list of slot rows (default mode)
-    //   keymapPickerView — horizontal scrollable app chips (picker mode)
+    //   keymapColumn    â vertical list of slot rows (default mode)
+    //   keymapPickerView â horizontal scrollable app chips (picker mode)
     //
     // No new Activity, no new Fragment, no new resources. Everything is
     // built programmatically and reused across opens.
 
     /** Build the overlay lazily on first open. Reused for every subsequent
-     *  open — keeping it inflated is cheap (one FrameLayout + ~20 child views)
+     *  open â keeping it inflated is cheap (one FrameLayout + ~20 child views)
      *  and avoids the inflate cost on every reopen.
      *
      *  Visual style: compact dropdown anchored just below the mapper button
      *  (top-right toolbar). Dark frosted palette: deep slate plate with
      *  a hairline rim, idle rows transparent + light-grey text, focused row
-     *  becomes a bright frosted-white pill with dark text — exactly the same
+     *  becomes a bright frosted-white pill with dark text â exactly the same
      *  language as the toolbar buttons (idle dark / focused white-frosted),
      *  so the launcher's visual vocabulary stays consistent.
      *
-     *  Compactness: rows flow content-tight (tag → name col → icon → app
+     *  Compactness: rows flow content-tight (tag â name col â icon â app
      *  label) with NO flex spacer pushing label and value to opposite
      *  edges. The previous design had ~180 dp of dead space in every row;
      *  the new layout uses only what the content needs. */
@@ -7485,12 +7483,12 @@ public class LauncherActivity extends Activity {
             }
         };
         ov.setLayoutParams(new FrameLayout.LayoutParams(MATCH, MATCH));
-        // Light contextual dim — this is a dropdown, not a full-screen modal.
+        // Light contextual dim â this is a dropdown, not a full-screen modal.
         // Keeps the home shelf faintly visible behind so the action feels
         // anchored to the page rather than blocking it.
         // v1.3.0: dim is now provided by the shared overlayBackdrop view
         // (see ensureOverlayBackdropVisible / dismissOverlayBackdropIfIdle)
-        // so transitioning settings → keymap doesn't flash a re-dim.
+        // so transitioning settings â keymap doesn't flash a re-dim.
         ov.setClickable(true);
         ov.setFocusable(true);
         ov.setFocusableInTouchMode(true);
@@ -7498,7 +7496,7 @@ public class LauncherActivity extends Activity {
 
         // Frosted card: deep slate plate, soft 14 dp corners, 1 px
         // hairline rim, subtle elevation. Slot list and picker swap
-        // visibility inside the same card — no second card needed.
+        // visibility inside the same card â no second card needed.
         android.widget.LinearLayout card = new android.widget.LinearLayout(this);
         card.setOrientation(android.widget.LinearLayout.VERTICAL);
         android.graphics.drawable.GradientDrawable cardBg =
@@ -7515,14 +7513,14 @@ public class LauncherActivity extends Activity {
         card.setClipChildren(false);
         card.setClipToPadding(false);
 
-        // ── Slot list view (default) ──────────────────────────────
+        // ââ Slot list view (default) ââââââââââââââââââââââââââââââ
         android.widget.LinearLayout col = new android.widget.LinearLayout(this);
         col.setOrientation(android.widget.LinearLayout.VERTICAL);
 
-        // Each row: [tag dot][name (fixed col)][icon][app label] — left-flow,
+        // Each row: [tag dot][name (fixed col)][icon][app label] â left-flow,
         // no flex spacer. Rows use WRAP_CONTENT and are equalised to the
         // widest row's measured width in equalizeKeymapRowWidths() after
-        // every binding update — that way the menu shrinks to fit the
+        // every binding update â that way the menu shrinks to fit the
         // longest visible app name (no dead space on the right) but the
         // selection pill still aligns across all rows.
         final int nameColW = dp(56);
@@ -7537,11 +7535,11 @@ public class LauncherActivity extends Activity {
             rowBg.setColor(Color.TRANSPARENT);
             row.setBackground(rowBg);
 
-            // [0] indicator — colour disc for the four colour keys, 3-line
+            // [0] indicator â colour disc for the four colour keys, 3-line
             //     hamburger for Menu, "CC" badge for Subtitle. v1.3.3:
             //     glyphs invert their colour when the row is selected
             //     (the row's bright frosted-white selection pill would
-            //     hide the warm-white idle glyph colour otherwise — the
+            //     hide the warm-white idle glyph colour otherwise â the
             //     "white selector blends, icon not visible" issue from
             //     v1.3.2 device testing). Colour discs keep their full
             //     saturated colour in both states. Container size dp(11)
@@ -7576,7 +7574,7 @@ public class LauncherActivity extends Activity {
             iconLp.setMarginEnd(dp(8));
             row.addView(icon, iconLp);
 
-            // [3] app label — flows left-aligned next to the icon. No
+            // [3] app label â flows left-aligned next to the icon. No
             //     flex spacer: this is the whole point of the redesign.
             TextView val = new TextView(this);
             val.setTextColor(0x88FFFFFF);
@@ -7600,12 +7598,12 @@ public class LauncherActivity extends Activity {
 
         // The divider + "Manage hidden apps" row that used to sit at the
         // bottom of the slot list moved to the unified settings panel in
-        // v1.3.0. The keymap card is now strictly key-binding territory —
+        // v1.3.0. The keymap card is now strictly key-binding territory â
         // 6 rows, no extras. Hide-apps drill-in lives at
         // {@code SETTINGS_ROW_HIDE_APPS} and reaches the same
         // {@link #enterHideManager} surface this card hosts in HIDE mode.
 
-        // ── App picker view ─────────────────────────────────────
+        // ââ App picker view âââââââââââââââââââââââââââââââââââââ
         android.widget.LinearLayout picker = new android.widget.LinearLayout(this);
         picker.setOrientation(android.widget.LinearLayout.VERTICAL);
         picker.setVisibility(View.GONE);
@@ -7642,7 +7640,7 @@ public class LauncherActivity extends Activity {
         hsv.setClipToPadding(false);
         hsv.addView(strip, new android.widget.FrameLayout.LayoutParams(WRAP, WRAP));
 
-        // ── Hide-manager view (v1.5.0: vertical list) ───────────────
+        // ââ Hide-manager view (v1.5.0: vertical list) âââââââââââââââ
         // Redesigned from the old horizontal chip strip to a vertical,
         // OK-toggleable list that mirrors the button-shortcuts slot list:
         // round app icon + label per row, ~6 rows visible and the rest
@@ -7657,8 +7655,8 @@ public class LauncherActivity extends Activity {
         hideView.setClipChildren(true);
         hideView.setClipToPadding(true);
 
-        // Header: the "Hide apps from shelf · OK toggles" title. It names the
-        // list and reminds the user that OK toggles the hidden flag — restored
+        // Header: the "Hide apps from shelf Â· OK toggles" title. It names the
+        // list and reminds the user that OK toggles the hidden flag â restored
         // per user request and styled like the picker title (tight padding so
         // there's no dead space above the list).
         TextView hideTitle = new TextView(this);
@@ -7673,7 +7671,7 @@ public class LauncherActivity extends Activity {
         hideTitle.setPadding(dp(4), dp(2), dp(4), dp(6));
         hideView.addView(hideTitle);
 
-        // Vertical scroller capped at HIDE_VISIBLE_ROWS rows tall — content
+        // Vertical scroller capped at HIDE_VISIBLE_ROWS rows tall â content
         // shorter than that wraps (no empty space); longer scrolls.
         final int hideRowH = dp(HIDE_ROW_H_DP);
         android.widget.ScrollView hideScroll = new android.widget.ScrollView(this) {
@@ -7689,7 +7687,7 @@ public class LauncherActivity extends Activity {
         hideScroll.setVerticalScrollBarEnabled(false);
         hideScroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
         // Width hugs the widest visible row (capped by the label max-width in
-        // addHideRow) → a compact, variable-width menu with no dead space for
+        // addHideRow) â a compact, variable-width menu with no dead space for
         // short names; long names ellipsize rather than widen the card.
         android.widget.LinearLayout.LayoutParams hsLp =
                 new android.widget.LinearLayout.LayoutParams(WRAP, WRAP);
@@ -7733,18 +7731,18 @@ public class LauncherActivity extends Activity {
         if (ko == null || card == null) return;
         // Warm hidden-app icons before any chip strip starts asking
         // {@code iconCache.get(pkg)}. The chip-strip's bind path doesn't
-        // queue loads on miss — it only renders the cell GONE — so an
+        // queue loads on miss â it only renders the cell GONE â so an
         // unwarmed hidden-app bitmap stays missing until something else
         // happens to load it. Idempotent, cheap on warm caches; only
         // does real work on the rare path "package broadcast invalidated
         // a hidden app's icon since the last overlay open". See
         // {@link #preWarmChipIcons} for the cost analysis.
         preWarmChipIcons();
-        // Hide the focus ring — it belongs to the shelf, which is now
+        // Hide the focus ring â it belongs to the shelf, which is now
         // logically behind the overlay.
         RingView rv = ringView; if (rv != null) rv.setVisibility(View.INVISIBLE);
         // Shared dim backdrop. Idempotent when transitioning from the
-        // settings panel — already at full alpha so this is a no-op
+        // settings panel â already at full alpha so this is a no-op
         // and the dim level stays constant.
         ensureOverlayBackdropVisible();
         // Always open in slot-list mode.
@@ -7769,7 +7767,7 @@ public class LauncherActivity extends Activity {
         // Drop-down animation: scale-up from the top-right corner with a
         // small downward translate so the card appears to "fall out" of the
         // mapper button. Pivot must be set after measure(), which happens
-        // on the next layout pass — post() guarantees getWidth() is valid.
+        // on the next layout pass â post() guarantees getWidth() is valid.
         card.animate().cancel();
         card.setAlpha(0f);
         card.setScaleX(0.94f); card.setScaleY(0.86f);
@@ -7793,7 +7791,7 @@ public class LauncherActivity extends Activity {
         final FrameLayout ko = keymapOverlay;
         final android.widget.LinearLayout card = keymapCard;
         if (ko == null) return;
-        // Apply any pending hide toggles to the shelf — done exactly once
+        // Apply any pending hide toggles to the shelf â done exactly once
         // per overlay session, so a long editing session of N toggles
         // triggers exactly one shelf rebuild instead of N. Runs ahead of
         // the snap-close branch below because both paths need the
@@ -7803,7 +7801,7 @@ public class LauncherActivity extends Activity {
             applyShelfApps(shelf);
         }
 
-        // ── Snap-close path: keymap → settings hand-off ──────────────────
+        // ââ Snap-close path: keymap â settings hand-off ââââââââââââââââââ
         // When the user drilled into the keymap card from the settings
         // panel (keymapOpenedFromSettings == true), Back from the keymap
         // card needs to land them back in the panel. The animated path
@@ -7813,12 +7811,12 @@ public class LauncherActivity extends Activity {
         //      run BEFORE the close animation so the next open started
         //      clean. With the card still visible during the 110 ms
         //      animate-out, that meant the user saw SLOTS mode behind
-        //      the fading-HIDE card — the "button shortcuts appears for
+        //      the fading-HIDE card â the "button shortcuts appears for
         //      a second" bug reported on v1.3.1.
         //   2. The 60 ms postDelayed re-open of the settings panel
         //      overlapped the 110 ms close animation, so the settings
         //      card and the keymap card were both partially visible
-        //      simultaneously for ~50 ms — visible cross-fade flicker.
+        //      simultaneously for ~50 ms â visible cross-fade flicker.
         //
         // Snap-close eliminates both: hide the keymap card instantly
         // (no animation, no SLOTS reset), then synchronously open the
@@ -7838,7 +7836,7 @@ public class LauncherActivity extends Activity {
             // keymap overlay so {@link #showSettingsPanel}'s
             // {@code ov.requestFocus()} grabs focus while ko is still
             // hosting the previously-focused chip / slot row. After
-            // that requestFocus runs, ko has no focused descendant —
+            // that requestFocus runs, ko has no focused descendant â
             // it's safe to flip ko to GONE.
             //
             // The reverse order (the v1.4.x first cut, fixed in v1.4.x)
@@ -7863,7 +7861,7 @@ public class LauncherActivity extends Activity {
             //          viewport position.
             //   4. {@code showSettingsPanel()} ran AFTER, so by the
             //      time it grabbed focus the shelf had already been
-            //      scrolled — the user saw the drift.
+            //      scrolled â the user saw the drift.
             //
             // Showing the panel first short-circuits step 1: ko's
             // focused descendant relinquishes focus to ov via the
@@ -7882,12 +7880,12 @@ public class LauncherActivity extends Activity {
             return;
         }
 
-        // ── Animated close path: user closing the keymap card directly ───
+        // ââ Animated close path: user closing the keymap card directly âââ
         // Reset to slot-list mode so a future re-open is consistent
         // (avoids the case where Back from slot-list closes the overlay
         // while picker mode was still cached as the active sub-view).
-        // For the keymap → home path this happens BEFORE the close
-        // animation since the user won't see the slot column anyway —
+        // For the keymap â home path this happens BEFORE the close
+        // animation since the user won't see the slot column anyway â
         // the next open will start in SLOTS regardless.
         keymapMode = KEYMAP_MODE_SLOTS;
         if (keymapPickerView != null) keymapPickerView.setVisibility(View.GONE);
@@ -7904,7 +7902,7 @@ public class LauncherActivity extends Activity {
                     .withLayer()
                     .withEndAction(() -> {
                         if (ko != keymapOverlay) return;
-                        // Cancellation race guard — see hideContextMenu.
+                        // Cancellation race guard â see hideContextMenu.
                         if (card.getAlpha() > 0.05f) return;
                         ko.setVisibility(View.GONE);
                         card.setAlpha(1f);
@@ -7930,7 +7928,7 @@ public class LauncherActivity extends Activity {
 
     /** Repaint every slot row to reflect the current keyMap state and
      *  selection. Called on every navigation event in slot mode and on
-     *  every commit from picker mode. Cheap — each row is a tiny
+     *  every commit from picker mode. Cheap â each row is a tiny
      *  LinearLayout with at most 4 children, all looked up by index.
      *
      *  Selection language: bright frosted-white pill + dark text, mirroring
@@ -7938,7 +7936,7 @@ public class LauncherActivity extends Activity {
      *  This keeps a single visual vocabulary across the whole launcher.
      *
      *  The manage-hidden-apps row is treated as the (rows)th selectable
-     *  entry — it lives below the key rows and a hairline divider, and
+     *  entry â it lives below the key rows and a hairline divider, and
      *  shares the same selection pill/text-inversion treatment so the
      *  highlight reads consistently across both categories. */
     private void refreshKeymapRows() {
@@ -7976,7 +7974,7 @@ public class LauncherActivity extends Activity {
                     icon.setImageBitmap(bmp);
                     icon.setVisibility(View.VISIBLE);
                 } else {
-                    // Bitmap not in iconCache yet — the icon is being
+                    // Bitmap not in iconCache yet â the icon is being
                     // loaded asynchronously and {@link #onIconLoaded}
                     // will fire {@link #refreshKeymapRows} when the
                     // bitmap lands. Keep the icon slot at INVISIBLE
@@ -7984,7 +7982,7 @@ public class LauncherActivity extends Activity {
                     // text does NOT shift between "loading" and
                     // "loaded" states. Without this, the val text
                     // moved sideways every time an async icon arrived
-                    // — a visible jiggle inside the keymap card.
+                    // â a visible jiggle inside the keymap card.
                     icon.setImageDrawable(null);
                     icon.setVisibility(View.INVISIBLE);
                 }
@@ -8013,7 +8011,7 @@ public class LauncherActivity extends Activity {
             // near-black when the row is selected so they stay visible
             // against the bright frosted-white selection pill (the
             // v1.3.2 "white selector blends, icon not visible" issue).
-            // The colour discs ignore the selected flag — they keep
+            // The colour discs ignore the selected flag â they keep
             // their saturated brand colour in both states. setSelectedState
             // is a no-op when the state hasn't actually changed, so the
             // call is safe to fire on every refresh.
@@ -8025,13 +8023,13 @@ public class LauncherActivity extends Activity {
 
         // The manage-hidden-apps row that used to sit at index `rows` was
         // removed in v1.3.0; it now lives in the unified settings panel.
-        // No special-case repaint needed here — the slot loop above
+        // No special-case repaint needed here â the slot loop above
         // covers every visible row.
 
         // Equalise row widths to the widest row so the menu is exactly as
         // wide as it needs to be (no dead space) AND the selection pill
         // aligns across all rows. Only re-measure when bindings/labels
-        // might have changed — selection-only repaints (every UP/DOWN
+        // might have changed â selection-only repaints (every UP/DOWN
         // press) skip this entirely, saving 7 view-measure passes per
         // navigation event.
         if (keymapRowsNeedEqualize) {
@@ -8043,15 +8041,15 @@ public class LauncherActivity extends Activity {
     /** Measure every selectable row in the slot column and snap them all to
      *  the widest measured width. Iterates every LinearLayout child (the
      *  6 key rows). v1.3.0 dropped the divider + manage row from this
-     *  column — the {@code instanceof LinearLayout} check is kept as a
+     *  column â the {@code instanceof LinearLayout} check is kept as a
      *  defensive guard against future structural drift. Called from
      *  refreshKeymapRows() after every binding/text change so the menu
      *  auto-fits the longest app label.
      *
      *  <p>v1.4.1 audit: dropped the per-row "restore prevW between
      *  measure and final-set" pass. The intermediate width does not
-     *  affect the final result — every row is unconditionally re-snapped
-     *  to {@code max} below — so restoring it just to overwrite it on
+     *  affect the final result â every row is unconditionally re-snapped
+     *  to {@code max} below â so restoring it just to overwrite it on
      *  the next pass was one wasted {@code setLayoutParams} call (and
      *  the {@code requestLayout} cascade it triggers) per row. With
      *  6 rows that's 6 cascades saved per re-equalize. Functional
@@ -8063,7 +8061,7 @@ public class LauncherActivity extends Activity {
         // Pass 1: force every row to WRAP_CONTENT (so {@code measure()}
         // reports the natural intrinsic width, not the previous
         // {@code max}-snapped width), then measure. We DO NOT restore
-        // here — pass 2 below sets every row to the new {@code max}
+        // here â pass 2 below sets every row to the new {@code max}
         // unconditionally, so the WRAP_CONTENT state is transient by
         // construction.
         for (int i = 0; i < n; i++) {
@@ -8091,11 +8089,11 @@ public class LauncherActivity extends Activity {
         }
     }
 
-    // ── App picker mode ──────────────────────────────────────────
+    // ââ App picker mode ââââââââââââââââââââââââââââââââââââââââââ
 
     /** Enter picker mode for the slot at rowIdx. Hides the slot list,
      *  rebuilds the chip strip from the current appList (only when its
-     *  size has changed since the last build — chips are cheap but
+     *  size has changed since the last build â chips are cheap but
      *  rebuilding ~50 of them on every reopen is needless GC pressure),
      *  and selects the chip matching the current binding (or "None" if
      *  unassigned). */
@@ -8110,7 +8108,7 @@ public class LauncherActivity extends Activity {
             rebuildPickerChips();
             keymapPickerBuiltSize = appList.size();
         } else {
-            // Strip cached from a previous open — top up any chips whose
+            // Strip cached from a previous open â top up any chips whose
             // bitmap was missing from iconCache at build time but has
             // since been loaded. See refreshHideChipIcons for the same
             // pattern in the hide-manager strip.
@@ -8118,7 +8116,7 @@ public class LauncherActivity extends Activity {
         }
         // Pre-select the chip matching the current binding so left/right
         // navigates from where the user is, not always from the start.
-        // Resolve against the picker's own sorted snapshot — never appList.
+        // Resolve against the picker's own sorted snapshot â never appList.
         int kc = SHORTCUT_KEYCODES[rowIdx];
         String pkg = keyMap.get(kc);
         int idx = 0; // 0 = "None" sentinel
@@ -8133,13 +8131,13 @@ public class LauncherActivity extends Activity {
         keymapColumn.setVisibility(View.GONE);
         keymapPickerView.setVisibility(View.VISIBLE);
         refreshKeymapPicker();
-        // Initial scroll happens after layout — post() so getLeft() of the
+        // Initial scroll happens after layout â post() so getLeft() of the
         // selected chip is non-zero.
         final android.widget.HorizontalScrollView hsv = keymapPickerHsv;
         if (hsv != null) hsv.post(this::scrollPickerToSelection);
     }
 
-    /** Cancel the picker without writing anything — return to slot list. */
+    /** Cancel the picker without writing anything â return to slot list. */
     private void exitAppPicker() {
         keymapMode = KEYMAP_MODE_SLOTS;
         if (keymapPickerView != null) keymapPickerView.setVisibility(View.GONE);
@@ -8148,14 +8146,14 @@ public class LauncherActivity extends Activity {
 
     /** Commit the highlighted chip as the binding for the current slot row,
      *  save to SharedPreferences, refresh the slot-list display, and return
-     *  to slot mode. Idx 0 = "None" → delete the binding. */
+     *  to slot mode. Idx 0 = "None" â delete the binding. */
     private void commitAppPickerSelection() {
         int kc = SHORTCUT_KEYCODES[keymapPickerSlotRow];
         if (keymapPickerIdx <= 0) {
             keyMap.delete(kc);
         } else {
             int appIdx = keymapPickerIdx - 1;
-            // Resolve through the picker's sorted snapshot — the chip the
+            // Resolve through the picker's sorted snapshot â the chip the
             // user highlighted ALWAYS maps to this exact app, regardless of
             // any later home/drawer reorder.
             if (appIdx >= 0 && appIdx < keymapPickerApps.size()) {
@@ -8163,7 +8161,7 @@ public class LauncherActivity extends Activity {
             }
         }
         saveKeyMap();
-        // Slot-row text just changed — schedule a re-measure on the next
+        // Slot-row text just changed â schedule a re-measure on the next
         // refresh so equalised widths reflect the new app label.
         keymapRowsNeedEqualize = true;
         refreshKeymapRows();
@@ -8173,7 +8171,7 @@ public class LauncherActivity extends Activity {
     /** Rebuild the chip strip from a stable, alphabetically-sorted snapshot
      *  of {@link #appList}. Called when the app-list size changes since the
      *  last build (see enterAppPicker) or when a package broadcast / reconcile
-     *  invalidates the cache — NOT on every reopen. The picker order is
+     *  invalidates the cache â NOT on every reopen. The picker order is
      *  intentionally INDEPENDENT of the home/drawer order: reordering apps on
      *  the shelf or in the drawer never changes which chip maps to which
      *  package, so a binding can't drift onto the wrong app. */
@@ -8181,18 +8179,18 @@ public class LauncherActivity extends Activity {
         android.widget.LinearLayout strip = keymapPickerStrip;
         if (strip == null) return;
         strip.removeAllViews();
-        // Stable alphabetical snapshot — the single source of truth for the
+        // Stable alphabetical snapshot â the single source of truth for the
         // chip order AND for every package lookup the picker performs.
         keymapPickerApps.clear();
         keymapPickerApps.addAll(appList);
         Collections.sort(keymapPickerApps,
                 (a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.label, b.label));
-        // First chip is the "Not assigned" sentinel — always present so the
+        // First chip is the "Not assigned" sentinel â always present so the
         // user can clear a binding from the picker without a separate gesture.
         addPickerChip(strip, getString(R.string.keymap_not_assigned), null, true);
         for (int i = 0; i < keymapPickerApps.size(); i++) {
             AppInfo a = keymapPickerApps.get(i);
-            // TV inputs have no app icon in the cache — draw a small input
+            // TV inputs have no app icon in the cache â draw a small input
             // glyph so the chip isn't blank. Apps use their cached round icon.
             Bitmap b = (a.tvInputId != null)
                     ? IconRenderer.generateInputGlyphIcon(dp(20), density)
@@ -8275,7 +8273,7 @@ public class LauncherActivity extends Activity {
         // the just-loaded package is actually bound to a slot. Without
         // the binding check the slot card is repainted on every icon
         // delivery during the cold-start icon flood (~50 deliveries on
-        // a typical TV) — each repaint walks all 6 rows, re-checks the
+        // a typical TV) â each repaint walks all 6 rows, re-checks the
         // bitmap cache, and re-mutates colours / GradientDrawable
         // backgrounds. Most of those repaints are pure noise because
         // the package whose icon just landed isn't shown anywhere on
@@ -8320,8 +8318,8 @@ public class LauncherActivity extends Activity {
         // uses INVISIBLE (reserves layout space, doesn't draw) so a
         // later icon delivery via {@link #setChipIcon} flips visibility
         // VISIBLE without changing the chip's measured width. See the
-        // {@link #addHideRow} javadoc for the visual rationale — the
-        // GONE → VISIBLE alternative made chips visibly resize on
+        // {@link #addHideRow} javadoc for the visual rationale â the
+        // GONE â VISIBLE alternative made chips visibly resize on
         // every async icon load and shifted neighbours along the strip.
         if (!isNone) {
             ImageView iv = new ImageView(this);
@@ -8355,14 +8353,14 @@ public class LauncherActivity extends Activity {
      *  selected chip into the viewport.
      *
      *  Two paint modes:
-     *    • prev < 0 → first paint after entering picker mode. We must do a
+     *    â¢ prev < 0 â first paint after entering picker mode. We must do a
      *      FULL sweep here, instantly resetting every chip's pill colour /
      *      text colour / scale to the idle state and then highlighting only
      *      the current one. This is the fix for the "2 or 3 selectors at
      *      once" bug: previous picker sessions left their selected chip
      *      scaled-up + bright-pilled, and the cheap two-chip diff path
      *      below could not undo those stale highlights.
-     *    • prev ≥ 0 → in-session navigation. Only the two chips that
+     *    â¢ prev â¥ 0 â in-session navigation. Only the two chips that
      *      changed are touched (animated), keeping per-keypress work O(1). */
     private void refreshKeymapPicker() {
         android.widget.LinearLayout strip = keymapPickerStrip;
@@ -8372,7 +8370,7 @@ public class LauncherActivity extends Activity {
         int prev = keymapPickerLastIdx;
         int curr = keymapPickerIdx;
         if (prev < 0) {
-            // Full reset — instant (no animation) so we don't trigger N
+            // Full reset â instant (no animation) so we don't trigger N
             // simultaneous spring animations across the whole strip.
             for (int i = 0; i < n; i++) {
                 if (i == curr) continue;
@@ -8386,7 +8384,7 @@ public class LauncherActivity extends Activity {
             if (prev < n) paintPickerChip(strip.getChildAt(prev), false, true);
             if (curr >= 0 && curr < n) paintPickerChip(strip.getChildAt(curr), true, true);
         }
-        // prev == curr (and ≥ 0): nothing visual changed — skip work.
+        // prev == curr (and â¥ 0): nothing visual changed â skip work.
         keymapPickerLastIdx = curr;
         scrollPickerToSelection();
     }
@@ -8432,7 +8430,7 @@ public class LauncherActivity extends Activity {
         View chip = strip.getChildAt(keymapPickerIdx);
         if (chip == null) return;
         if (chip.getWidth() == 0) {
-            // Layout hasn't run yet — try again next frame.
+            // Layout hasn't run yet â try again next frame.
             hsv.post(this::scrollPickerToSelection);
             return;
         }
@@ -8451,14 +8449,14 @@ public class LauncherActivity extends Activity {
     /** D-pad navigation inside the overlay. Routes by current mode:
      *
      *  SLOT mode:
-     *    UP/DOWN — move slot selection
-     *    OK      — enter picker for the selected slot
-     *    BACK    — close the overlay
+     *    UP/DOWN â move slot selection
+     *    OK      â enter picker for the selected slot
+     *    BACK    â close the overlay
      *
      *  PICKER mode:
-     *    LEFT/RIGHT — move chip selection (auto-scrolls)
-     *    OK         — commit the chip and return to slot mode
-     *    BACK       — cancel and return to slot mode
+     *    LEFT/RIGHT â move chip selection (auto-scrolls)
+     *    OK         â commit the chip and return to slot mode
+     *    BACK       â cancel and return to slot mode
      *
      *  All other keys are swallowed so unmapped remote buttons don't
      *  bleed through and trigger their (potentially mapped) shortcut
@@ -8472,7 +8470,7 @@ public class LauncherActivity extends Activity {
         }
         int kc = ev.getKeyCode();
         // Volume / mute / power / system keys must keep working even while
-        // the overlay is open — the overlay is a launcher-level dropdown,
+        // the overlay is open â the overlay is a launcher-level dropdown,
         // not a hardware-blocking modal. Returning false here lets
         // dispatchKeyEvent fall through to super so the platform delivers
         // the key to its global handler (AudioService, PowerManager, etc.).
@@ -8508,7 +8506,7 @@ public class LauncherActivity extends Activity {
     }
 
     private boolean handleKeymapSlotsKey(int kc) {
-        // 6 key bindings only — the v1.2.x "manage hidden apps" 7th row
+        // 6 key bindings only â the v1.2.x "manage hidden apps" 7th row
         // moved to the unified settings panel in v1.3.0.
         int rows = SHORTCUT_LABELS.length;
         switch (kc) {
@@ -8527,7 +8525,7 @@ public class LauncherActivity extends Activity {
             case KeyEvent.KEYCODE_ESCAPE:
                 hideKeymapOverlay(); return true;
         }
-        // Swallow everything else — see method javadoc.
+        // Swallow everything else â see method javadoc.
         return true;
     }
 
@@ -8549,11 +8547,11 @@ public class LauncherActivity extends Activity {
             case KeyEvent.KEYCODE_ESCAPE:
                 exitAppPicker(); return true;
         }
-        // Swallow everything else — see handleKeymapOverlayKey javadoc.
+        // Swallow everything else â see handleKeymapOverlayKey javadoc.
         return true;
     }
 
-    // ── Hide-manager mode ────────────────────────────────────────────────
+    // ââ Hide-manager mode ââââââââââââââââââââââââââââââââââââââââââââââââ
     //
     // Vertical, OK-toggleable list of every installed app inside the same
     // card that hosts the slot list and picker. Rows are built once per
@@ -8563,14 +8561,14 @@ public class LauncherActivity extends Activity {
     // (see hideKeymapOverlay) so a heavy session of multiple toggles
     // doesn't trigger N shelf rebuilds.
 
-    /** Enter hide mode — swap the slot list for the hide chip strip,
+    /** Enter hide mode â swap the slot list for the hide chip strip,
      *  rebuild chips on first open / after a package change, and pre-select
      *  the first chip. Mirrors enterAppPicker exactly so the UX feels
      *  identical between the two card sub-modes. */
     private void enterHideManager() {
         if (keymapColumn == null || keymapHideView == null) return;
         // The hidden-apps list depends on the hiddenApps SET (not appList
-        // size), and it's small, so just rebuild it on every open — cheap and
+        // size), and it's small, so just rebuild it on every open â cheap and
         // always correct after a hide/unhide or package change.
         buildHideChips();
         int n = hideListApps.size();
@@ -8581,7 +8579,7 @@ public class LauncherActivity extends Activity {
         if (keymapPickerView != null) keymapPickerView.setVisibility(View.GONE);
         keymapHideView .setVisibility(View.VISIBLE);
         refreshHideStrip();
-        // Initial scroll happens after layout — post() so getTop() of the
+        // Initial scroll happens after layout â post() so getTop() of the
         // selected row is valid.
         final android.widget.ScrollView sv = keymapHideScroll;
         if (sv != null) sv.post(this::scrollHideToSelection);
@@ -8590,17 +8588,17 @@ public class LauncherActivity extends Activity {
     /** Cancel the hide manager and return to slot mode. The shelf is
      *  re-filtered only on overlay close (see hideKeymapOverlay) so
      *  exiting hide mode without closing the overlay leaves the shelf
-     *  alone — cheap, and avoids a flicker behind the dim.
+     *  alone â cheap, and avoids a flicker behind the dim.
      *
      *  <p>v1.3.0: when the user entered HIDE directly from the settings
      *  panel (the "Manage hidden apps" row), Back from HIDE should NOT
      *  drop the user into the SLOTS list (which the user never opened
      *  and doesn't expect to see). The
-     *  {@link #hideManagerSkipSlotsOnExit} flag — set in
+     *  {@link #hideManagerSkipSlotsOnExit} flag â set in
      *  {@link #activateSettingsRow} alongside
-     *  {@link #keymapOpenedFromSettings} — short-circuits the SLOTS
+     *  {@link #keymapOpenedFromSettings} â short-circuits the SLOTS
      *  return path and dismisses the keymap card directly, which then
-     *  re-opens the settings panel via the existing keymap → settings
+     *  re-opens the settings panel via the existing keymap â settings
      *  hand-off (so the user lands at "settings panel, Manage hidden
      *  apps row selected"). */
     private void exitHideManager() {
@@ -8614,7 +8612,7 @@ public class LauncherActivity extends Activity {
         if (keymapColumn   != null) keymapColumn  .setVisibility(View.VISIBLE);
         // Land focus back on the row the user came from. Pre-v1.3.0 this
         // was SHORTCUT_LABELS.length (the manage-hidden-apps 7th row),
-        // but that row is now in the settings panel — fall back to the
+        // but that row is now in the settings panel â fall back to the
         // first slot row when re-entering SLOTS from HIDE within the
         // keymap card itself.
         keymapSelectedRow = 0;
@@ -8627,15 +8625,15 @@ public class LauncherActivity extends Activity {
      *  same horizontal LinearLayout shape used by the keymap picker:
      *  [icon (20dp)] [label]. The hidden flag is encoded entirely as a
      *  paint flag on the label TextView (Paint.STRIKE_THRU_TEXT_FLAG),
-     *  so toggling state is a single setPaintFlags() call — no view
+     *  so toggling state is a single setPaintFlags() call â no view
      *  insert/remove churn, no visibility flip, no allocation. */
     private void buildHideChips() {
         android.widget.LinearLayout strip = keymapHideStrip;
         if (strip == null) return;
         strip.removeAllViews();
         hideListApps.clear();
-        // Only hidden apps appear here, in stable ALPHABETICAL order — row
-        // i ↔ hideListApps.get(i). The order is independent of the
+        // Only hidden apps appear here, in stable ALPHABETICAL order â row
+        // i â hideListApps.get(i). The order is independent of the
         // home/drawer order so it never shifts under a reorder, and every
         // consumer (toggle, icon top-up, live icon delivery) resolves
         // through this same list by package.
@@ -8647,7 +8645,7 @@ public class LauncherActivity extends Activity {
                 (a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.label, b.label));
         for (int i = 0; i < hideListApps.size(); i++) {
             AppInfo a = hideListApps.get(i);
-            // TV inputs have no cached app icon — use a small input glyph.
+            // TV inputs have no cached app icon â use a small input glyph.
             Bitmap b = (a.tvInputId != null)
                     ? IconRenderer.generateInputGlyphIcon(dp(22), density)
                     : ((iconCache != null) ? iconCache.get(a.packageName) : null);
@@ -8680,7 +8678,7 @@ public class LauncherActivity extends Activity {
      *  ImageView is hidden (icon was null at build time) with the bitmap
      *  now in iconCache. The strip is built once per app-list-size change
      *  to avoid view churn on every reopen, but the underlying iconCache
-     *  populates asynchronously and lazily — so a chip built before the
+     *  populates asynchronously and lazily â so a chip built before the
      *  icon was loaded would otherwise stay icon-less for the launcher's
      *  lifetime. The fix is allocation-free: each chip already has the
      *  ImageView slot reserved (kept GONE for layout consistency); we just
@@ -8756,9 +8754,9 @@ public class LauncherActivity extends Activity {
 
     /** Repaint chip styles to reflect current selection AND hidden state.
      *  Two paint modes (same dispatch pattern as refreshKeymapPicker):
-     *    • prev < 0 → first paint after entering hide mode. Full sweep:
+     *    â¢ prev < 0 â first paint after entering hide mode. Full sweep:
      *      every chip's pill colour / text colour / strike-through / scale.
-     *    • prev ≥ 0 → in-session navigation. Only the two chips that
+     *    â¢ prev â¥ 0 â in-session navigation. Only the two chips that
      *      changed selection are repainted. The toggled chip's strike-
      *      through is updated separately by {@link #toggleSelectedHide}. */
     private void refreshHideStrip() {
@@ -8769,9 +8767,9 @@ public class LauncherActivity extends Activity {
         int prev = keymapHideLastIdx;
         int curr = keymapHideIdx;
         // Every row in this list is a hidden app, so there is no per-row
-        // "hidden" distinction to encode — pass hidden=false (no strike).
+        // "hidden" distinction to encode â pass hidden=false (no strike).
         if (prev < 0) {
-            // Full sweep — paint every row's idle state, then highlight the
+            // Full sweep â paint every row's idle state, then highlight the
             // current one.
             for (int i = 0; i < n; i++) {
                 paintHideRow(strip.getChildAt(i), i == curr, false, false);
@@ -8785,9 +8783,9 @@ public class LauncherActivity extends Activity {
     }
 
     /** Single source of truth for a hide-<em>row</em>'s visual state. Matches
-     *  the slot-row paint: selected → dark text on a bright pill; idle →
+     *  the slot-row paint: selected â dark text on a bright pill; idle â
      *  light text on transparent. Hidden adds a strike-through on the label
-     *  so the flag is legible in both states. (No scale — rows aren't chips.) */
+     *  so the flag is legible in both states. (No scale â rows aren't chips.) */
     private void paintHideRow(View row, boolean sel, boolean hidden, boolean animate) {
         if (row == null) return;
         android.graphics.drawable.Drawable bgd = row.getBackground();
@@ -8813,7 +8811,7 @@ public class LauncherActivity extends Activity {
     /** OK on a row in the hidden-apps manager UNHIDES that app (every row in
      *  this list is a hidden app). Persists the change, re-filters the shelf
      *  on overlay close (keymapHideDirty), and rebuilds the list so the now-
-     *  visible app drops out — keeping the manager strictly "hidden apps only".
+     *  visible app drops out â keeping the manager strictly "hidden apps only".
      *  Hiding is done from the long-press context menu, not here. */
     private void toggleSelectedHide() {
         int idx = keymapHideIdx;
@@ -8838,7 +8836,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Re-place a just-unhidden app at the FIRST drawer slot (immediately past
-     *  the home segment) instead of leaving it at its old index — which, if
+     *  the home segment) instead of leaving it at its old index â which, if
      *  that index fell inside the home row, would push a current favourite out
      *  to the drawer. The home row keeps exactly the apps it shows now; the
      *  returning app joins the top of the drawer.
@@ -8848,7 +8846,7 @@ public class LauncherActivity extends Activity {
      *  re-insert it at the {@link #appList} index whose visible rank equals
      *  {@code hc}, so its new visible rank is exactly the first drawer slot.
      *  When there aren't enough visible apps to fill the home row it simply
-     *  lands at the end (still in the home row — unavoidable, and correct).
+     *  lands at the end (still in the home row â unavoidable, and correct).
      *  The new order is persisted; the shelf/drawer rebuild on the hide-manager
      *  close (keymapHideDirty) renders it. */
     private void repositionUnhiddenIntoDrawer(AppInfo app) {
@@ -8867,7 +8865,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Auto-scroll the vertical list so the selected row stays in view with
-     *  a small margin (v1.5.0 — was a horizontal strip scroll). */
+     *  a small margin (v1.5.0 â was a horizontal strip scroll). */
     private void scrollHideToSelection() {
         android.widget.ScrollView sv = keymapHideScroll;
         android.widget.LinearLayout strip = keymapHideStrip;
@@ -8908,14 +8906,14 @@ public class LauncherActivity extends Activity {
             case KeyEvent.KEYCODE_ESCAPE:
                 exitHideManager(); return true;
         }
-        // Swallow everything else — see handleKeymapOverlayKey javadoc.
+        // Swallow everything else â see handleKeymapOverlayKey javadoc.
         return true;
     }
 
     private void preWarmIcon(AppInfo app) {
         String key = app.packageName;
         if (iconCache.get(key) != null || iconInflight.containsKey(key)) return;
-        // Register an empty waiter list — visible cells self-register via loadIconAsync/bind().
+        // Register an empty waiter list â visible cells self-register via loadIconAsync/bind().
         // The redundant attached-cell scan was removed: it caused double setIconBitmap delivery
         // when a cell was already in the waiters list AND matched the attached scan.
         List<IconTarget> waiters = new ArrayList<>(2);
@@ -8947,14 +8945,14 @@ public class LauncherActivity extends Activity {
                             // Guard: only deliver to a cell that is still attached
                             // and bound to this package. A cell that's been recycled
                             // back to the pool has visibility GONE and a null
-                            // boundApp — delivering would invalidate a hidden view
+                            // boundApp â delivering would invalidate a hidden view
                             // for nothing.
                             if (cell.iconTargetVisible() && key.equals(cell.iconTargetPackage()))
                                 cell.setIconBitmap(fb);
                         }
                     }
                     // Live-update any open chip strips / slot rows showing
-                    // this package — the bitmap may have been requested
+                    // this package â the bitmap may have been requested
                     // for the shelf but the user is currently inside the
                     // hide manager / keymap picker. Runs even when the
                     // shelf-delivery path short-circuited above (pending
@@ -8972,16 +8970,16 @@ public class LauncherActivity extends Activity {
      *
      * <p>This is the consolidated path for both {@link #preWarmIcon} and
      * {@link #loadIconAsync}. It runs on the {@code iconExecutor} (NEVER
-     * on the UI thread — disk I/O and PM binder calls combined can run
+     * on the UI thread â disk I/O and PM binder calls combined can run
      * 30-50 ms each, which would skip multiple frames if invoked from
      * {@code cell.bind} or similar).
      *
      * <p>Sequence:
      * <ol>
-     *   <li>{@link IconDiskCache#tryRead} — synchronous WEBP decode of
+     *   <li>{@link IconDiskCache#tryRead} â synchronous WEBP decode of
      *       the cached file. ~2-5 ms on hit, 0 ms on miss.</li>
      *   <li>If miss: {@link #resolveIconDrawable} (PM binder +
-     *       drawable resolve) → {@link IconRenderer#process}
+     *       drawable resolve) â {@link IconRenderer#process}
      *       (AdaptiveIcon compositing / circle clip / plate
      *       detection). ~30-50 ms.</li>
      *   <li>On a fresh PM-resolved bitmap, mirror to disk via
@@ -8989,7 +8987,7 @@ public class LauncherActivity extends Activity {
      *       hits the disk fast-path.</li>
      * </ol>
      *
-     * <p>Returns {@code null} on any failure — callers handle the null
+     * <p>Returns {@code null} on any failure â callers handle the null
      * (cell stays at placeholder until a future load succeeds).
      */
     private Bitmap loadIconBlocking(AppInfo app) {
@@ -8999,7 +8997,7 @@ public class LauncherActivity extends Activity {
         // is volatile so the read is coherent on every CPU; capturing
         // once also guarantees the disk-read, the IconRenderer.process
         // output dimensions, AND the disk-write key all agree even if
-        // density changes mid-call (HDMI swap, multi-window resize) —
+        // density changes mid-call (HDMI swap, multi-window resize) â
         // without the snapshot, an internal {@code dp(ICON_DP)}
         // re-read could produce a B-sized bitmap that we then store
         // under an A-keyed filename, causing a future read at A to
@@ -9022,47 +9020,47 @@ public class LauncherActivity extends Activity {
      *
      * <p>Two paths:
      * <ol>
-     *   <li>{@code app.ri != null} — the AppInfo came from a fresh
+     *   <li>{@code app.ri != null} â the AppInfo came from a fresh
      *       {@link android.content.pm.PackageManager#queryIntentActivities}
      *       call. {@link android.content.pm.ResolveInfo#loadIcon} returns
      *       the activity's launcher drawable directly.</li>
-     *   <li>{@code app.ri == null} — the AppInfo was reconstructed from
+     *   <li>{@code app.ri == null} â the AppInfo was reconstructed from
      *       the on-disk {@link AppListCache} (which cannot serialise
      *       ResolveInfo). Fall back to
      *       {@link android.content.pm.PackageManager#getActivityIcon(android.content.ComponentName)}
      *       which gives the same drawable via the activity's
-     *       ComponentName — same binder cost, same result. Throws
+     *       ComponentName â same binder cost, same result. Throws
      *       {@link android.content.pm.PackageManager.NameNotFoundException}
      *       when the package vanished between the cache write and the
      *       read; the next package broadcast invalidates the cache so
      *       the stale entry doesn't survive long.</li>
      * </ol>
      *
-     * <p>Returns {@code null} on any exception — the icon-load callers
+     * <p>Returns {@code null} on any exception â the icon-load callers
      * already handle null from the previous {@code ri.loadIcon} path
      * (placeholder cell stays until a future cache refresh succeeds).
      */
     private Drawable resolveIconDrawable(AppInfo app) {
         if (app == null) return null;
-        // Request icons at 2× the device's actual screen density (the
-        // standard "give the downscaler headroom" ratio — same idea as
+        // Request icons at 2Ã the device's actual screen density (the
+        // standard "give the downscaler headroom" ratio â same idea as
         // 2x/3x web assets), capped at DENSITY_XXXHIGH (640 dpi).
         //
         // Why not just hardcode XXXHIGH for every device? On a TV box
         // that already reports a high density (xhdpi+, the common case
-        // on modern TVs), 2× naturally saturates at the XXXHIGH cap, so
+        // on modern TVs), 2Ã naturally saturates at the XXXHIGH cap, so
         // behaviour there is unchanged. But on the boxes that actually
-        // have the bug — ones reporting a LOW density (e.g. 160 dpi =
+        // have the bug â ones reporting a LOW density (e.g. 160 dpi =
         // mdpi), where ri.loadIcon(pm) fetches the mdpi asset and
-        // upscales it to iconPx, looking blurry — unconditionally
+        // upscales it to iconPx, looking blurry â unconditionally
         // requesting XXXHIGH forces decoding a ~640 dpi asset (e.g. a
-        // 432×432 px adaptive-icon foreground layer) when the screen
-        // only needed roughly 320 dpi worth of sharpness. That's a 4×
+        // 432Ã432 px adaptive-icon foreground layer) when the screen
+        // only needed roughly 320 dpi worth of sharpness. That's a 4Ã
         // larger decode (and proportionally more transient ARGB_8888
         // memory) for zero additional visible benefit, multiplied across
-        // every app on the shelf during the initial icon-load flood —
+        // every app on the shelf during the initial icon-load flood â
         // exactly the moment low-RAM devices are already under the most
-        // memory pressure. Scaling the request to 2× what the device
+        // memory pressure. Scaling the request to 2Ã what the device
         // actually needs fixes the same blurry-icon bug with a request
         // proportional to what will actually be visible.
         int deviceDensityDpi = Math.round(density * DisplayMetrics.DENSITY_DEFAULT);
@@ -9101,15 +9099,15 @@ public class LauncherActivity extends Activity {
         return null;
     }
 
-    // ── Banner-tile pipeline (v1.5.0) ────────────────────────────────────
+    // ââ Banner-tile pipeline (v1.5.0) ââââââââââââââââââââââââââââââââââââ
     // Mirrors the icon pipeline (preWarmIcon / loadIconAsync) but produces
     // the TV-style banner tiles the home / drawer cells display, into
     // {@link #bannerCache} / {@link #bannerInflight}. Delivers to the same
     // {@link IconTarget} cells (their display bitmap is the banner). Does NOT
-    // fire {@link #onIconLoaded} — that hook is for the round chip icons.
+    // fire {@link #onIconLoaded} â that hook is for the round chip icons.
 
     /** Resolve the app's TV banner ({@code android:banner}) drawable, or
-     *  {@code null} if it ships none (the common case for phone-style apps —
+     *  {@code null} if it ships none (the common case for phone-style apps â
      *  those fall back to a generated tile). */
     private Drawable resolveBannerDrawable(AppInfo app) {
         if (app == null) return null;
@@ -9128,7 +9126,7 @@ public class LauncherActivity extends Activity {
 
     /** Background-thread banner loader: real banner art (cover-fit) when the
      *  app provides one, else a generated tile (icon on a tinted rounded
-     *  rect). Always returns a {@code BANNER_W × BANNER_H} bitmap (or null). */
+     *  rect). Always returns a {@code BANNER_W Ã BANNER_H} bitmap (or null). */
     private Bitmap loadBannerBlocking(AppInfo app) {
         if (app == null) return null;
         final int w = tileWpx, h = bannerHpx, corner = tileCornerPx;
@@ -9215,7 +9213,7 @@ public class LauncherActivity extends Activity {
         if (cell.getWidth() == 0) return;
         cell.getLocationOnScreen(ringCellLoc);
         // Root location is stable for the activity's lifetime on a TV
-        // launcher — the activity window doesn't move until a
+        // launcher â the activity window doesn't move until a
         // configuration change resets us. Cache the first read and
         // reuse it across every subsequent {@code positionRing} call.
         // Saves one full {@link View#getLocationOnScreen} walk
@@ -9239,13 +9237,13 @@ public class LauncherActivity extends Activity {
         float cx = (ringCellLoc[0] - ringRootLoc[0]) + cell.getWidth() * sx / 2f;
         float cy = (ringCellLoc[1] - ringRootLoc[1]) + cachedIcyOffset * sy;
         // Keep the ring's own scale in lockstep with the cell so its radius
-        // hugs the focused icon — a fixed-size ring sat INSIDE the focused
+        // hugs the focused icon â a fixed-size ring sat INSIDE the focused
         // icon by ~2.5dp, which read as misalignment.
         rv.setScaleX(sx);
         rv.setScaleY(sy);
         rv.setX(cx - ringLayoutW / 2f); rv.setY(cy - ringLayoutH / 2f);
         if (rv.getVisibility() != View.VISIBLE) rv.setVisibility(View.VISIBLE);
-        // No invalidate() — setX/setY/setScale already mark the view dirty.
+        // No invalidate() â setX/setY/setScale already mark the view dirty.
     }
 
     /** Synchronously repositions the ring over the drag-target cell.
@@ -9259,7 +9257,7 @@ public class LauncherActivity extends Activity {
 
     private void startClock() {
         // Re-detect system 12/24-hour preference on every resume.  The user
-        // may have changed Settings → Date & time while away; we pick up the
+        // may have changed Settings â Date & time while away; we pick up the
         // new value here without requiring a ContentObserver.
         boolean detected = DateFormat.is24HourFormat(this);
         if (detected != is24Hour) {
@@ -9270,7 +9268,7 @@ public class LauncherActivity extends Activity {
             // Toggle is off: ensure the pill is hidden and no tick is
             // scheduled. tickClock would short-circuit anyway, but dropping
             // the postDelayed entirely means zero CPU per minute on installs
-            // that opt out of the clock — the configured "0 cost when off"
+            // that opt out of the clock â the configured "0 cost when off"
             // contract from the v1.3.0 design discussion.
             clockRunning = false;
             uiHandler.removeCallbacks(clockTick);
@@ -9282,7 +9280,7 @@ public class LauncherActivity extends Activity {
         if (cv != null) cv.setVisibility(View.VISIBLE);
         if (!clockRunning) {
             clockRunning = true;
-            // Fresh start — reset the minute tracker so the very first paint
+            // Fresh start â reset the minute tracker so the very first paint
             // uses the no-fade cold-render path (no spurious pulse on entry).
             clockFmt.reset();
             long now = System.currentTimeMillis();
@@ -9293,7 +9291,7 @@ public class LauncherActivity extends Activity {
 
     private void stopClock() { clockRunning = false; uiHandler.removeCallbacks(clockTick); }
 
-    // Wallpaper subsystem — the entire bitmap-loading / cross-fade / decode
+    // Wallpaper subsystem â the entire bitmap-loading / cross-fade / decode
     // state machine lives in {@link WallpaperController}. The controller is
     // built in {@link #buildLayout()} after the two stacked ImageViews are
     // attached, and torn down in {@link #onDestroy()}. Activity now only
@@ -9320,7 +9318,7 @@ public class LauncherActivity extends Activity {
         catch (Exception e) { showToast(getString(R.string.toast_no_file_picker)); }
     }
 
-    // ── Settings backup / restore (SAF, dependency-free) ─────────────────
+    // ââ Settings backup / restore (SAF, dependency-free) âââââââââââââââââ
 
     /** Launch the system "create document" UI to save the settings backup. */
     @SuppressWarnings("deprecation")
@@ -9417,7 +9415,7 @@ public class LauncherActivity extends Activity {
         // Re-order the live app list by the restored order and rebuild both
         // surfaces. applyStoredOrder leaves apps the backup didn't mention at
         // the end (alphabetical); packages in the backup not installed here are
-        // simply never matched. appByPackage is order-independent — no rebuild.
+        // simply never matched. appByPackage is order-independent â no rebuild.
         applyStoredOrder(appList);
         RecyclingShelfView s = shelf;
         if (s != null) {
@@ -9443,7 +9441,7 @@ public class LauncherActivity extends Activity {
         showToast(getString(R.string.toast_restore_done));
     }
 
-    // ── Wallpaper slideshow engine ───────────────────────────────────────
+    // ââ Wallpaper slideshow engine âââââââââââââââââââââââââââââââââââââââ
 
     /** Load persisted slideshow state into the in-memory fields. Called once
      *  from {@link #initCaches}. */
@@ -9491,10 +9489,10 @@ public class LauncherActivity extends Activity {
     /** Whether the media-read permission needed to browse image folders is
      *  granted.
      *  <ul>
-     *    <li>API 26–32: READ_EXTERNAL_STORAGE</li>
+     *    <li>API 26â32: READ_EXTERNAL_STORAGE</li>
      *    <li>API 33   : READ_MEDIA_IMAGES (full library)</li>
      *    <li>API 34+  : READ_MEDIA_IMAGES (full) OR
-     *                   READ_MEDIA_VISUAL_USER_SELECTED (partial — user
+     *                   READ_MEDIA_VISUAL_USER_SELECTED (partial â user
      *                   picked specific photos). Either grant is sufficient
      *                   for our MediaStore bucket query; partial access may
      *                   return a smaller folder list, but that is fine.</li>
@@ -9618,7 +9616,7 @@ public class LauncherActivity extends Activity {
      *  {@code onReady} on the UI thread. No-op if no folder is set.
      *  <p>Deliberately NOT on {@link #appExecutor}: that single-thread executor
      *  has a 1-deep queue and a {@code DiscardPolicy}, so a slideshow scan
-     *  submitted during the cold-start app scan would be silently dropped —
+     *  submitted during the cold-start app scan would be silently dropped â
      *  leaving {@code slideshowImages} null forever and the rotation / each-
      *  restart change dead until a manual folder re-pick. A short-lived thread
      *  (the same pattern as the folder-picker scan) always runs, costs nothing
@@ -9631,7 +9629,7 @@ public class LauncherActivity extends Activity {
                 final String[] imgs = listSlideshowImages(folder);
                 uiHandler.post(() -> {
                     if (destroyed) return;
-                    // Treat a failed enumeration (null — revoked permission /
+                    // Treat a failed enumeration (null â revoked permission /
                     // unmounted storage) as an empty list, NOT "not yet loaded".
                     // Otherwise advanceSlideshow's onReady=advance would see
                     // null and re-enumerate forever. Empty stops cleanly; a
@@ -9645,7 +9643,7 @@ public class LauncherActivity extends Activity {
                     if (onReady != null) onReady.run();
                 });
             }, "wp-slideshow-scan").start();
-        } catch (Exception ignored) { /* thread create failed — extremely rare */ }
+        } catch (Exception ignored) { /* thread create failed â extremely rare */ }
     }
 
     /** List the images in the chosen MediaStore folder (bucket), sorted by
@@ -9728,9 +9726,9 @@ public class LauncherActivity extends Activity {
 
     /** Apply the image at the current index via the wallpaper cross-fade
      *  pipeline. Uses {@code crossfadeUri} (not {@code applyFromUri}) so
-     *  the slideshow rotation never writes a snapshot or updates prefs —
+     *  the slideshow rotation never writes a snapshot or updates prefs â
      *  that work is for user-picks only.
-     *  <p>No {@code resetUserLoadingGuard()} call here — if the previous
+     *  <p>No {@code resetUserLoadingGuard()} call here â if the previous
      *  image is still decoding, we let the guard silently drop this tick.
      *  Resetting it would start two concurrent decodes that race to call
      *  {@code crossfade()}, the second cancels the first's in-flight
@@ -9743,7 +9741,7 @@ public class LauncherActivity extends Activity {
         try {
             Uri u = Uri.parse(imgs[idx]);
             wallpaperCtl.crossfadeUri(u);
-        } catch (Exception ignored) { /* bad uri — skip */ }
+        } catch (Exception ignored) { /* bad uri â skip */ }
     }
 
     /** Advance to the next image and apply it. Re-enumerates first if the
@@ -9764,7 +9762,7 @@ public class LauncherActivity extends Activity {
 
     /** (Re)arm the foreground interval timer for the current setting, or cancel
      *  it when off / paused / no folder. Cheap: one pending message at most.
-     *  Does NOT enumerate or show an image — that's handled by
+     *  Does NOT enumerate or show an image â that's handled by
      *  {@link #slideshowRestartAdvanceOnce} on the first resume after process
      *  start. This only arms the NEXT rotation. */
     private void restartSlideshowTimer() {
@@ -9788,7 +9786,7 @@ public class LauncherActivity extends Activity {
             // the same retry logic as the duration-only path.
             advanceSlideshowWithRetry();
         } else {
-            // Duration is set but "each restart" is off — just show the current
+            // Duration is set but "each restart" is off â just show the current
             // saved image without advancing the index.
             if (slideshowImages == null) {
                 // On device reboot, MediaStore might not be ready yet. The enumeration
@@ -9858,7 +9856,7 @@ public class LauncherActivity extends Activity {
         // The caller will handle this gracefully (no-op or fallback).
     }
 
-    // ── Idle UI hide (slideshow-only visual cleanup) ──────────────────────
+    // ââ Idle UI hide (slideshow-only visual cleanup) ââââââââââââââââââââââ
 
     /** Cycle the idle-hide timeout. {@code dir} is +1 (forward) or -1 (back). */
     private void stepIdleHide(int dir) {
@@ -9873,7 +9871,7 @@ public class LauncherActivity extends Activity {
         scheduleIdleHide();
     }
 
-    /** (Re)arm the idle-hide timer. Safe to call on every key press —
+    /** (Re)arm the idle-hide timer. Safe to call on every key press â
      *  cancels any pending trigger and posts a fresh one if the feature
      *  is configured and the slideshow is active. No-op otherwise. */
     private void scheduleIdleHide() {
@@ -9883,7 +9881,7 @@ public class LauncherActivity extends Activity {
     }
 
     /** Cancel the timer and, if the UI is hidden, restore it immediately
-     *  (no animation — used by onPause / overlay open). */
+     *  (no animation â used by onPause / overlay open). */
     private void cancelAndRestoreIdleHide() {
         uiHandler.removeCallbacks(idleHideTrigger);
         if (idleHideActive) applyIdleHide(false);
@@ -9892,7 +9890,7 @@ public class LauncherActivity extends Activity {
     /** Fade home UI in (active=false) or out (active=true).
      *  Views hidden: shelf, netBtn, mapperBtnView, ringView.
      *  Views kept visible: wallpaper (always), clockView (always).
-     *  Duration: 500 ms out, 250 ms in — smooth but snappy. */
+     *  Duration: 500 ms out, 250 ms in â smooth but snappy. */
     private void applyIdleHide(boolean hide) {
         if (idleHideActive == hide) return;
         idleHideActive = hide;
@@ -9905,11 +9903,11 @@ public class LauncherActivity extends Activity {
         if (nb != null) nb.animate().alpha(hide ? 0f : 0.6f).setDuration(dur).start();
         if (mb != null) mb.animate().alpha(hide ? 0f : 0.6f).setDuration(dur).start();
         if (rv != null) rv.animate().alpha(target).setDuration(dur).start();
-        // Clock stays fully visible — it is the reason idle-hide exists
+        // Clock stays fully visible â it is the reason idle-hide exists
         // (wallpaper + clock, nothing else).
     }
 
-    // ── Slideshow folder picker overlay ──────────────────────────────────
+    // ââ Slideshow folder picker overlay ââââââââââââââââââââââââââââââââââ
 
     /** Show the custom folder picker for the scanned {@code folders}. */
     private void showFolderPicker(java.util.List<String[]> folders) {
@@ -9937,7 +9935,7 @@ public class LauncherActivity extends Activity {
         folderPickerOverlay.requestFocus();
         scrollFolderPickerToSelection();
 
-        // Anchor below the gear button — same math as the keymap card.
+        // Anchor below the gear button â same math as the keymap card.
         if (card != null) anchorCardUnderGear(card, dp(78), dp(20));
 
         // Drop-down animation: same as keymap / settings card.
@@ -9999,7 +9997,7 @@ public class LauncherActivity extends Activity {
         card.setPadding(dp(8), dp(8), dp(8), dp(8));
         card.setElevation(dp(10));
 
-        // Title — same style as keymap / hide-manager title.
+        // Title â same style as keymap / hide-manager title.
         TextView title = new TextView(this);
         title.setText(R.string.folder_picker_title);
         title.setTextColor(0xFFEFEFEF);
@@ -10056,7 +10054,7 @@ public class LauncherActivity extends Activity {
             row.setBackground(rb);
 
             // Name: weight=1 so it fills the space between left edge and
-            // count badge — gives a full-width selector pill. Capped at
+            // count badge â gives a full-width selector pill. Capped at
             // dp(160) via maxWidth so a very long folder name never widens
             // the card; it ellipsises instead.
             TextView name = new TextView(this);
@@ -10150,7 +10148,7 @@ public class LauncherActivity extends Activity {
     /** Commit the chosen folder: store its bucket id, start the slideshow.
      *  If the slideshow was completely off (no interval, no each-restart),
      *  auto-enable a sensible default interval so picking a folder visibly
-     *  starts the rotation — the user shouldn't have to set a duration too.
+     *  starts the rotation â the user shouldn't have to set a duration too.
      *  Similarly, if idle-hide is off, auto-enable it to the default 2-min
      *  timeout so the slideshow gets the "clean wallpaper + clock" experience
      *  without requiring extra configuration. */
@@ -10214,7 +10212,7 @@ public class LauncherActivity extends Activity {
             if (uri != null) {
                 try { getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION); }
                 catch (SecurityException e) { showToast(getString(R.string.toast_wallpaper_no_permission)); return; }
-                // Picking a single wallpaper means "I want exactly this" — turn
+                // Picking a single wallpaper means "I want exactly this" â turn
                 // the slideshow off so it can't override the chosen image. The
                 // folder selection is kept so it's easy to re-enable.
                 slideshowDurationSec = 0;
@@ -10243,7 +10241,7 @@ public class LauncherActivity extends Activity {
         // launcher is the active home and the receiver is RECEIVER_NOT_EXPORTED.
         // Without this catch the throwable bubbles up through onCreate
         // and the activity dies before setContentView's view tree is
-        // visible — which on TV ROMs flashes the system home picker.
+        // visible â which on TV ROMs flashes the system home picker.
         // Catching here lets the launcher come up; the user-visible
         // consequence is that package-add / -remove won't auto-refresh
         // the shelf until the next onResume (which retries the listener
@@ -10268,8 +10266,8 @@ public class LauncherActivity extends Activity {
     }
 
     /** Register {@link #timeReceiver} for the system's clock-change
-     *  broadcasts. Idempotent — the registered flag prevents double
-     *  registration on rapid {@code onResume → onResume} paths some TV
+     *  broadcasts. Idempotent â the registered flag prevents double
+     *  registration on rapid {@code onResume â onResume} paths some TV
      *  ROMs emit during fast configuration transitions (the same shape
      *  of bug the {@code globalFocusListener} dedupe defends against). */
     private void registerTimeReceiver() {
@@ -10278,12 +10276,12 @@ public class LauncherActivity extends Activity {
         f.addAction(Intent.ACTION_TIME_CHANGED);
         f.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         f.addAction(Intent.ACTION_DATE_CHANGED);
-        // No data scheme — these are broadcast as plain action intents.
+        // No data scheme â these are broadcast as plain action intents.
         // RECEIVER_NOT_EXPORTED is appropriate on Tiramisu+ since these
         // are system-only broadcasts; locking the receiver keeps any
         // future third-party app from spoofing a fake clock change.
         //
-        // Best-effort registration — same defensive pattern as
+        // Best-effort registration â same defensive pattern as
         // registerPkgReceiver. If the system refuses (very rare; some
         // hardened ROMs gate even system-only broadcasts on a SELinux
         // domain) the launcher still runs; the user-visible consequence
@@ -10333,10 +10331,10 @@ public class LauncherActivity extends Activity {
         // in a single CountDownLatch await. Net effect: ~5-30 ms
         // less UI-thread blocking on slow ROMs at cold start, with
         // zero behavioural change (the load was always going to
-        // happen — just now in parallel).
+        // happen â just now in parallel).
         //
         // Stash the returned handle as {@link #prefs} so every
-        // {@code getString} / {@code edit} site reuses one instance —
+        // {@code getString} / {@code edit} site reuses one instance â
         // see the field's javadoc for the cumulative-savings rationale.
         prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         // {@link Context#getSystemService(String)} is documented to
@@ -10346,7 +10344,7 @@ public class LauncherActivity extends Activity {
         // Wear OS / IoT-derived ROMs that have ended up running on
         // cheap TV boxes) have been observed missing it. Without this
         // guard the launcher NPEs inside onCreate and dies on launch
-        // — user gets a black home screen with no recovery short of
+        // â user gets a black home screen with no recovery short of
         // a factory reset. Fall back to a 64 MB heap-class default
         // so the LruCache cap math below still produces a sensible
         // value (~8 MB cache).
@@ -10357,14 +10355,14 @@ public class LauncherActivity extends Activity {
         // icon-load executor tasks can read from / write to it. Owns
         // its own write executor; shut down in onDestroy().
         iconDiskCache = new IconDiskCache(this);
-        // The in-memory icon cache. Pure LRU, no create() fallback —
+        // The in-memory icon cache. Pure LRU, no create() fallback â
         // the disk lookup is performed inside {@link #loadIconBlocking}
         // on the iconExecutor's worker thread. Earlier drafts wired the
         // disk cache as a {@code LruCache.create()} override; that path
         // ran synchronously on the calling thread, which on cold start
         // meant {@code preWarmIcon}'s early-return check
         // ({@code iconCache.get(key)}) blocked on a disk read for every
-        // missing app — ~5 ms × 50 apps = 250 ms of UI-thread blocking
+        // missing app â ~5 ms Ã 50 apps = 250 ms of UI-thread blocking
         // inside {@code setApps}. Doing the disk read in the executor
         // task keeps every UI-thread {@code iconCache.get} memory-only
         // (instant) and lets the disk reads run in parallel across the
@@ -10374,60 +10372,60 @@ public class LauncherActivity extends Activity {
         };
         // Banner-tile cache (v1.5.0). Tiles are larger than chip icons but
         // far fewer are alive at once (only on-screen home/drawer cells), so
-        // a third of the icon budget is ample. In-memory only — no disk tier.
+        // a third of the icon budget is ample. In-memory only â no disk tier.
         bannerCache = new LruCache<String, Bitmap>(Math.max(2, cacheMb / 3) * 1024 * 1024) {
             @Override protected int sizeOf(String k, Bitmap v) { return v.getByteCount(); }
         };
         int cores = Runtime.getRuntime().availableProcessors();
         // Icon executor: {@code cores} worker threads handle the cold-start
-        // icon flood (typically 50 apps × ~20 ms decode each ≈ 1 s of work
+        // icon flood (typically 50 apps Ã ~20 ms decode each â 1 s of work
         // distributed across the pool). After the flood the queue stays
-        // empty for the rest of the session — package broadcasts and
+        // empty for the rest of the session â package broadcasts and
         // onTrimMemory are the only events that re-fire icon work, and
         // they're rare.
         //
         // 1.4.2 audit: pool size raised from {@code Math.max(2, cores - 1)}
-        // to {@code Math.max(2, cores)}. The previous "cores − 1" tuning
+        // to {@code Math.max(2, cores)}. The previous "cores â 1" tuning
         // assumed leaving a core free for the UI thread would smooth
         // cold-start frame paints. In practice Android's CFS scheduler
         // rotates threads at sub-millisecond granularity and the UI
         // thread's foreground priority class gets its fair share
         // regardless of how many CPU-bound workers are running. On a
         // 4-core TV the change lifts the cold-start icon-decode wall
-        // clock from ~333 ms (3 workers) to ~250 ms (4 workers) — a
+        // clock from ~333 ms (3 workers) to ~250 ms (4 workers) â a
         // ~25 % reduction in time-to-fully-rendered-shelf, with no
         // measurable UI-thread regression in profiling. The
         // {@code Math.max(2, ...)} floor also avoids the latent
         // IllegalArgumentException that {@code cores - 1 = 0 < max = cores}
         // would have triggered on a hypothetical single-core device
-        // (Android always reports ≥ 2 logical cores in practice, but
+        // (Android always reports â¥ 2 logical cores in practice, but
         // the contract is now defensively safe by construction).
         //
         // allowCoreThreadTimeOut(true) lets the core threads exit after
         // the 30 s keepAlive elapses. Without this they sit in WAITING
-        // forever, holding ~0.5–1 MB of stack each and showing up in
+        // forever, holding ~0.5â1 MB of stack each and showing up in
         // StrictMode / heap dumps as live launcher state. The platform
         // re-creates them on the next executor.execute() call, so the
         // observable behaviour for the next icon flood is identical
-        // (other than a one-time thread-creation cost in the µs range).
+        // (other than a one-time thread-creation cost in the Âµs range).
         //
         // Queue capacity: RecyclingShelfView.setApps() submits ONE
-        // preWarmIcon() task per app, synchronously, in a tight loop —
+        // preWarmIcon() task per app, synchronously, in a tight loop â
         // every cold-start app count lands on this queue essentially at
         // once. A 128-deep bound was tight enough that TV boxes shipping
         // with large pre-installed app catalogues (150-300+ streaming
         // apps is common on cheap Android TV hardware) could overflow it.
         // DiscardOldestPolicy silently drops the OLDEST *queued* task to
-        // make room for the new one — it does not throw, so the
+        // make room for the new one â it does not throw, so the
         // RejectedExecutionException cleanup below never runs for the
         // discarded task, and that task's iconInflight entry is never
         // removed. The affected package's icon then stays stuck on the
         // placeholder for the rest of the session (nothing re-queues it
         // until a package broadcast for that exact app, or a
         // TRIM_MEMORY_COMPLETE clear, frees the orphaned entry). Bumped
-        // to 1024 — comfortably above any realistic installed-app count
+        // to 1024 â comfortably above any realistic installed-app count
         // (a queued task is just a tiny Runnable closure, so the memory
-        // cost of the higher bound is negligible and transient) — so the
+        // cost of the higher bound is negligible and transient) â so the
         // discard path is no longer reachable in practice while still
         // keeping the queue bounded against a genuinely runaway producer.
         int iconWorkers = Math.max(2, cores);
@@ -10456,9 +10454,9 @@ public class LauncherActivity extends Activity {
         // renders day-of-week + time, when false the pill is hidden and no
         // minute tick is scheduled (zero CPU per minute).
         // Clock display preference. v1.4.9 replaced the boolean show/hide with
-        // a 3-state mode (full → time-only → off), persisted as an int under
+        // a 3-state mode (full â time-only â off), persisted as an int under
         // KEY_CLOCK_MODE. Pre-1.4.9 installs only have the boolean KEY_SHOW_CLOCK,
-        // so migrate from it the first time (true → FULL, false → OFF).
+        // so migrate from it the first time (true â FULL, false â OFF).
         int storedMode = prefs.getInt(KEY_CLOCK_MODE, -1);
         if (storedMode < CLOCK_FULL || storedMode > CLOCK_OFF) {
             storedMode = prefs.getBoolean(KEY_SHOW_CLOCK, true) ? CLOCK_FULL : CLOCK_OFF;
@@ -10489,7 +10487,7 @@ public class LauncherActivity extends Activity {
             // the modern branch above but routed through the deprecated
             // flag-based API. The flags are deprecated since API 30 but
             // the platform team kept the constants working forever for
-            // exactly this shape of cross-version code — the
+            // exactly this shape of cross-version code â the
             // @SuppressWarnings("deprecation") on the method covers the
             // unavoidable build-time warning. android:windowFullscreen
             // in styles.xml hides the status bar via FLAG_FULLSCREEN
@@ -10575,7 +10573,7 @@ public class LauncherActivity extends Activity {
         if (cw > capW) cw = capW;
         // v1.5.x: shrink the banner tiles slightly (~8%) for a tighter grid
         // with more breathing room between tiles, per user request. Pure
-        // layout math evaluated once per config change — zero per-frame cost.
+        // layout math evaluated once per config change â zero per-frame cost.
         cw = Math.round(cw * 0.92f);
         if (cw < minW) cw = minW;
         tileWpx      = cw;
@@ -10586,7 +10584,7 @@ public class LauncherActivity extends Activity {
 
     /** Clip a small list/chip {@link ImageView} to a circle so the shared
      *  (rounded-square) cached icon bitmap renders ROUND in the keymap slot
-     *  rows, the app picker, and the hide-apps list — without touching the
+     *  rows, the app picker, and the hide-apps list â without touching the
      *  shared {@link #iconCache} (a pure view-level clip, no extra bitmap).
      *  Used so the chip icons stay the familiar small round app icons while
      *  the home / drawer tiles use their own larger artwork. */
@@ -10609,7 +10607,7 @@ public class LauncherActivity extends Activity {
      *  cached {@link Rect} bounds for the text variant. The {@code
      *  selectedState} field flips the hamburger / CC colour from warm
      *  white to near-black when the row is selected so the glyphs stay
-     *  visible against the bright frosted-white selection pill — the
+     *  visible against the bright frosted-white selection pill â the
      *  v1.3.2 issue where they invisibly blended into the white pill.
      *  Colour discs (the four colour-key rows) keep their saturated
      *  colour in both states because red / green / yellow / blue are
@@ -10630,7 +10628,7 @@ public class LauncherActivity extends Activity {
         /** Update the selection state and request a redraw if it
          *  actually changed. Cheap no-op when the row's selection state
          *  hasn't moved (refreshKeymapRows fires on every UP/DOWN press
-         *  but the state delta is one row in / one row out — most rows
+         *  but the state delta is one row in / one row out â most rows
          *  are stable). */
         void setSelectedState(boolean s) {
             if (s != selectedState) {
@@ -10653,7 +10651,7 @@ public class LauncherActivity extends Activity {
      *  <ul>
      *    <li>{@link #GLYPH_DOT}: solid colour disc (~64 % of the
      *        container's half-width). Stays its saturated colour in
-     *        both idle and selected states — visible on either backdrop.</li>
+     *        both idle and selected states â visible on either backdrop.</li>
      *    <li>{@link #GLYPH_HAMBURGER}: three short horizontal lines,
      *        symmetric within ~64 % of the container so the visual
      *        footprint matches the colour disc. Idle warm white,
@@ -10665,11 +10663,11 @@ public class LauncherActivity extends Activity {
      *
      *  The {@link Rect} parameter is owned by the calling View
      *  (per-instance) and reused for {@code Paint.getTextBounds} on
-     *  the CC variant — getTextBounds allocates internally if no Rect
+     *  the CC variant â getTextBounds allocates internally if no Rect
      *  is supplied, so passing a cached one keeps the draw call
      *  zero-alloc per frame. */
     // Resolved once per process instead of inside drawShortcutGlyph's
-    // GLYPH_CC branch — Typeface.create(String, int) is not guaranteed
+    // GLYPH_CC branch â Typeface.create(String, int) is not guaranteed
     // to be a cache hit on every Android version, so re-resolving it on
     // every redraw of the CC row (every UP/DOWN that crosses it while
     // the keymap overlay is open) was a small avoidable allocation on
@@ -10685,7 +10683,7 @@ public class LauncherActivity extends Activity {
         // Glyph colour for the monochrome variants: idle warm white
         // (matches row label idle colour), selected near-black (matches
         // row label selected colour). Colour discs keep their full
-        // colour regardless — saturated brand colours read on either
+        // colour regardless â saturated brand colours read on either
         // backdrop, and inverting them would be a different visual
         // language (the dots would lose their identity).
         final int glyphColor = selected ? 0xFF111114 : 0xCCFFFFFF;
@@ -10719,7 +10717,7 @@ public class LauncherActivity extends Activity {
             p.setTextSize(h * 0.62f);
             // Vertically centre via the actual rendered glyph bounds
             // (Paint.FontMetrics centres on the typographic median,
-            // which sits below the visual median of "CC" — the user
+            // which sits below the visual median of "CC" â the user
             // reported "not aligned in centre" against this rendering).
             // getTextBounds writes into the caller-owned Rect, so this
             // is allocation-free per draw.
