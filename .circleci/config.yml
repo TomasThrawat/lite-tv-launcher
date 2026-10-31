@@ -16,17 +16,26 @@ jobs:
             fi
             java -version
             ./gradlew --version
-            sdkmanager --version
       - restore_cache:
           keys:
             - lite-tv-gradle-v1-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - lite-tv-gradle-v1-
       - run:
-          name: Install Android SDK 36
+          name: Install Android CLI and SDK 36
           command: |
             set -euo pipefail
-            yes | sdkmanager --licenses >/dev/null
-            sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+            curl -fsSL https://dl.google.com/android/cli/latest/linux_x86_64/install.sh | bash
+            export PATH="$HOME/.local/bin:$PATH"
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
+            android --no-metrics --version
+            SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+            if [ -z "$SDK_ROOT" ]; then
+              echo "ANDROID_HOME and ANDROID_SDK_ROOT are both unset" >&2
+              exit 1
+            fi
+            set +o pipefail
+            yes | android --no-metrics --sdk="$SDK_ROOT" sdk install platforms/android-36 build-tools/36.0.0 platform-tools
+            set -o pipefail
       - run:
           name: Run unit tests, lint, and assemble APKs
           command: |
