@@ -1,0 +1,56 @@
+version: 2.1
+
+jobs:
+  android-build:
+    docker:
+      - image: cimg/android:2026.08
+    steps:
+      - checkout
+      - run:
+          name: Select Java 17 and inspect toolchain
+          command: |
+            set -euo pipefail
+            if [ -d /usr/lib/jvm/java-17-openjdk-amd64 ]; then
+              echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> "$BASH_ENV"
+              echo 'export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH' >> "$BASH_ENV"
+            fi
+            java -version
+            ./gradlew --version
+            sdkmanager --version
+      - restore_cache:
+          keys:
+            - lite-tv-gradle-v1-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - lite-tv-gradle-v1-
+      - run:
+          name: Install Android SDK 36
+          command: |
+            set -euo pipefail
+            yes | sdkmanager --licenses >/dev/null
+            sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+      - run:
+          name: Run unit tests, lint, and assemble APKs
+          command: |
+            set -euo pipefail
+            chmod +x ./gradlew
+            ./gradlew --no-daemon --stacktrace clean testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
+      - save_cache:
+          key: lite-tv-gradle-v1-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+      - store_test_results:
+          path: app/build/test-results/testDebugUnitTest
+      - store_artifacts:
+          path: app/build/outputs/apk/debug
+          destination: debug-apk
+      - store_artifacts:
+          path: app/build/outputs/apk/androidTest/debug
+          destination: android-test-apk
+      - store_artifacts:
+          path: app/build/reports
+          destination: build-reports
+
+workflows:
+  android-smoke-test:
+    jobs:
+      - android-build
