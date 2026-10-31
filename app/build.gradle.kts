@@ -546,10 +546,7 @@ android {
         warningsAsErrors   = false
         // Skip dependencies â there are none, but explicit beats implicit.
         checkDependencies  = false
-        // Generate machine-readable reports the CI lint job uploads.
-        textReport         = true
-        htmlReport         = true
-        xmlReport          = true
+        // AGP automatically generates text, HTML, and XML lint reports.
         lintConfig         = file("lint.xml")
         // SyntheticAccessor: this codebase intentionally uses inner classes
         // (RecyclingShelfView, CellView) that touch outer-class fields. The
@@ -567,19 +564,22 @@ android {
     }
 }
 
-// Block Kotlin from entering via any transitive dep â applies to the
-// PRODUCTION classpaths only. Test classpaths are exempt so androidx.test
-// can pull its dependencies (which transitively include Kotlin runtime
-// stubs in newer versions). The Kotlin runtime stays out of the released
-// APK because androidTestImplementation produces a separate test APK.
+// Kotlin is excluded from production app classpaths, but stays available to
+// Gradle's Lint worker and the separate test classpaths. This keeps the
+// released APK free of Kotlin runtime while allowing Lint to run correctly.
 configurations.matching {
     val n = it.name
     !n.contains("Test", ignoreCase = true) &&
             !n.startsWith("androidTest") &&
             !n.startsWith("test")
 }.configureEach {
-    exclude(group = "org.jetbrains.kotlin")
+    // Keep androidx.core-ktx out of all production and lint classpaths.
     exclude(group = "androidx.core", module = "core-ktx")
+    // AGP's lint worker uses Kotlin stdlib internals (for example EnumEntriesKt).
+    // Exclude Kotlin only from production app classpaths, never from lint.
+    if (!name.contains("lint", ignoreCase = true)) {
+        exclude(group = "org.jetbrains.kotlin")
+    }
 }
 
 dependencies {
